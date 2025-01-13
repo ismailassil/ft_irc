@@ -5,6 +5,9 @@
 
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
+
+#include "Parsing.hpp"
 
 int main() {
 	int				   server_fd, client_fd;
@@ -13,6 +16,7 @@ int main() {
 	char			   buffer[1024];
 	int				   port = 6667;	 // Default IRC port
 
+	Parsing parser;
 	// Create the server socket
 	server_fd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( server_fd < 0 ) {
@@ -27,6 +31,11 @@ int main() {
 		INADDR_ANY;	 // Bind to all available interfaces
 	server_addr.sin_port =
 		htons( port );	// Convert the port to network byte order
+
+	int reuse = 1;
+	if ( setsockopt( server_fd, SOL_SOCKET, SO_REUSEPORT, &reuse,
+					 sizeof( reuse ) ) )
+		throw std::runtime_error( "setsocketopt" );
 
 	// Bind the socket to the address and port
 	if ( bind( server_fd, (struct sockaddr *)&server_addr,
@@ -56,20 +65,24 @@ int main() {
 
 	std::cout << "Client connected" << std::endl;
 
-	// Read data from the client
-	ssize_t bytes_read = read( client_fd, buffer, sizeof( buffer ) - 1 );
-	if ( bytes_read < 0 ) {
-		perror( "read" );
-		close( client_fd );
-		close( server_fd );
-		return 1;
-	}
+	while ( 1 ) {
+		// Read data from the client
+		ssize_t bytes_read = read( client_fd, buffer, sizeof( buffer ) - 1 );
+		if ( bytes_read < 0 ) {
+			perror( "read" );
+			close( client_fd );
+			close( server_fd );
+			return 1;
+		}
 
-	buffer[bytes_read] = '\0';	// Null-terminate the buffer
-	std::cout << "Received message: " << buffer << std::endl;
-	std::string ss( buffer );
-	std::cout << "[" << ss << "]" << std::endl;
-	std::cout << ss.length() << std::endl;
+		buffer[bytes_read] = '\0';	// Null-terminate the buffer
+		std::string ss( buffer );
+		if ( ss.length() > 0 ) {
+			std::cout << "Received message: " << buffer << std::endl;
+			std::cout << "Received message: " << ss.length() << std::endl;
+			parser.registerClient( client_fd, ss );
+		}
+	}
 
 	// Close the client and server sockets
 	close( client_fd );
