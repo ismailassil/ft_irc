@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parsing.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: obouchta <obouchta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:43:15 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/13 18:35:33 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/13 18:47:33 by obouchta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ bool Parsing::isValid( const string& str ) {
 }
 
 bool Parsing::registerClient( int fd, string& input ) {
-	if ( rNewLine( input ) ) return false;
+	// if ( rNewLine( input ) ) return false;
 	istringstream	 stream( input );
 	vector< string > tokens;
 	string			 token;

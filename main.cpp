@@ -17,6 +17,7 @@ int main() {
 	int				   port = 6667;	 // Default IRC port
 
 	Parsing parser;
+	parser.setPass("he");
 	// Create the server socket
 	server_fd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( server_fd < 0 ) {
@@ -67,7 +68,8 @@ int main() {
 
 	while ( 1 ) {
 		// Read data from the client
-		ssize_t bytes_read = read( client_fd, buffer, sizeof( buffer ) - 1 );
+		// ssize_t bytes_read = read( client_fd, buffer, sizeof( buffer ) - 1 );
+		ssize_t bytes_read = recv( client_fd, buffer, sizeof( buffer ) - 1, 0 );
 		if ( bytes_read < 0 ) {
 			perror( "read" );
 			close( client_fd );
