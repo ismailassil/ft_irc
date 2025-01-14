@@ -32,7 +32,7 @@ class ClientManager {
 		void kickCmd( int, string& );
 
 	public:
-		void parse( string& );
+		void parse( int, string& );
 		bool registerClient( int, string& );
 		void setPass( const string& );
 };

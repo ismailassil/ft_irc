@@ -41,8 +41,8 @@ void ClientManager::joinCmd(int fd, string& cmd)
             newChannel.setName(chans[i]);
             if (hasPasswords)
                 newChannel.setPassword(passwords[j]);
-            newChannel.add_client(cli[fd]);
-            newChannel.add_admin(cli[fd]);
+            newChannel.addClient(cli[fd]);
+            newChannel.addAdmin(cli[fd]);
             channels.push_back(newChannel);
             j++;
         }
@@ -69,7 +69,7 @@ void ClientManager::joinCmd(int fd, string& cmd)
                         ft_send(fd, ERR_BADCHANNELKEY(string("*"), chans[i]));
                         return;
                     }
-                    channels[k].add_client(cli[fd]);
+                    channels[k].addClient(cli[fd]);
                     string joinMsg = ":" + cli[fd].getNickName() + " JOIN :" + channels[k].getName() + "\r\n";
                     ft_send(fd, joinMsg);
                     channels[k].broadcast(joinMsg, fd);

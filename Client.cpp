@@ -55,8 +55,16 @@ int Client::getFd() const {
 	return fd;
 }
 
+bool Client::getAuthenticated() const {
+	return authenticated;
+}
+
 bool Client::getRegistered() const {
 	return registered;
+}
+
+int Client::getKey() const {
+	return key;
 }
 
 bool Client::getInviteChannel( string &ChName ) const {
@@ -84,12 +92,24 @@ const string Client::getBuffer() const {
 	return buffer;
 }
 
-void Client::setFd( int fd ) {
+void Client::setFd( const int fd ) {
 	this->fd = fd;
+}
+
+void Client::setAuthenticated( const bool value ) {
+	this->authenticated = value;
+}
+
+void Client::setRegistered( const bool value ) {
+	this->registered = value;
 }
 
 void Client::setNickname( const string &nickName ) {
 	this->nickname = nickName;
+}
+
+void Client::setKey( const int key ) {
+	this->key = key;
 }
 
 void Client::setLoggedIn( const bool value ) {
@@ -102,10 +122,6 @@ void Client::setUsername( const string &userName ) {
 
 void Client::setBuffer( const string &received ) {
 	this->buffer = received;
-}
-
-void Client::setRegistered( const bool value ) {
-	this->registered = value;
 }
 
 void Client::setIpAdd( const string &ipAdd ) {

@@ -14,7 +14,7 @@
 #include "ClientManager.hpp"
 
 bool ClientManager::isCmd( const string& str, const char* cmd ) {
-	if ( str.length() != std::strlen( cmd ) ) return false;
+	if ( str.length() != strlen( cmd ) ) return false;
 	string tmp = str;
 	for ( size_t i = 0; i < tmp.length(); i++ ) {
 		if ( tolower( tmp[i] ) != cmd[i] ) return false;
@@ -24,12 +24,15 @@ bool ClientManager::isCmd( const string& str, const char* cmd ) {
 
 void ClientManager::ft_send( int fd, const string& str ) {
 	if ( send( fd, str.c_str(), str.size(), 0 ) == -1 )
-		std::cerr << "send() failed" << std::endl;
+		cerr << "send() failed" << endl;
 }
 
 bool ClientManager::rNewLine( string& input ) {
 	size_t pos = input.find( "\r\n" );
-	if ( pos == string::npos ) return true;
+	if ( pos == string::npos ) {
+		return false;
+		// return true;
+	}
 	input.erase( 0, pos );
 	return false;
 }
@@ -46,26 +49,25 @@ bool ClientManager::isValid( const string& str ) {
 }
 
 bool ClientManager::registerClient( int fd, string& input ) {
+	static int id = 1;
+	if ( cli[fd].getRegistered() )
+		return true;
 	const vector< string > tokens = ft_split_tokens( input );
 
 	if ( tokens.size() == 0 ) return false;
 	string cmd = tokens.at( 0 );
-	if ( !isCmd( cmd, PASS ) && !isCmd( cmd, NICK ) && !isCmd( cmd, USER ) ) {
-		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd.c_str() ) ),
-			   false;
-	}
 	if ( isCmd( cmd, PASS ) ) {
-		if ( cli[fd].getRegistered() )
+		if ( cli[fd].getAuthenticated() )
 			return ft_send( fd, ERR_ALREADYREGISTERED( string( "" ) ) ), false;
 		if ( tokens.size() == 1 )
 			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
 		if ( tokens.size() > 2 || tokens.at( 1 ) != pass ) {
 			return ft_send( fd, ERR_PASSWDMISMATCH( string( "*" ) ) ), false;
 		}
-		cli[fd].setRegistered( true );
+		cli[fd].setAuthenticated( true );
 	}
 	if ( isCmd( cmd, NICK ) ) {
-		if ( !cli[fd].getRegistered() )
+		if ( !cli[fd].getAuthenticated() )
 			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ) ), false;
 		if ( tokens.size() == 1 )
 			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
@@ -87,14 +89,11 @@ bool ClientManager::registerClient( int fd, string& input ) {
 		cli[fd].setNickname( nk );
 	}
 	if ( isCmd( cmd, USER ) ) {
-		if ( !cli[fd].getRegistered() )
+		if ( !cli[fd].getAuthenticated() )
 			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ) ), false;
 		if ( !cli[fd].getUserName().empty() )
 			return ft_send( fd, ERR_ALREADYREGISTERED( string( "*" ) ) ), false;
-		if ( tokens.size() < 4 )
-			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
-		size_t semiColonPos = input.find( ":" );
-		if ( semiColonPos == string::npos && tokens.size() != 4 )
+		if ( tokens.size() < 5 )
 			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
 
 		string username = tokens.at( 0 );
@@ -102,8 +101,15 @@ bool ClientManager::registerClient( int fd, string& input ) {
 			username = tokens.at( 0 ).substr( 0, 10 );
 		cli[fd].setUsername( username );
 	}
-	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() )
+	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() ) {
+		cli[fd].setKey(id++);
+		cli[fd].setRegistered( true );
+
+		std::stringstream ss;
+		ss << setw(3) << setfill('0') << cli[fd].getKey();
+		ft_send( fd, RPL_CONNECTED( ss.str(), cli[fd].getNickName() ) );
 		return true;
+	}
 	return false;
 }
 
@@ -111,8 +117,59 @@ void ClientManager::setPass( const string& p ) {
 	pass = p;
 }
 
-void ClientManager::parse( string& input ) {
+void ClientManager::parse( int fd, string& input ) {
+	if ( input.empty() ) return;
+
 	if ( rNewLine( input ) ) return;
+	size_t pos = input.find_first_of( "\t\v" );
+	if ( pos != string::npos ) {
+		input.erase( pos );
+		string buff = cli[fd].getBuffer();
+		buff.append( input );
+		cli[fd].setBuffer( buff );
+		return;
+	}
+
+	string buffer = cli[fd].getBuffer();
+
+	if ( cli[fd].getRegistered() )
+		if ( !registerClient( fd, buffer ) )
+			return;
+
+	void ( ClientManager::* func[] )( int, string& ) = {
+		&ClientManager::nickCmd,
+		&ClientManager::quitCmd,
+		&ClientManager::joinCmd,
+		&ClientManager::kickCmd,
+	};
+
+	const char* cmdList[] = { NICK, QUIT, JOIN, KICK };
+
+	const vector< string > tokens = ft_split_tokens( input );
+	if ( tokens.size() == 0 ) return;
+
+	string cmd = tokens.at( 0 );
+	transform( input.begin(), input.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
+
+	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
+		if ( isCmd( cmd, cmdList[i] ) ) {
+			( this->*func[i] )( fd, input );
+			return;
+		}
+	}
+
+	/*
+		- Remove CRNL and Check for \t\v
+
+		if ( !rNewLine( input ) ) return;
+		size_t pos = input.find_first_of( "\t\v" );
+		if ( pos != string::npos ) {
+			return ft_send( fd, ERR_NOSUCHCHANNEL( string( "*" ) ) );
+		}
+	*/
+	size_t nPos = input.find( "\n" );
+	input.erase( nPos, 1 );
+	if ( input.empty() ) return;
 }
 
 void ClientManager::nickCmd( int fd, string& input ) {

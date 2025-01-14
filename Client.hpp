@@ -16,7 +16,9 @@
 class Client {
 	private:
 		int							   fd;
+		bool						   authenticated;
 		bool						   registered;
+		int							   key;
 		string						   nickname;
 		bool						   loggedIn;
 		string						   userName;
@@ -35,7 +37,9 @@ class Client {
 
 		// Getters
 		int			 getFd() const;
+		bool		 getAuthenticated() const;
 		bool		 getRegistered() const;
+		int			 getKey() const;
 		bool		 getInviteChannel( string &ChName ) const;
 		const string getNickName() const;
 		bool		 getLoggedIn() const;
@@ -44,8 +48,10 @@ class Client {
 		const string getBuffer() const;
 
 		// Setters
-		void setFd( int fd );
+		void setFd( const int fd );
+		void setAuthenticated( const bool value );
 		void setNickname( const string &nickName );
+		void setKey( const int key );
 		void setLoggedIn( const bool value );
 		void setUsername( const string &username );
 		void setBuffer( const string &received );

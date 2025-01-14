@@ -24,12 +24,19 @@
 #include <string>	  // IWYU pragma: keep
 #include <utility>	  // IWYU pragma: keep
 #include <vector>	  // IWYU pragma: keep
+#include <string>	  // IWYU pragma: keep
+#include <cstring>	  // IWYU pragma: keep
+#include <sstream>   // IWYU pragma: keep
+#include <iomanip>  // IWYU pragma: keep
 
 #include "Responses.hpp"
 
 #define PASS "pass"
 #define NICK "nick"
 #define USER "user"
+#define QUIT "quit"
+#define JOIN "join"
+#define KICK "kick"
 
 using std::cerr;
 using std::cout;
@@ -44,6 +51,8 @@ using std::string;
 using std::tolower;
 using std::transform;
 using std::vector;
+using std::setw;
+using std::setfill;
 
 #define RED		"\x1b[31m"
 #define GREEN	"\x1b[1;32m"

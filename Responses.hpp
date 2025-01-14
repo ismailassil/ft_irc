@@ -2,7 +2,7 @@
 
 #define CRLF "\r\n"
 
-#define RPL_CONNECTED( nickname )							( ": 001 " + nickname + " : Welcome to the IRC server!" + CRLF )
+#define RPL_CONNECTED( id, nickname )						( ": " + id + " " + nickname + " : Welcome to the IRC server!" + CRLF )
 #define RPL_UMODEIS( hostname, chName, mode, user )			":" + hostname + " MODE " + chName + " " + mode + " " + user + CRLF
 #define RPL_CREATIONTIME( nickname, chName, creationtime )	": 329 " + nickname + " #" + chName + " " + creationtime + CRLF
 #define RPL_CHANNELMODES( nickname, chName, modes )			": 324 " + nickname + " #" + chName + " " + modes + CRLF
@@ -13,7 +13,7 @@
 #define RPL_ENDOFNAMES( nickname, chName )					( ": 366 " + nickname + " #" + chName + " :END of /NAMES list" + CRLF )
 #define RPL_TOPICIS( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + "\r\n" )
 #define RPL_TOPIC( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + CRLF )
-#define KICK( chName, nickname, reason )					( ": " + nickname + " KICK #" + chName + " " + nickname + " :" + reason + CRLF )
+#define RPL_KICK( chName, nickname, reason )				( ": " + nickname + " KICK #" + chName + " " + nickname + " :" + reason + CRLF )
 
 /////////////////////////////////
 //////////// ERRORS /////////////
