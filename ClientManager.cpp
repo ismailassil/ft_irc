@@ -54,7 +54,7 @@ bool ClientManager::registerClient( int fd, string& input ) {
 
 	if ( tokens.size() == 0 ) return false;
 	string cmd = tokens.at( 0 );
-	if ( !isCmd( cmd, PASS ) && !isCmd( cmd, NICK ) && !isCmd( cmd, USER ) ) {
+	if ( !isCmd( cmd, PASS ) && !isCmd( cmd, NICK ) && !isCmd( cmd, USER ) && !isCmd( cmd, JOIN ) ) {
 		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd.c_str() ) ), false;
 	}
 	if ( isCmd( cmd, PASS ) ) {
@@ -94,19 +94,22 @@ bool ClientManager::registerClient( int fd, string& input ) {
 			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ) ), false;
 		if ( !cli[fd].getUserName().empty() )
 			return ft_send( fd, ERR_ALREADYREGISTERED( string( "*" ) ) ), false;
-		if ( tokens.size() < 4 )
+		if ( tokens.size() < 5 )
 			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
-		size_t semiColonPos = input.find( ":" );
-		if ( semiColonPos == string::npos && tokens.size() != 4 )
-			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
+		// size_t semiColonPos = input.find( ":" );
+		// if ( semiColonPos == string::npos && tokens.size() != 4 )
+		// 	return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
 
 		string username = tokens.at( 0 );
 		if ( username.length() > 10 )
 			username = tokens.at( 0 ).substr( 0, 10 );
 		cli[fd].setUsername( username );
 	}
-	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() )
+	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() ) {
+		ft_send( fd, RPL_CONNECTED( cli[fd].getNickName() ) );
 		cli[fd].setRegistered( true );
+		return true;
+	}
 	return false;
 }
 
@@ -121,24 +124,35 @@ void ClientManager::setPass( const string& p ) {
 }
 
 void ClientManager::parse( int fd, string& input ) {
-
-	cout << "parse: " << input << std::endl;
-
-	// Remove CRNL and Check for \t\v
-	// if ( !rNewLine( input ) ) return;
-	// size_t pos = input.find_first_of( "\t\v" );
-	// if ( pos != string::npos ) {
-	// 	return ft_send( fd, ERR_NOSUCHCHANNEL( string( "*" ) ) );
-	// }
-	
 	size_t pos = input.find( "\n" );
 	input.erase( pos, 1 );
 	if ( input.empty() ) return;
 
 	if (!registerClient( fd, input ))
 		return ;
-	cout << "Client <" << fd << "> Nickname: " << cli[fd].getNickName() << std::endl;
-	joinCmd(fd, input);
+	// check if join cmd
+	const vector< string > tokens = ft_split_tokens( input );
+
+	if ( tokens.size() == 0 ) return ;
+	string cmd = tokens.at( 0 );
+	cout << "Command: " << cmd << std::endl;
+	if ( cmd == "JOIN" )
+		joinCmd(fd, input);
+	cout << "============================================================" << std::endl;
+	cout << "Clients: " << std::endl;
+	for ( map< int, Client >::iterator it = cli.begin(); it != cli.end(); it++ ) {
+		cout << "Client <" << it->first << "> Nickname: " << it->second.getNickName() << std::endl;
+	}
+	cout << "Channels: " << std::endl;
+	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
+		cout << "Name: " << it->getName() << std::endl;
+		cout << "Members: " << std::endl;
+		for ( vector< Client >::iterator it2 = it->getClientChannelList().begin(); it2 != it->getClientChannelList().end(); it2++ ) {
+			cout << "Client <" << it2->getNickName() << ">" << std::endl;
+		}
+	}
+	cout << "Current Client: " << fd << std::endl;
+	cout << "============================================================" << std::endl;
 	// if ( rNewLine( input ) ) return;
 }
 
