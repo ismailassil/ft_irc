@@ -29,6 +29,7 @@ class ClientManager {
 		void nickCmd( int, string& );
 		void quitCmd( int, string& );
 		void joinCmd( int, string& );
+		void kickCmd( int, string& );
 
 	public:
 		void parse( string& );

@@ -148,7 +148,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
 		if ( it->getClient( fd ) ) {
-			it->remove_client( fd );
+			it->removeClient( fd );
 			if ( it->getNumberOfClients() == 0 ) {
 				channels.erase( it );
 			} else {
@@ -156,7 +156,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 				it->broadcast( reply, fd );
 			}
 		} else if ( it->getAdmin( fd ) ) {
-			it->remove_admin( fd );
+			it->removeAdmin( fd );
 			if ( it->getNumberOfClients() == 0 ) {
 				channels.erase( it );
 			} else {

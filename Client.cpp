@@ -51,36 +51,36 @@ Client &Client::operator=( Client const &src ) {
 	return *this;
 }
 
-int Client::getFd() {
+int Client::getFd() const {
 	return fd;
 }
 
-bool Client::getRegistered() {
+bool Client::getRegistered() const {
 	return registered;
 }
 
-bool Client::getInviteChannel( string &ChName ) {
+bool Client::getInviteChannel( string &ChName ) const {
 	return find( ChannelsInvite.begin(), ChannelsInvite.end(), ChName ) !=
 		   ChannelsInvite.end();
 }
 
-const string Client::getNickName() {
+const string Client::getNickName() const {
 	return nickname;
 }
 
-bool Client::getLoggedIn() {
+bool Client::getLoggedIn() const {
 	return loggedIn;
 }
 
-const string Client::getUserName() {
+const string Client::getUserName() const {
 	return userName;
 }
 
-const string Client::getIpAdd() {
+const string Client::getIpAdd() const {
 	return ipAdd;
 }
 
-const string Client::getBuffer() {
+const string Client::getBuffer() const {
 	return buffer;
 }
 

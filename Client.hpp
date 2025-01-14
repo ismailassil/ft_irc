@@ -34,14 +34,14 @@ class Client {
 		Client &operator=( Client const &src );
 
 		// Getters
-		int			 getFd();
-		bool		 getRegistered();
-		bool		 getInviteChannel( string &ChName );
-		const string getNickName();
-		bool		 getLoggedIn();
-		const string getUserName();
-		const string getIpAdd();
-		const string getBuffer();
+		int			 getFd() const;
+		bool		 getRegistered() const;
+		bool		 getInviteChannel( string &ChName ) const;
+		const string getNickName() const;
+		bool		 getLoggedIn() const;
+		const string getUserName() const;
+		const string getIpAdd() const;
+		const string getBuffer() const;
 
 		// Setters
 		void setFd( int fd );

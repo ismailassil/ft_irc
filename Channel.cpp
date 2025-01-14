@@ -57,31 +57,31 @@ void Channel::setModeAtIndex( const size_t index, const bool mode ) {
 	modes[index].second = mode;
 }
 
-const int Channel::getInviteOnly() {
+const int Channel::getInviteOnly() const {
 	return invite_only;
 }
 
-const string Channel::getTopic() {
+const string Channel::getTopic() const {
 	return topic;
 }
 
-const int Channel::getKey() {
+const int Channel::getKey() const {
 	return key;
 }
 
-const int Channel::getLimit() {
+const int Channel::getLimit() const {
 	return limit;
 }
 
-const int Channel::getNumberOfClients() {
+const int Channel::getNumberOfClients() const {
 	return clients.size();
 }
 
-const bool Channel::getModeAtIndex( const size_t index ) {
+const bool Channel::getModeAtIndex( const size_t index ) const {
 	return modes[index].second;
 }
 
-const bool Channel::isClientInChannel( const string &nick ) {
+const bool Channel::isClientInChannel( const string &nick ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getNickName() == nick )
 			return true;
@@ -89,15 +89,23 @@ const bool Channel::isClientInChannel( const string &nick ) {
 	return false;
 }
 
-const string Channel::getPassword() {
+const bool Channel::isAdminInChannel( const string &nick ) const {
+	for ( size_t i = 0; i < admins.size(); i++ ) {
+		if ( admins[i].getNickName() == nick )
+			return true;
+	}
+	return false;
+}
+
+const string Channel::getPassword() const {
 	return password;
 }
 
-const string Channel::getName() {
+const string Channel::getName() const {
 	return name;
 }
 
-const string Channel::getModes() {
+const string Channel::getModes() const {
 	string modes_str = "";
 	for ( size_t i = 0; i < modes.size(); i++ ) {
 		if ( modes[i].second )
@@ -106,7 +114,7 @@ const string Channel::getModes() {
 	return modes_str;
 }
 
-const string Channel::getClientChannelList() {
+const string Channel::getClientChannelList() const {
 	string list = "";
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		list += clients[i].getNickName();
@@ -116,7 +124,7 @@ const string Channel::getClientChannelList() {
 	return list;
 }
 
-const Client *Channel::getClient( const int fd ) {
+const Client *Channel::getClient( const int fd ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getFd() == fd )
 			return &clients[i];
@@ -124,7 +132,7 @@ const Client *Channel::getClient( const int fd ) {
 	return NULL;
 }
 
-const Client *Channel::getAdmin( const int fd ) {
+const Client *Channel::getAdmin( const int fd ) const {
 	for ( size_t i = 0; i < admins.size(); i++ ) {
 		if ( admins[i].getFd() == fd )
 			return &admins[i];
@@ -132,7 +140,7 @@ const Client *Channel::getAdmin( const int fd ) {
 	return NULL;
 }
 
-const Client *Channel::getClientInChannel( const string &name ) {
+const Client *Channel::getClientInChannel( const string &name )const  {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getNickName() == name )
 			return &clients[i];
@@ -140,15 +148,23 @@ const Client *Channel::getClientInChannel( const string &name ) {
 	return NULL;
 }
 
-void Channel::add_client( const Client newClient ) {
+const Client *Channel::getAdminInChannel( const string &name )const  {
+	for ( size_t i = 0; i < admins.size(); i++ ) {
+		if ( admins[i].getNickName() == name )
+			return &admins[i];
+	}
+	return NULL;
+}
+
+void Channel::addClient( const Client newClient ) {
 	clients.push_back( newClient );
 }
 
-void Channel::add_admin( const Client newClient ) {
+void Channel::addAdmin( const Client newClient ) {
 	admins.push_back( newClient );
 }
 
-void Channel::remove_client( const int fd ) {
+void Channel::removeClient( const int fd ) {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getFd() == fd ) {
 			clients.erase( clients.begin() + i );
@@ -157,7 +173,7 @@ void Channel::remove_client( const int fd ) {
 	}
 }
 
-void Channel::remove_admin( const int fd ) {
+void Channel::removeAdmin( const int fd ) {
 	for ( size_t i = 0; i < admins.size(); i++ ) {
 		if ( admins[i].getFd() == fd ) {
 			admins.erase( admins.begin() + i );
@@ -166,7 +182,7 @@ void Channel::remove_admin( const int fd ) {
 	}
 }
 
-bool Channel::change_clientToAdmin( const string &nick ) {
+bool Channel::changeClientToAdmin( const string &nick ) {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getNickName() == nick ) {
 			admins.push_back( clients[i] );
@@ -177,7 +193,7 @@ bool Channel::change_clientToAdmin( const string &nick ) {
 	return false;
 }
 
-bool Channel::change_adminToClient( const string &nick ) {
+bool Channel::changeAdminToClient( const string &nick ) {
 	for ( size_t i = 0; i < admins.size(); i++ ) {
 		if ( admins[i].getNickName() == nick ) {
 			clients.push_back( admins[i] );
@@ -192,7 +208,7 @@ bool Channel::change_adminToClient( const string &nick ) {
 // 	(void)reply;
 // }
 
-void Channel::broadcast( const string& reply, const int fd ) {
+void Channel::broadcast( const string &reply, const int fd ) {
 	(void)reply;
 	(void)fd;
 }

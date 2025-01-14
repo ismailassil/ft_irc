@@ -24,20 +24,16 @@ const vector< string > ft_split_tokens( const string& input ) {
 	return tokens;
 }
 
-const vector<string> splitString(const string& str, char delim)
-{
-    vector<string> split;
-    string token = "";
-    for (size_t i = 0; i < str.size(); i++)
-    {
-        if (str[i] == delim)
-        {
-            split.push_back(token);
-            token = "";
-        }
-        else
-            token += str[i];
-    }
-    split.push_back(token);
-    return split;
+const vector< string > splitString( const string& str, char delim ) {
+	vector< string > split;
+	string			 token = "";
+	for ( size_t i = 0; i < str.size(); i++ ) {
+		if ( str[i] == delim ) {
+			split.push_back( token );
+			token = "";
+		} else
+			token += str[i];
+	}
+	split.push_back( token );
+	return split;
 }
