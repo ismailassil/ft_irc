@@ -7,7 +7,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "Parsing.hpp"
+#include "ClientManager.hpp"
 
 int main() {
 	int				   server_fd, client_fd;
@@ -16,7 +16,8 @@ int main() {
 	char			   buffer[1024];
 	int				   port = 6667;	 // Default IRC port
 
-	Parsing parser;
+	ClientManager parser;
+	parser.setPass("he");
 	// Create the server socket
 	server_fd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( server_fd < 0 ) {
