@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 09:10:53 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 09:25:53 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/14 15:05:03 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 Client::Client()
 	: fd( -1 ),
+	 authenticated( false ),
 	  registered( false ),
 	  loggedIn( false ),
 	  nickname( "" ),
@@ -23,6 +24,7 @@ Client::Client()
 
 Client::Client( const string &nickname, const string &username, int fd )
 	: fd( fd ),
+	  authenticated( false ),
 	  registered( false ),
 	  loggedIn( false ),
 	  nickname( nickname ),
@@ -84,8 +86,16 @@ const string Client::getBuffer() {
 	return buffer;
 }
 
+bool Client::getAuthenticated() {
+	return authenticated;
+}
+
 void Client::setFd( int fd ) {
 	this->fd = fd;
+}
+
+void Client::setAuthenticated( const bool value ) {
+	this->authenticated = value;
 }
 
 void Client::setNickname( const string &nickName ) {

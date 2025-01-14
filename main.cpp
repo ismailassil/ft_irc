@@ -78,11 +78,8 @@ int main() {
 
 		buffer[bytes_read] = '\0';	// Null-terminate the buffer
 		std::string ss( buffer );
-		if ( ss.length() > 0 ) {
-			std::cout << "Received message: " << buffer << std::endl;
-			std::cout << "Received message: " << ss.length() << std::endl;
-			parser.registerClient( client_fd, ss );
-		}
+		if ( ss.length() > 0 )
+			parser.parse( client_fd, ss );
 	}
 
 	// Close the client and server sockets

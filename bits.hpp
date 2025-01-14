@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bits.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 20:29:12 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 10:37:58 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/14 14:18:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #define PASS "pass"
 #define NICK "nick"
 #define USER "user"
+#define JOIN "JOIN"
 
 using std::cerr;
 using std::cout;

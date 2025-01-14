@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 20:29:16 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 10:19:27 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/14 15:03:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 class Client {
 	private:
 		int							   fd;
+		bool							authenticated;
 		bool						   registered;
 		string						   nickname;
 		bool						   loggedIn;
@@ -42,6 +43,7 @@ class Client {
 		const string getUserName();
 		const string getIpAdd();
 		const string getBuffer();
+		bool getAuthenticated();
 
 		// Setters
 		void setFd( int fd );
@@ -51,4 +53,5 @@ class Client {
 		void setBuffer( const string &received );
 		void setRegistered( const bool value );
 		void setIpAdd( const string &ipadd );
+		void setAuthenticated( const bool value );
 };
