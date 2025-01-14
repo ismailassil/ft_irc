@@ -49,9 +49,7 @@ bool ClientManager::isValid( const string& str ) {
 }
 
 bool ClientManager::registerClient( int fd, string& input ) {
-	static int id = 1;
-	if ( cli[fd].getRegistered() )
-		return true;
+	static int			   id	  = 1;
 	const vector< string > tokens = ft_split_tokens( input );
 
 	if ( tokens.size() == 0 ) return false;
@@ -59,7 +57,6 @@ bool ClientManager::registerClient( int fd, string& input ) {
 	if ( !isCmd( cmd, USER ) && !isCmd( cmd, NICK ) && !isCmd( cmd, PASS ) )
 		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) ), false;
 	if ( isCmd( cmd, PASS ) ) {
-		cout << cli[fd].getAuthenticated() << endl;
 		if ( cli[fd].getAuthenticated() )
 			return ft_send( fd, ERR_ALREADYREGISTERED( string( "" ) ) ), false;
 		if ( tokens.size() == 1 )
@@ -121,69 +118,114 @@ void ClientManager::setPass( const string& p ) {
 }
 
 void ClientManager::parse( int fd, string& input ) {
+	size_t pos = input.find( "\n" );
+	if ( pos != string::npos )
+		input.erase( pos, 1 );
 	if ( input.empty() ) return;
 
-	if ( rNewLine( input ) ) return;
-	size_t pos = input.find_first_of( "\t\v" );
-	if ( pos != string::npos ) {
-		input.erase( pos );
-		string buff = cli[fd].getBuffer();
-		buff.append( input );
-		cli[fd].setBuffer( buff );
-		return;
-	}
-
-	size_t isExist = cli.find( fd ) != cli.end();
-	if ( !isExist ) {
+	if ( cli.find( fd ) == cli.end() ) {
 		cli[fd] = Client();
 	}
 
-	size_t nPos = input.find( "\n" );
-	if ( nPos != string::npos )
-		input.erase( nPos, 1 );
-
-	string buffer = cli[fd].getBuffer();
-
 	if ( !cli[fd].getRegistered() )
-		if ( !registerClient( fd, buffer ) )
+		if ( !registerClient( fd, input ) )
 			return;
-
-	void ( ClientManager::* func[] )( int, string& ) = {
-		&ClientManager::nickCmd,
-		&ClientManager::quitCmd,
-		&ClientManager::joinCmd,
-		&ClientManager::kickCmd,
-	};
-
-	const char* cmdList[] = { NICK, QUIT, JOIN, KICK };
-
+	// check if join cmd
 	const vector< string > tokens = ft_split_tokens( input );
+
 	if ( tokens.size() == 0 ) return;
-
 	string cmd = tokens.at( 0 );
-	transform( input.begin(), input.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
-
-	bool found = false;
-	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
-		if ( isCmd( cmd, cmdList[i] ) ) {
-			found = true;
-			( this->*func[i] )( fd, input );
-			return;
+	cout << "Command: " << cmd << std::endl;
+	if ( cmd == "join" )
+		joinCmd( fd, input );
+	cout << CYAN << "============================================================" << RESET << endl;
+	cout << GREEN << "Clients: " << RESET << endl;
+	for ( map< int, Client >::const_iterator it = cli.begin(); it != cli.end(); it++ ) {
+		cout << YELLOW << "\tClient <" << it->first << "> " << RESET;
+		cout << MAGENTA << "\tNickname: " << it->second.getNickName() << RESET << endl;
+	}
+	cout << GREEN << "Channels: " << RESET << endl;
+	for ( vector< Channel >::const_iterator it = channels.begin(); it != channels.end(); it++ ) {
+		cout << BLUE << "\tName: " << it->getName() << RESET << endl;
+		if ( !it->getPassword().empty() )
+			cout << YELLOW << "\tPassword: " << it->getPassword() << RESET << endl;
+		cout << "\tMembers: " << RESET;
+		cout << it->getClientChannelList() << endl;
+		cout << "\tAdmins: " << RESET;
+		for ( int i = 0; i < it->getNumberOfClients(); i++ ) {
+			if ( it->getAdmin( it->getClient( i )->getFd() ) )
+				cout << it->getClient( i )->getNickName() << " ";
 		}
 	}
-	if ( !found )
-		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) );
-
-	/*
-		- Remove CRNL and Check for \t\v
-
-		if ( !rNewLine( input ) ) return;
-		size_t pos = input.find_first_of( "\t\v" );
-		if ( pos != string::npos ) {
-			return ft_send( fd, ERR_NOSUCHCHANNEL( string( "*" ) ) );
-		}
-	*/
+	cout << RED << "Current Client: " << fd << RESET << endl;
+	cout << CYAN << "============================================================" << RESET << endl;
+	// if ( rNewLine( input ) ) return;
 }
+
+// void ClientManager::parse( int fd, string& input ) {
+// 	if ( input.empty() ) return;
+
+// 	if ( rNewLine( input ) ) return;
+// 	size_t pos = input.find_first_of( "\t\v" );
+// 	if ( pos != string::npos ) {
+// 		input.erase( pos );
+// 		string buff = cli[fd].getBuffer();
+// 		buff.append( input );
+// 		cli[fd].setBuffer( buff );
+// 		return;
+// 	}
+
+// 	size_t isExist = cli.find( fd ) != cli.end();
+// 	if ( !isExist ) {
+// 		cli[fd] = Client();
+// 	}
+
+// 	size_t nPos = input.find( "\n" );
+// 	if ( nPos != string::npos )
+// 		input.erase( nPos, 1 );
+
+// 	string buffer = cli[fd].getBuffer();
+
+// 	if ( !cli[fd].getRegistered() )
+// 		if ( !registerClient( fd, buffer ) )
+// 			return;
+
+// 	void ( ClientManager::* func[] )( int, string& ) = {
+// 		&ClientManager::nickCmd,
+// 		&ClientManager::quitCmd,
+// 		&ClientManager::joinCmd,
+// 		&ClientManager::kickCmd,
+// 	};
+
+// 	const char* cmdList[] = { NICK, QUIT, JOIN, KICK };
+
+// 	const vector< string > tokens = ft_split_tokens( input );
+// 	if ( tokens.size() == 0 ) return;
+
+// 	string cmd = tokens.at( 0 );
+// 	transform( input.begin(), input.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
+
+// 	bool found = false;
+// 	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
+// 		if ( isCmd( cmd, cmdList[i] ) ) {
+// 			found = true;
+// 			( this->*func[i] )( fd, input );
+// 			return;
+// 		}
+// 	}
+// 	if ( !found )
+// 		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) );
+
+// 	/*
+// 		- Remove CRNL and Check for \t\v
+
+// 		if ( !rNewLine( input ) ) return;
+// 		size_t pos = input.find_first_of( "\t\v" );
+// 		if ( pos != string::npos ) {
+// 			return ft_send( fd, ERR_NOSUCHCHANNEL( string( "*" ) ) );
+// 		}
+// 	*/
+// }
 
 void ClientManager::nickCmd( int fd, string& input ) {
 	const vector< string > tokens = ft_split_tokens( input );

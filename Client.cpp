@@ -21,9 +21,9 @@ Client::Client()
 	  nickname( "" ),
 	  userName( "" ),
 	  buffer( "" ),
-	  ipAdd( "" ) {
-		cout << "Client created" << endl;
-	  }
+	  ipAdd( "" ),
+	  ChannelsInvite( 0 ),
+	  channels( 0 ) {}
 
 Client::Client( const string &nickname, const string &username, int key, int fd )
 	: fd( fd ),
@@ -34,7 +34,9 @@ Client::Client( const string &nickname, const string &username, int key, int fd 
 	  nickname( nickname ),
 	  userName( username ),
 	  buffer( "" ),
-	  ipAdd( "" ) {}
+	  ipAdd( "" ),
+	  ChannelsInvite( 0 ),
+	  channels( 0 ) {}
 
 Client::~Client() {}
 
@@ -44,15 +46,17 @@ Client::Client( Client const &src ) {
 
 Client &Client::operator=( Client const &src ) {
 	if ( this != &src ) {
-		this->fd			 = src.fd;
-		this->registered	 = src.registered;
-		this->nickname		 = src.nickname;
-		this->loggedIn		 = src.loggedIn;
-		this->userName		 = src.userName;
-		this->buffer		 = src.buffer;
-		this->ipAdd			 = src.ipAdd;
-		this->ChannelsInvite = src.ChannelsInvite;
-		this->channels		 = src.channels;
+		fd			   = src.fd;
+		authenticated  = src.authenticated;
+		registered	   = src.registered;
+		key			   = src.key;
+		loggedIn	   = src.loggedIn;
+		nickname	   = src.nickname;
+		userName	   = src.userName;
+		buffer		   = src.buffer;
+		ipAdd		   = src.ipAdd;
+		ChannelsInvite = src.ChannelsInvite;
+		channels	   = src.channels;
 	}
 	return *this;
 }
@@ -62,6 +66,7 @@ int Client::getFd() const {
 }
 
 bool Client::getAuthenticated() const {
+	cout << authenticated << endl;
 	return authenticated;
 }
 

@@ -24,7 +24,7 @@ void ClientManager::joinCmd(int fd, string& cmd)
     int j = 0;
     for (size_t i = 0; i < chans.size(); i++)
     {
-        if (chans[i][0] != '#' || chans[i][0] != '&')
+        if (chans[i][0] != '#' && chans[i][0] != '&')
             return ft_send(fd, ERR_NOSUCHCHANNEL(cli[fd].getNickName(), chans[i]));
         // check if channel already exists
         bool exists = false;
