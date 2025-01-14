@@ -5,6 +5,7 @@
 
 void ClientManager::joinCmd(int fd, string& cmd)
 {
+    cout << "joinCmd" << endl;
     vector<string> passwords;
     bool hasPasswords = false;
     vector<string> splited = ft_split_tokens(cmd);

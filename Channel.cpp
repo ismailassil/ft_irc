@@ -57,7 +57,7 @@ void Channel::setModeAtIndex( const size_t index, const bool mode ) {
 	modes[index].second = mode;
 }
 
-const int Channel::getInviteOnly() const {
+int Channel::getInviteOnly() const {
 	return invite_only;
 }
 
@@ -65,23 +65,23 @@ const string Channel::getTopic() const {
 	return topic;
 }
 
-const int Channel::getKey() const {
+int Channel::getKey() const {
 	return key;
 }
 
-const int Channel::getLimit() const {
+int Channel::getLimit() const {
 	return limit;
 }
 
-const int Channel::getNumberOfClients() const {
+int Channel::getNumberOfClients() const {
 	return clients.size();
 }
 
-const bool Channel::getModeAtIndex( const size_t index ) const {
+bool Channel::getModeAtIndex( const size_t index ) const {
 	return modes[index].second;
 }
 
-const bool Channel::isClientInChannel( const string &nick ) const {
+bool Channel::isClientInChannel( const string &nick ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getNickName() == nick )
 			return true;
@@ -89,7 +89,7 @@ const bool Channel::isClientInChannel( const string &nick ) const {
 	return false;
 }
 
-const bool Channel::isAdminInChannel( const string &nick ) const {
+bool Channel::isAdminInChannel( const string &nick ) const {
 	for ( size_t i = 0; i < admins.size(); i++ ) {
 		if ( admins[i].getNickName() == nick )
 			return true;
@@ -140,7 +140,7 @@ const Client *Channel::getAdmin( const int fd ) const {
 	return NULL;
 }
 
-const Client *Channel::getClientInChannel( const string &name )const  {
+const Client *Channel::getClientInChannel( const string &name ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getNickName() == name )
 			return &clients[i];
@@ -148,7 +148,7 @@ const Client *Channel::getClientInChannel( const string &name )const  {
 	return NULL;
 }
 
-const Client *Channel::getAdminInChannel( const string &name )const  {
+const Client *Channel::getAdminInChannel( const string &name ) const {
 	for ( size_t i = 0; i < admins.size(); i++ ) {
 		if ( admins[i].getNickName() == name )
 			return &admins[i];

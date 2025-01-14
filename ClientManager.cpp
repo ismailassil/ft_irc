@@ -56,7 +56,10 @@ bool ClientManager::registerClient( int fd, string& input ) {
 
 	if ( tokens.size() == 0 ) return false;
 	string cmd = tokens.at( 0 );
+	if ( !isCmd( cmd, USER ) && !isCmd( cmd, NICK ) && !isCmd( cmd, PASS ) )
+		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) ), false;
 	if ( isCmd( cmd, PASS ) ) {
+		cout << cli[fd].getAuthenticated() << endl;
 		if ( cli[fd].getAuthenticated() )
 			return ft_send( fd, ERR_ALREADYREGISTERED( string( "" ) ) ), false;
 		if ( tokens.size() == 1 )
@@ -85,7 +88,7 @@ bool ClientManager::registerClient( int fd, string& input ) {
 				return ft_send( fd, ERR_NICKNAMEINUSE( nk ) ), false;
 		}
 		if ( !cli[fd].getNickName().empty() )
-			ft_send( fd, ": " + cli[fd].getNickName() + " NICK " + nk );
+			ft_send( fd, ": " + cli[fd].getNickName() + " NICK " + nk + "\n" );
 		cli[fd].setNickname( nk );
 	}
 	if ( isCmd( cmd, USER ) ) {
@@ -102,11 +105,11 @@ bool ClientManager::registerClient( int fd, string& input ) {
 		cli[fd].setUsername( username );
 	}
 	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() ) {
-		cli[fd].setKey(id++);
+		cli[fd].setKey( id++ );
 		cli[fd].setRegistered( true );
 
 		std::stringstream ss;
-		ss << setw(3) << setfill('0') << cli[fd].getKey();
+		ss << setw( 3 ) << setfill( '0' ) << cli[fd].getKey();
 		ft_send( fd, RPL_CONNECTED( ss.str(), cli[fd].getNickName() ) );
 		return true;
 	}
@@ -130,9 +133,18 @@ void ClientManager::parse( int fd, string& input ) {
 		return;
 	}
 
+	size_t isExist = cli.find( fd ) != cli.end();
+	if ( !isExist ) {
+		cli[fd] = Client();
+	}
+
+	size_t nPos = input.find( "\n" );
+	if ( nPos != string::npos )
+		input.erase( nPos, 1 );
+
 	string buffer = cli[fd].getBuffer();
 
-	if ( cli[fd].getRegistered() )
+	if ( !cli[fd].getRegistered() )
 		if ( !registerClient( fd, buffer ) )
 			return;
 
@@ -151,12 +163,16 @@ void ClientManager::parse( int fd, string& input ) {
 	string cmd = tokens.at( 0 );
 	transform( input.begin(), input.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
 
+	bool found = false;
 	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
 		if ( isCmd( cmd, cmdList[i] ) ) {
+			found = true;
 			( this->*func[i] )( fd, input );
 			return;
 		}
 	}
+	if ( !found )
+		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) );
 
 	/*
 		- Remove CRNL and Check for \t\v
@@ -167,9 +183,6 @@ void ClientManager::parse( int fd, string& input ) {
 			return ft_send( fd, ERR_NOSUCHCHANNEL( string( "*" ) ) );
 		}
 	*/
-	size_t nPos = input.find( "\n" );
-	input.erase( nPos, 1 );
-	if ( input.empty() ) return;
 }
 
 void ClientManager::nickCmd( int fd, string& input ) {

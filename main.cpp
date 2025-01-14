@@ -81,7 +81,7 @@ int main() {
 		if ( ss.length() > 0 ) {
 			std::cout << "Received message: " << buffer << std::endl;
 			std::cout << "Received message: " << ss.length() << std::endl;
-			parser.registerClient( client_fd, ss );
+			parser.parse( client_fd, ss );
 		}
 	}
 

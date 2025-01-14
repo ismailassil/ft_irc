@@ -29,14 +29,14 @@ class Channel {
 		void setModeAtIndex( const size_t, const bool );
 
 		// Getters
-		const int	  getInviteOnly() const;
+		int			  getInviteOnly() const;
 		const string  getTopic() const;
-		const int	  getKey() const;
-		const int	  getLimit() const;
-		const int	  getNumberOfClients() const;
-		const bool	  getModeAtIndex( const size_t ) const;
-		const bool	  isClientInChannel( const string & ) const;
-		const bool	  isAdminInChannel( const string & ) const;
+		int			  getKey() const;
+		int			  getLimit() const;
+		int			  getNumberOfClients() const;
+		bool		  getModeAtIndex( const size_t ) const;
+		bool		  isClientInChannel( const string & ) const;
+		bool		  isAdminInChannel( const string & ) const;
 		const string  getPassword() const;
 		const string  getName() const;
 		const string  getModes() const;

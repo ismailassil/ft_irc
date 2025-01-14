@@ -19,8 +19,8 @@ class Client {
 		bool						   authenticated;
 		bool						   registered;
 		int							   key;
-		string						   nickname;
 		bool						   loggedIn;
+		string						   nickname;
 		string						   userName;
 		string						   buffer;
 		string						   ipAdd;
@@ -30,7 +30,7 @@ class Client {
 	public:
 		// Constructors and Destructor
 		Client();
-		Client( const string &nickname, const string &username, int fd );
+		Client( const string &nickname, const string &username, int key, int fd );
 		~Client();
 		Client( Client const &src );
 		Client &operator=( Client const &src );
@@ -57,4 +57,25 @@ class Client {
 		void setBuffer( const string &received );
 		void setRegistered( const bool value );
 		void setIpAdd( const string &ipadd );
+
+		void printAll () {
+			cout << "fd: " << fd << endl;
+			cout << "authenticated: " << authenticated
+				 << endl;
+			cout << "registered: " << registered << endl;
+			cout << "key: " << key << endl;
+			cout << "loggedIn: " << loggedIn << endl;
+			cout << "nickname: " << nickname << endl;
+			cout << "userName: " << userName << endl;
+			cout << "buffer: " << buffer << endl;
+			cout << "ipAdd: " << ipAdd << endl;
+			cout << "ChannelsInvite: ";
+			for ( size_t i = 0; i < ChannelsInvite.size(); i++ )
+				cout << ChannelsInvite[i] << " ";
+			cout << endl;
+			cout << "channels: ";
+			for ( size_t i = 0; i < channels.size(); i++ )
+				cout << channels[i].first << " ";
+			cout << endl;
+		}
 };

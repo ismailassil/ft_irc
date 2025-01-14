@@ -14,16 +14,22 @@
 
 Client::Client()
 	: fd( -1 ),
+	  authenticated( false ),
 	  registered( false ),
+	  key( -1 ),
 	  loggedIn( false ),
 	  nickname( "" ),
 	  userName( "" ),
 	  buffer( "" ),
-	  ipAdd( "" ) {}
+	  ipAdd( "" ) {
+		cout << "Client created" << endl;
+	  }
 
-Client::Client( const string &nickname, const string &username, int fd )
+Client::Client( const string &nickname, const string &username, int key, int fd )
 	: fd( fd ),
+	  authenticated( false ),
 	  registered( false ),
+	  key( key ),
 	  loggedIn( false ),
 	  nickname( nickname ),
 	  userName( username ),
