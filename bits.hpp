@@ -6,7 +6,7 @@
 /*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 20:29:12 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/13 20:29:13 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/14 10:37:58 by iassil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #include <string>	  // For std::string
 #include <utility>	  // IWYU pragma: keep
 #include <vector>	  // IWYU pragma: keep
+
+#include "Responses.hpp"
 
 #define PASS "pass"
 #define NICK "nick"
@@ -39,3 +41,5 @@ using std::string;
 using std::tolower;
 using std::transform;
 using std::vector;
+
+const vector< string > ft_split_tokens( const string& input );

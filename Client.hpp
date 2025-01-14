@@ -6,7 +6,7 @@
 /*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 20:29:16 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 09:25:56 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/14 10:19:27 by iassil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ class Client {
 		string						   nickname;
 		bool						   loggedIn;
 		string						   userName;
-		string						   realName;
 		string						   buffer;
 		string						   ipAdd;
 		vector< string >			   ChannelsInvite;
@@ -41,7 +40,6 @@ class Client {
 		const string getNickName();
 		const bool	 getLoggedIn();
 		const string getUserName();
-		const string getRealName();
 		const string getIpAdd();
 		const string getBuffer();
 
@@ -50,7 +48,6 @@ class Client {
 		void setNickname( const string &nickName );
 		void setLoggedIn( const bool value );
 		void setUsername( const string &username );
-		void setRealName( const string &realName );
 		void setBuffer( const string &received );
 		void setRegistered( const bool value );
 		void setIpAdd( const string &ipadd );

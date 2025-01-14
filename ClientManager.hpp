@@ -6,7 +6,7 @@
 /*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:43:17 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 09:23:46 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/14 10:37:18 by iassil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ class ClientManager {
 		bool			   isCmd( const string&, const char* );
 		static void		   ft_send( int, const string& );
 		bool			   isValid( const string& str );
+
+		void nickCmd( int, string& );
 
 	public:
 		void parse( string& );

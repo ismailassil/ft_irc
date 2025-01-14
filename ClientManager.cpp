@@ -13,10 +13,6 @@
 
 #include "ClientManager.hpp"
 
-#include <cstddef>
-
-#include "Responses.hpp"
-
 bool ClientManager::isCmd( const string& str, const char* cmd ) {
 	if ( str.length() != std::strlen( cmd ) ) return false;
 	string tmp = str;
@@ -32,7 +28,7 @@ void ClientManager::ft_send( int fd, const string& str ) {
 }
 
 bool ClientManager::rNewLine( string& input ) {
-	size_t pos = input.find( "\n" );
+	size_t pos = input.find( "\r\n" );
 	if ( pos == string::npos ) return true;
 	input.erase( 0, pos );
 	return false;
@@ -50,12 +46,8 @@ bool ClientManager::isValid( const string& str ) {
 }
 
 bool ClientManager::registerClient( int fd, string& input ) {
-	// if ( rNewLine( input ) ) return false;
-	istringstream	 stream( input );
-	vector< string > tokens;
-	string			 token;
+	const vector< string > tokens = ft_split_tokens( input );
 
-	while ( stream >> token ) tokens.push_back( token );
 	if ( tokens.size() == 0 ) return false;
 	string cmd = tokens.at( 0 );
 	if ( !isCmd( cmd, PASS ) && !isCmd( cmd, NICK ) && !isCmd( cmd, USER ) ) {
@@ -79,8 +71,7 @@ bool ClientManager::registerClient( int fd, string& input ) {
 			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
 		if ( tokens.size() > 2 ) {
 			string erro;
-			for ( vector< string >::iterator it = tokens.begin() + 1;
-				  it != tokens.end(); it++ )
+			for ( vector< string >::const_iterator it = tokens.begin() + 1; it != tokens.end(); it++ )
 				erro.append( *it + " " );
 			return ft_send( fd, ERR_ERRONEUSNICKNAME( erro ) ), false;
 		}
@@ -109,8 +100,7 @@ bool ClientManager::registerClient( int fd, string& input ) {
 		string username = tokens.at( 0 );
 		if ( username.length() > 10 )
 			username = tokens.at( 0 ).substr( 0, 10 );
-		string realname;
-		if ( semiColonPos != string::npos )
+		cli[fd].setUsername( username );
 	}
 	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() )
 		return true;
@@ -123,9 +113,33 @@ void ClientManager::setPass( const string& p ) {
 
 void ClientManager::parse( string& input ) {
 	if ( rNewLine( input ) ) return;
-	istringstream	 stream( input );
-	vector< string > tokens;
-	string			 token;
+}
 
-	while ( stream >> token ) tokens.push_back( token );
+void ClientManager::nickCmd( int fd, string& input ) {
+	const vector< string > tokens = ft_split_tokens( input );
+
+	if ( tokens.size() > 2 ) {
+		string erro;
+		for ( vector< string >::const_iterator it = tokens.begin() + 1; it != tokens.end(); it++ )
+			erro.append( *it + " " );
+		return ft_send( fd, ERR_ERRONEUSNICKNAME( erro ) );
+	}
+	if ( tokens.size() == 2 )
+		return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) );
+	string nick = tokens.at( 1 );
+	if ( !isValid( nick ) )
+		return ft_send( fd, ERR_ERRONEUSNICKNAME( nick ) );
+	for ( map< int, Client >::iterator it = cli.begin(); it != cli.end(); it++ ) {
+		if ( it->second.getNickName() == nick )
+			return ft_send( fd, ERR_NICKNAMEINUSE( nick ) );
+	}
+	cli[fd].setNickname( nick );
+}
+
+void ClientManager::quitCmd(int fd, string& input) {
+	const vector< string > tokens = ft_split_tokens( input );
+
+	string reason;
+	
+	ft_send(fd, )
 }
