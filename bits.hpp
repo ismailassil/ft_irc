@@ -12,18 +12,19 @@
 
 #pragma once
 #include <sys/socket.h>	 // IWYU pragma: keep
+#include <unistd.h>		 // IWYU pragma: keep
 
 #include <algorithm>  // IWYU pragma: keep
 #include <cctype>	  // IWYU pragma: keep
+#include <cstring>	  // IWYU pragma: keep
 #include <iostream>	  // IWYU pragma: keep
 #include <map>		  // IWYU pragma: keep
 #include <sstream>	  // IWYU pragma: keep
-#include <string>	  // For std::string
+#include <string>	  // IWYU pragma: keep
 #include <utility>	  // IWYU pragma: keep
 #include <vector>	  // IWYU pragma: keep
 
 #include "Responses.hpp"
-#include <cstring>
 
 #define PASS "pass"
 #define NICK "nick"
@@ -42,5 +43,13 @@ using std::string;
 using std::tolower;
 using std::transform;
 using std::vector;
+
+#define RED		"\x1b[31m"
+#define GREEN	"\x1b[1;32m"
+#define YELLOW	"\x1b[1;33m"
+#define BLUE	"\x1b[1;34m"
+#define MAGENTA "\x1b[1;35m"
+#define CYAN	"\x1b[1;36m"
+#define RESET	"\x1b[0m"
 
 const vector< string > ft_split_tokens( const string& input );

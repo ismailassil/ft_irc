@@ -11,12 +11,15 @@
 /* ************************************************************************** */
 
 #pragma once
+#include "Channel.hpp"
 #include "Client.hpp"
 #include "bits.hpp"
 
 class ClientManager {
 	private:
+		vector<int>		   fds;
 		map< int, Client > cli;
+		vector< Channel >  channels;
 		string			   pass;
 		bool			   rNewLine( string& );
 		bool			   isCmd( const string&, const char* );
