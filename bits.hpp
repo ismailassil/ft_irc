@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 20:29:12 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 14:18:27 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/14 18:31:53 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <string>	  // IWYU pragma: keep
 #include <utility>	  // IWYU pragma: keep
 #include <vector>	  // IWYU pragma: keep
+#include <iomanip>
 
 #include "Responses.hpp"
 
@@ -53,6 +54,8 @@ using std::vector;
 #define MAGENTA "\x1b[1;35m"
 #define CYAN	"\x1b[1;36m"
 #define RESET	"\x1b[0m"
+#define BOLD "\033[1m"
+#define WHITE "\033[37m"
 
 const vector< string > splitString( const string& str, char delim );
 const vector< string > ft_split_tokens( const string& input );

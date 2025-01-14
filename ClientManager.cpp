@@ -47,17 +47,19 @@ bool ClientManager::isValid( const string& str ) {
 	return true;
 }
 
+
 bool ClientManager::registerClient( int fd, string& input ) {
+	static int id = 1;
 	if ( cli[fd].getRegistered() )
 		return true;
 	const vector< string > tokens = ft_split_tokens( input );
 
 	if ( tokens.size() == 0 ) return false;
 	string cmd = tokens.at( 0 );
-	if ( !isCmd( cmd, PASS ) && !isCmd( cmd, NICK ) && !isCmd( cmd, USER ) && !isCmd( cmd, JOIN ) ) {
-		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd.c_str() ) ), false;
-	}
+	if ( !isCmd( cmd, USER ) && !isCmd( cmd, NICK ) && !isCmd( cmd, PASS ) )
+		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) ), false;
 	if ( isCmd( cmd, PASS ) ) {
+		cout << cli[fd].getAuthenticated() << endl;
 		if ( cli[fd].getAuthenticated() )
 			return ft_send( fd, ERR_ALREADYREGISTERED( string( "" ) ) ), false;
 		if ( tokens.size() == 1 )
@@ -86,7 +88,7 @@ bool ClientManager::registerClient( int fd, string& input ) {
 				return ft_send( fd, ERR_NICKNAMEINUSE( nk ) ), false;
 		}
 		if ( !cli[fd].getNickName().empty() )
-			ft_send( fd, ": " + cli[fd].getNickName() + " NICK " + nk );
+			ft_send( fd, ": " + cli[fd].getNickName() + " NICK " + nk + "\n" );
 		cli[fd].setNickname( nk );
 	}
 	if ( isCmd( cmd, USER ) ) {
@@ -96,9 +98,6 @@ bool ClientManager::registerClient( int fd, string& input ) {
 			return ft_send( fd, ERR_ALREADYREGISTERED( string( "*" ) ) ), false;
 		if ( tokens.size() < 5 )
 			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
-		// size_t semiColonPos = input.find( ":" );
-		// if ( semiColonPos == string::npos && tokens.size() != 4 )
-		// 	return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) ), false;
 
 		string username = tokens.at( 0 );
 		if ( username.length() > 10 )
@@ -106,8 +105,12 @@ bool ClientManager::registerClient( int fd, string& input ) {
 		cli[fd].setUsername( username );
 	}
 	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() ) {
-		ft_send( fd, RPL_CONNECTED( cli[fd].getNickName() ) );
+		cli[fd].setKey( id++ );
 		cli[fd].setRegistered( true );
+
+		std::stringstream ss;
+		ss << std::setw( 3 ) << std::setfill( '0' ) << cli[fd].getKey();
+		ft_send( fd, RPL_CONNECTED( ss.str(), cli[fd].getNickName() ) );
 		return true;
 	}
 	return false;
@@ -124,8 +127,14 @@ void ClientManager::setPass( const string& p ) {
 }
 
 void ClientManager::parse( int fd, string& input ) {
+
+	size_t isExist = cli.find( fd ) != cli.end();
+    if ( !isExist ) {
+        cli[fd] = Client();
+    }
 	size_t pos = input.find( "\n" );
-	input.erase( pos, 1 );
+	if ( pos != string::npos )
+		input.erase( pos, 1 );
 	if ( input.empty() ) return;
 
 	if (!registerClient( fd, input ))
@@ -136,23 +145,29 @@ void ClientManager::parse( int fd, string& input ) {
 	if ( tokens.size() == 0 ) return ;
 	string cmd = tokens.at( 0 );
 	cout << "Command: " << cmd << std::endl;
-	if ( cmd == "JOIN" )
+	if ( cmd == "join" )
 		joinCmd(fd, input);
-	cout << "============================================================" << std::endl;
-	cout << "Clients: " << std::endl;
-	for ( map< int, Client >::iterator it = cli.begin(); it != cli.end(); it++ ) {
-		cout << "Client <" << it->first << "> Nickname: " << it->second.getNickName() << std::endl;
-	}
-	cout << "Channels: " << std::endl;
-	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
-		cout << "Name: " << it->getName() << std::endl;
-		cout << "Members: " << std::endl;
-		for ( vector< Client >::iterator it2 = it->getClientChannelList().begin(); it2 != it->getClientChannelList().end(); it2++ ) {
-			cout << "Client <" << it2->getNickName() << ">" << std::endl;
+	cout << BOLD << CYAN << "============================================================" << RESET << endl;
+    cout << BOLD << GREEN << "Clients: " << RESET << endl;
+    for (map<int, Client>::const_iterator it = cli.begin(); it != cli.end(); it++) {
+        cout << YELLOW << "\tClient <" << it->first << "> " << RESET;
+        cout << MAGENTA << "\tNickname: " << it->second.getNickName() << RESET << endl;
+    }
+    cout << BOLD << GREEN << "Channels: " << RESET << endl;
+    for (vector<Channel>::const_iterator it = channels.begin(); it != channels.end(); it++) {
+        cout << BLUE << "\tName: " << it->getName() << RESET << endl;
+		if (!it->getPassword().empty())
+			cout << YELLOW << "\tPassword: " << it->getPassword() << RESET << endl;
+        cout << WHITE << "\tMembers: " << RESET;
+        cout << it->getClientChannelList() << endl;
+        cout << WHITE << "\tAdmins: " << RESET;
+		for (size_t i = 0; i < it->getNumberOfClients(); i++) {
+			if (it->getAdmin(it->getClient(i)->getFd()))
+				cout << it->getClient(i)->getNickName() << " ";
 		}
-	}
-	cout << "Current Client: " << fd << std::endl;
-	cout << "============================================================" << std::endl;
+    }
+    cout << BOLD << RED << "Current Client: " << fd << RESET << endl;
+    cout << BOLD << CYAN << "============================================================" << RESET << endl;
 	// if ( rNewLine( input ) ) return;
 }
 
@@ -189,7 +204,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
 		if ( it->getClient( fd ) ) {
-			it->remove_client( fd );
+			it->removeClient( fd );
 			if ( it->getNumberOfClients() == 0 ) {
 				channels.erase( it );
 			} else {
@@ -197,7 +212,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 				it->broadcast( reply, fd );
 			}
 		} else if ( it->getAdmin( fd ) ) {
-			it->remove_admin( fd );
+			it->removeAdmin( fd );
 			if ( it->getNumberOfClients() == 0 ) {
 				channels.erase( it );
 			} else {

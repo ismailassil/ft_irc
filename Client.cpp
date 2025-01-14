@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 09:10:53 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 15:05:03 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/14 18:28:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 Client::Client()
 	: fd( -1 ),
-	 authenticated( false ),
+	  authenticated( false ),
 	  registered( false ),
 	  loggedIn( false ),
 	  nickname( "" ),
 	  userName( "" ),
 	  buffer( "" ),
-	  ipAdd( "" ) {}
+	  ipAdd( "" ) {
+	cout << "Client created" << endl;
+	  }
 
 Client::Client( const string &nickname, const string &username, int fd )
 	: fd( fd ),
@@ -53,44 +55,48 @@ Client &Client::operator=( Client const &src ) {
 	return *this;
 }
 
-int Client::getFd() {
+int Client::getFd() const {
 	return fd;
 }
 
-bool Client::getRegistered() {
+bool Client::getAuthenticated() const {
+	return authenticated;
+}
+
+bool Client::getRegistered() const {
 	return registered;
 }
 
-bool Client::getInviteChannel( string &ChName ) {
+int Client::getKey() const {
+	return key;
+}
+
+bool Client::getInviteChannel( string &ChName ) const {
 	return find( ChannelsInvite.begin(), ChannelsInvite.end(), ChName ) !=
 		   ChannelsInvite.end();
 }
 
-const string Client::getNickName() {
+const string Client::getNickName() const {
 	return nickname;
 }
 
-bool Client::getLoggedIn() {
+bool Client::getLoggedIn() const {
 	return loggedIn;
 }
 
-const string Client::getUserName() {
+const string Client::getUserName() const {
 	return userName;
 }
 
-const string Client::getIpAdd() {
+const string Client::getIpAdd() const {
 	return ipAdd;
 }
 
-const string Client::getBuffer() {
+const string Client::getBuffer() const {
 	return buffer;
 }
 
-bool Client::getAuthenticated() {
-	return authenticated;
-}
-
-void Client::setFd( int fd ) {
+void Client::setFd( const int fd ) {
 	this->fd = fd;
 }
 
@@ -98,8 +104,16 @@ void Client::setAuthenticated( const bool value ) {
 	this->authenticated = value;
 }
 
+void Client::setRegistered( const bool value ) {
+	this->registered = value;
+}
+
 void Client::setNickname( const string &nickName ) {
 	this->nickname = nickName;
+}
+
+void Client::setKey( const int key ) {
+	this->key = key;
 }
 
 void Client::setLoggedIn( const bool value ) {
@@ -112,10 +126,6 @@ void Client::setUsername( const string &userName ) {
 
 void Client::setBuffer( const string &received ) {
 	this->buffer = received;
-}
-
-void Client::setRegistered( const bool value ) {
-	this->registered = value;
 }
 
 void Client::setIpAdd( const string &ipAdd ) {

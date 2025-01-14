@@ -29,28 +29,30 @@ class Channel {
 		void setModeAtIndex( const size_t, const bool );
 
 		// Getters
-		const int	  getInviteOnly();
-		const string  getTopic();
-		const int	  getKey();
-		const int	  getLimit();
-		const int	  getNumberOfClients();
-		const bool	  getModeAtIndex( const size_t );
-		const bool	  isClientInChannel( const string & );
-		const string  getPassword();
-		const string  getName();
-		const string  getModes();
-		const string  getClientChannelList();
-		const Client *getClient( const int );
-		const Client *getAdmin( const int );
-		const Client *getClientInChannel( const string & );
+		const int	  getInviteOnly() const;
+		const string  getTopic() const;
+		const int	  getKey() const;
+		const int	  getLimit() const;
+		const int	  getNumberOfClients() const;
+		const bool	  getModeAtIndex( const size_t ) const;
+		const bool	  isClientInChannel( const string & ) const;
+		const bool	  isAdminInChannel( const string & ) const;
+		const string  getPassword() const;
+		const string  getName() const;
+		const string  getModes() const;
+		const string  getClientChannelList() const;
+		const Client *getClient( const int ) const;
+		const Client *getAdmin( const int ) const;
+		const Client *getClientInChannel( const string & ) const;
+		const Client *getAdminInChannel( const string & ) const;
 
 		// Methods
-		void add_client( const Client );
-		void add_admin( const Client );
-		void remove_client( const int );
-		void remove_admin( const int );
-		bool change_clientToAdmin( const string & );
-		bool change_adminToClient( const string & );
+		void addAdmin( const Client );
+		void removeAdmin( const int );
+		void addClient( const Client );
+		void removeClient( const int );
+		bool changeClientToAdmin( const string & );
+		bool changeAdminToClient( const string & );
 
 		// Send to All
 		void broadcast( const string &, int );
