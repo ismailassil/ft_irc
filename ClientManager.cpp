@@ -136,10 +136,15 @@ void ClientManager::nickCmd( int fd, string& input ) {
 	cli[fd].setNickname( nick );
 }
 
-void ClientManager::quitCmd(int fd, string& input) {
+void ClientManager::quitCmd( int fd, string& input ) {
 	const vector< string > tokens = ft_split_tokens( input );
 
-	string reason;
-	
-	ft_send(fd, )
+	string reason = input;
+	size_t pos	  = reason.find( tokens.at( 0 ) );
+	if ( pos != string::npos ) {
+		reason.erase( pos, tokens.at( 0 ).length() );
+	}
+
+	// Remove the Client from the Server and the Channels
+	ft_send( fd, "Quit: " + reason);
 }

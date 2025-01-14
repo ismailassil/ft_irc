@@ -23,6 +23,7 @@
 #include <vector>	  // IWYU pragma: keep
 
 #include "Responses.hpp"
+#include <cstring>
 
 #define PASS "pass"
 #define NICK "nick"

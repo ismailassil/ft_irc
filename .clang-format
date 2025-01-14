@@ -1,0 +1,25 @@
+---
+BasedOnStyle: Google
+AlignAfterOpenBracket: Align
+AlignConsecutiveMacros: 'true'
+AlignConsecutiveAssignments: 'true'
+AlignConsecutiveDeclarations: 'true'
+AlignTrailingComments: 'true'
+AllowAllConstructorInitializersOnNextLine: 'true'
+BreakConstructorInitializers: BeforeColon
+IndentPPDirectives: AfterHash
+ColumnLimit: 0
+BreakBeforeBraces: Attach
+IndentWidth: '4'
+IndentAccessModifiers: 'true'
+PenaltyReturnTypeOnItsOwnLine: 0
+PointerAlignment: Right
+ReflowComments: 'true'
+SpaceBeforeCtorInitializerColon: 'true'
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: 'true'
+SpacesInAngles: 'true'
+SpacesInParentheses: 'true'
+TabWidth: '4'
+UseTab: Always
+...

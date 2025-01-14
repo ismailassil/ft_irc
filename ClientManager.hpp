@@ -24,6 +24,7 @@ class ClientManager {
 		bool			   isValid( const string& str );
 
 		void nickCmd( int, string& );
+		void quitCmd( int, string& );
 
 	public:
 		void parse( string& );
