@@ -192,7 +192,7 @@ bool Channel::change_adminToClient( const string &nick ) {
 // 	(void)reply;
 // }
 
-// void Channel::sendBroadcast( const string& reply, const int fd ) {
-// 	(void)reply;
-// 	(void)fd;
-// }
+void Channel::broadcast( const string& reply, const int fd ) {
+	(void)reply;
+	(void)fd;
+}

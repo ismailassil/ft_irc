@@ -153,7 +153,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 				channels.erase( it );
 			} else {
 				string reply = ":" + cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd() + " QUIT :" + reason;
-				it->sendBroadcast( reply );
+				it->broadcast( reply, fd );
 			}
 		} else if ( it->getAdmin( fd ) ) {
 			it->remove_admin( fd );
@@ -161,7 +161,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 				channels.erase( it );
 			} else {
 				string reply = ":" + cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd() + " QUIT :" + reason;
-				it->sendBroadcast( reply );
+				it->broadcast( reply, fd );
 			}
 		}
 	}

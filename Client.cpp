@@ -51,15 +51,15 @@ Client &Client::operator=( Client const &src ) {
 	return *this;
 }
 
-const int Client::getFd() {
+int Client::getFd() {
 	return fd;
 }
 
-const bool Client::getRegistered() {
+bool Client::getRegistered() {
 	return registered;
 }
 
-const bool Client::getInviteChannel( string &ChName ) {
+bool Client::getInviteChannel( string &ChName ) {
 	return find( ChannelsInvite.begin(), ChannelsInvite.end(), ChName ) !=
 		   ChannelsInvite.end();
 }
@@ -68,16 +68,12 @@ const string Client::getNickName() {
 	return nickname;
 }
 
-const bool Client::getLoggedIn() {
+bool Client::getLoggedIn() {
 	return loggedIn;
 }
 
 const string Client::getUserName() {
 	return userName;
-}
-
-const string Client::getRealName() {
-	return realName;
 }
 
 const string Client::getIpAdd() {
@@ -102,10 +98,6 @@ void Client::setLoggedIn( const bool value ) {
 
 void Client::setUsername( const string &userName ) {
 	this->userName = userName;
-}
-
-void Client::setRealName( const string &realName ) {
-	this->realName = realName;
 }
 
 void Client::setBuffer( const string &received ) {

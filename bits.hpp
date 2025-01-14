@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #pragma once
+#include <stdio.h>		 // IWYU pragma: keep
 #include <sys/socket.h>	 // IWYU pragma: keep
 #include <unistd.h>		 // IWYU pragma: keep
 
@@ -52,4 +53,5 @@ using std::vector;
 #define CYAN	"\x1b[1;36m"
 #define RESET	"\x1b[0m"
 
+const vector< string > splitString( const string& str, char delim );
 const vector< string > ft_split_tokens( const string& input );

@@ -34,11 +34,11 @@ class Client {
 		Client &operator=( Client const &src );
 
 		// Getters
-		const int	 getFd();
-		const bool	 getRegistered();
-		const bool	 getInviteChannel( string &ChName );
+		int			 getFd();
+		bool		 getRegistered();
+		bool		 getInviteChannel( string &ChName );
 		const string getNickName();
-		const bool	 getLoggedIn();
+		bool		 getLoggedIn();
 		const string getUserName();
 		const string getIpAdd();
 		const string getBuffer();
