@@ -1,13 +1,6 @@
 #include "Channel.hpp"
 
-Channel::Channel() {
-	invite_only = 0;
-	topic		= "";
-	key			= 0;
-	limit		= 0;
-	name		= "";
-	password	= "";
-}
+Channel::Channel() : invite_only( 0 ), topic( "" ), key( 0 ), limit( 0 ), name( "" ), password( "" ) {}
 
 Channel::~Channel() {
 }
@@ -17,15 +10,17 @@ Channel::Channel( Channel const &src ) {
 }
 
 Channel &Channel::operator=( Channel const &src ) {
-	invite_only = src.invite_only;
-	topic		= src.topic;
-	key			= src.key;
-	limit		= src.limit;
-	name		= src.name;
-	password	= src.password;
-	clients		= src.clients;
-	admins		= src.admins;
-	modes		= src.modes;
+	if ( this != &src ) {
+		invite_only = src.invite_only;
+		topic		= src.topic;
+		key			= src.key;
+		limit		= src.limit;
+		name		= src.name;
+		password	= src.password;
+		clients		= src.clients;
+		admins		= src.admins;
+		modes		= src.modes;
+	}
 	return *this;
 }
 
