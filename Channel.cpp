@@ -58,6 +58,10 @@ void Channel::setName( const string &name ) {
 	this->name = name;
 }
 
+void Channel::setModeAtIndex( const size_t index, const bool mode ) {
+	modes[index].second = mode;
+}
+
 const int Channel::getInviteOnly() const {
 	return invite_only;
 }
@@ -82,6 +86,10 @@ const int Channel::getNumberOfClients() const {
 	return clients.size();
 }
 
+const bool Channel::getModeAtIndex( const size_t index ) const {
+	return modes[index].second;
+}
+
 const bool Channel::isClientInChannel( const string &nick ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getNickName() == nick )
@@ -104,6 +112,15 @@ const string Channel::getPassword() const {
 
 const string Channel::getName() const {
 	return name;
+}
+
+const string Channel::getModes() const {
+	string modes_str = "";
+	for ( size_t i = 0; i < modes.size(); i++ ) {
+		if ( modes[i].second )
+			modes_str += modes[i].first;
+	}
+	return modes_str;
 }
 
 const string Channel::getClientChannelList() const {
