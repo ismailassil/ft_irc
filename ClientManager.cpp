@@ -1,16 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ClientManager.cpp                                        :+:      :+: :+:
- */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 16:43:15 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/13 20:15:57 by iassil           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "ClientManager.hpp"
 
 bool ClientManager::isCmd( const string& str, const char* cmd ) {
@@ -34,7 +21,6 @@ bool ClientManager::isValid( const string& str ) {
 }
 
 void ClientManager::registerClient( int fd, string& input ) {
-	static int			   id	  = 1;
 	const vector< string > tokens = ft_split_tokens( input );
 
 	if ( tokens.size() == 0 ) return;
@@ -89,63 +75,10 @@ void ClientManager::registerClient( int fd, string& input ) {
 		cli[fd].setUsername( username );
 	}
 	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() ) {
-		cli[fd].setKey( id++ );
 		cli[fd].setRegistered( true );
-
-		std::stringstream ss;
-		ss << setw( 3 ) << setfill( '0' ) << cli[fd].getKey();
-		ft_send( fd, RPL_CONNECTED( ss.str(), cli[fd].getNickName() ) );
+		ft_send( fd, RPL_CONNECTED( cli[fd].getNickName() ) );
 	}
 }
-
-void ClientManager::setPass( const string& p ) {
-	pass = p;
-}
-
-// void ClientManager::parse( int fd, string& input ) {
-// 	size_t pos = input.find( "\n" );
-// 	if ( pos != string::npos )
-// 		input.erase( pos, 1 );
-// 	if ( input.empty() ) return;
-
-// 	if ( cli.find( fd ) == cli.end() ) {
-// 		cli[fd] = Client();
-// 	}
-
-// 	if ( !cli[fd].getRegistered() )
-// 		if ( !registerClient( fd, input ) )
-// 			return;
-// 	// check if join cmd
-// 	const vector< string > tokens = ft_split_tokens( input );
-
-// 	if ( tokens.size() == 0 ) return;
-// 	string cmd = tokens.at( 0 );
-// 	cout << "Command: " << cmd << std::endl;
-// 	if ( cmd == "join" )
-// 		joinCmd( fd, input );
-// 	cout << CYAN << "============================================================" << RESET << endl;
-// 	cout << GREEN << "Clients: " << RESET << endl;
-// 	for ( map< int, Client >::const_iterator it = cli.begin(); it != cli.end(); it++ ) {
-// 		cout << YELLOW << "\tClient <" << it->first << "> " << RESET;
-// 		cout << MAGENTA << "\tNickname: " << it->second.getNickName() << RESET << endl;
-// 	}
-// 	cout << GREEN << "Channels: " << RESET << endl;
-// 	for ( vector< Channel >::const_iterator it = channels.begin(); it != channels.end(); it++ ) {
-// 		cout << BLUE << "\tName: " << it->getName() << RESET << endl;
-// 		if ( !it->getPassword().empty() )
-// 			cout << YELLOW << "\tPassword: " << it->getPassword() << RESET << endl;
-// 		cout << "\tMembers: " << RESET;
-// 		cout << it->getClientChannelList() << endl;
-// 		cout << "\tAdmins: " << RESET;
-// 		for ( int i = 0; i < it->getNumberOfClients(); i++ ) {
-// 			if ( it->getAdmin( it->getClient( i )->getFd() ) )
-// 				cout << it->getClient( i )->getNickName() << " ";
-// 		}
-// 	}
-// 	cout << RED << "Current Client: " << fd << RESET << endl;
-// 	cout << CYAN << "============================================================" << RESET << endl;
-// 	// if ( rNewLine( input ) ) return;
-// }
 
 bool ClientManager::rNewLine( string& input ) {
 	if ( input.empty() ) return true;
@@ -184,7 +117,7 @@ void ClientManager::parse( int fd, string& input ) {
 	
 	//////////////////////////////////////////////////////////////////////
 	/////////////////////////// Search for cmd ///////////////////////////
-	const char* cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK };
+	const char* cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK, PART, TOPIC, MODE, PRIVMSG };
 	const vector< string > tokens = ft_split_tokens( input );
 	if ( tokens.size() == 0 ) return;
 
@@ -227,4 +160,33 @@ void ClientManager::parse( int fd, string& input ) {
 			return;
 		}
 	}
+}
+
+void ClientManager::setPass( const string& p ) {
+	pass = p;
+}
+
+const string ClientManager::getPass() const {
+	return pass;
+}
+
+const Client* ClientManager::getClient( const string& nick ) {
+	for ( map< int, Client >::iterator it = cli.begin(); it != cli.end(); it++ ) {
+		if ( it->second.getNickName() == nick )
+			return &it->second;
+	}
+	return NULL;
+}
+ 
+const Channel* ClientManager::getChannel(const string& name) {
+    for (vector<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
+        Channel& channel = *it;
+        if (channel.getName() == name)
+            return &channel;
+    }
+    return NULL;
+}
+
+const string ClientManager::getPrefix(int fd) {
+	return cli[fd].getNickName() + "!" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd();
 }

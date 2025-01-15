@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   bits.hpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 20:29:12 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/15 13:14:42 by codespace        ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 #include <stdio.h>		 // IWYU pragma: keep
 #include <sys/socket.h>	 // IWYU pragma: keep
@@ -37,6 +25,10 @@
 #define QUIT "quit"
 #define JOIN "join"
 #define KICK "kick"
+#define PART "part"
+#define TOPIC "topic"
+#define MODE "mode"
+#define PRIVMSG "privmsg"
 
 using std::cerr;
 using std::cout;

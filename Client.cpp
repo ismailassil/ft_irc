@@ -1,22 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 09:10:53 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 09:25:53 by iassil           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Client.hpp"
 
 Client::Client()
 	: fd( -1 ),
 	  authenticated( false ),
 	  registered( false ),
-	  key( -1 ),
 	  loggedIn( false ),
 	  nickname( "" ),
 	  userName( "" ),
@@ -25,11 +12,10 @@ Client::Client()
 	  ChannelsInvite( 0 ),
 	  channels( 0 ) {}
 
-Client::Client( const string &nickname, const string &username, int key, int fd )
+Client::Client( const string &nickname, const string &username, int fd )
 	: fd( fd ),
 	  authenticated( false ),
 	  registered( false ),
-	  key( key ),
 	  loggedIn( false ),
 	  nickname( nickname ),
 	  userName( username ),
@@ -49,7 +35,6 @@ Client &Client::operator=( Client const &src ) {
 		fd			   = src.fd;
 		authenticated  = src.authenticated;
 		registered	   = src.registered;
-		key			   = src.key;
 		loggedIn	   = src.loggedIn;
 		nickname	   = src.nickname;
 		userName	   = src.userName;
@@ -72,10 +57,6 @@ bool Client::getAuthenticated() const {
 
 bool Client::getRegistered() const {
 	return registered;
-}
-
-int Client::getKey() const {
-	return key;
 }
 
 bool Client::getInviteChannel( string &ChName ) const {
@@ -117,10 +98,6 @@ void Client::setRegistered( const bool value ) {
 
 void Client::setNickname( const string &nickName ) {
 	this->nickname = nickName;
-}
-
-void Client::setKey( const int key ) {
-	this->key = key;
 }
 
 void Client::setLoggedIn( const bool value ) {

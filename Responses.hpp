@@ -2,7 +2,7 @@
 
 #define CRLF "\r\n"
 
-#define RPL_CONNECTED( id, nickname )						( ": " + id + " " + nickname + " : Welcome to the IRC server!" + CRLF )
+#define RPL_CONNECTED( nickname )						( ": " + nickname + " : Welcome to the IRC server!" + CRLF )
 #define RPL_UMODEIS( hostname, chName, mode, user )			":" + hostname + " MODE " + chName + " " + mode + " " + user + CRLF
 #define RPL_CREATIONTIME( nickname, chName, creationtime )	": 329 " + nickname + " #" + chName + " " + creationtime + CRLF
 #define RPL_CHANNELMODES( nickname, chName, modes )			": 324 " + nickname + " #" + chName + " " + modes + CRLF
@@ -39,3 +39,4 @@
 #define ERR_NOTONCHANNEL( nickname, chName )		   ( ": 442 " + nickname + " #" + chName + " :You're not on that channel" + CRLF )
 #define ERR_USERNOTINCHANNEL( nickname, nick, chName ) ( ": 441 " + nickname + " " + nick + " #" + chName + " :You're not on that channel" + CRLF )
 #define ERR_CHANOPRIVSNEEDED( nickname, chName )	   ( ": 482 " + nickname + " #" + chName + " :You're not a channel operator" + CRLF )
+#define ERR_NORECIPIENT( nickname, command )		   ( ": 411 " + nickname + " " + command + " :No recipient given" + CRLF )

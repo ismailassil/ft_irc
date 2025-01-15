@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 20:29:16 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/15 12:16:00 by codespace        ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 #include "bits.hpp"
 
@@ -18,7 +6,6 @@ class Client {
 		int							   fd;
 		bool						   authenticated;
 		bool						   registered;
-		int							   key;
 		bool						   loggedIn;
 		string						   nickname;
 		string						   userName;
@@ -30,7 +17,7 @@ class Client {
 	public:
 		// Constructors and Destructor
 		Client();
-		Client( const string &nickname, const string &username, int key, int fd );
+		Client( const string &nickname, const string &username, int fd );
 		~Client();
 		Client( Client const &src );
 		Client &operator=( Client const &src );
@@ -39,7 +26,6 @@ class Client {
 		int			 getFd() const;
 		bool		 getAuthenticated() const;
 		bool		 getRegistered() const;
-		int			 getKey() const;
 		bool		 getInviteChannel( string &ChName ) const;
 		const string getNickName() const;
 		bool		 getLoggedIn() const;
@@ -51,7 +37,6 @@ class Client {
 		void setFd( const int fd );
 		void setAuthenticated( const bool value );
 		void setNickname( const string &nickName );
-		void setKey( const int key );
 		void setLoggedIn( const bool value );
 		void setUsername( const string &username );
 		void setBuffer( const string &received );
@@ -63,7 +48,6 @@ class Client {
 			cout << "authenticated: " << authenticated
 				 << endl;
 			cout << "registered: " << registered << endl;
-			cout << "key: " << key << endl;
 			cout << "loggedIn: " << loggedIn << endl;
 			cout << "nickname: " << nickname << endl;
 			cout << "userName: " << userName << endl;

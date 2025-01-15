@@ -28,6 +28,10 @@ class Channel {
 		void setName( const string & );
 		void setModeAtIndex( const size_t, const bool );
 
+		bool		  	isClientInChannel( const string & ) const;
+		bool		  	isAdminInChannel( const string & ) const;
+		bool 			isInChannel( const string & ) const;
+
 		// Getters
 		int			  getInviteOnly() const;
 		const string  getTopic() const;
@@ -35,8 +39,6 @@ class Channel {
 		int			  getLimit() const;
 		int			  getNumberOfClients() const;
 		bool		  getModeAtIndex( const size_t ) const;
-		bool		  isClientInChannel( const string & ) const;
-		bool		  isAdminInChannel( const string & ) const;
 		const string  getPassword() const;
 		const string  getName() const;
 		const string  getModes() const;
@@ -55,5 +57,5 @@ class Channel {
 		bool changeAdminToClient( const string & );
 
 		// Send to All
-		void broadcast( const string &, int );
+		void broadcast( const string &, int ) const ;
 };

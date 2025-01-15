@@ -24,6 +24,18 @@ Channel &Channel::operator=( Channel const &src ) {
 	return *this;
 }
 
+bool Channel::isInChannel( const string &nick ) const {
+	for ( size_t i = 0; i < clients.size(); i++ ) {
+		if ( clients[i].getNickName() == nick )
+			return true;
+	}
+	for ( size_t i = 0; i < admins.size(); i++ ) {
+		if ( admins[i].getNickName() == nick )
+			return true;
+	}
+	return false;
+}
+
 void Channel::setInviteOnly( const int invite_only ) {
 	this->invite_only = invite_only;
 }
@@ -203,7 +215,7 @@ bool Channel::changeAdminToClient( const string &nick ) {
 // 	(void)reply;
 // }
 
-void Channel::broadcast( const string &reply, const int fd ) {
+void Channel::broadcast( const string &reply, const int fd ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getFd() != fd )
 			ft_send( clients[i].getFd(), reply );
