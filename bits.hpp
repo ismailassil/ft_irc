@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bits.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 20:29:12 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 10:37:58 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/15 12:03:09 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,3 +64,4 @@ using std::setfill;
 
 const vector< string > splitString( const string& str, char delim );
 const vector< string > ft_split_tokens( const string& input );
+int stringToInt(const std::string& str);

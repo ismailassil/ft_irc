@@ -3,6 +3,7 @@
 Channel::Channel() {
 	invite_only = 0;
 	topic		= "";
+	topicRestrict = 0;
 	key			= 0;
 	limit		= 0;
 	name		= "";
@@ -19,13 +20,13 @@ Channel::Channel( Channel const &src ) {
 Channel &Channel::operator=( Channel const &src ) {
 	invite_only = src.invite_only;
 	topic		= src.topic;
+	topicRestrict = src.topicRestrict;
 	key			= src.key;
 	limit		= src.limit;
 	name		= src.name;
 	password	= src.password;
 	clients		= src.clients;
 	admins		= src.admins;
-	modes		= src.modes;
 	return *this;
 }
 
@@ -35,6 +36,10 @@ void Channel::setInviteOnly( const int invite_only ) {
 
 void Channel::setTopic( const string topic ) {
 	this->topic = topic;
+}
+
+void Channel::setTopicRestrict( const int topicRestrict ) {
+	this->topicRestrict = topicRestrict;
 }
 
 void Channel::setKey( const int key ) {
@@ -53,16 +58,16 @@ void Channel::setName( const string &name ) {
 	this->name = name;
 }
 
-void Channel::setModeAtIndex( const size_t index, const bool mode ) {
-	modes[index].second = mode;
-}
-
 const int Channel::getInviteOnly() const {
 	return invite_only;
 }
 
 const string Channel::getTopic() const {
 	return topic;
+}
+
+const int Channel::getTopicRestrict() const {
+	return topicRestrict;
 }
 
 const int Channel::getKey() const {
@@ -75,10 +80,6 @@ const int Channel::getLimit() const {
 
 const int Channel::getNumberOfClients() const {
 	return clients.size();
-}
-
-const bool Channel::getModeAtIndex( const size_t index ) const {
-	return modes[index].second;
 }
 
 const bool Channel::isClientInChannel( const string &nick ) const {
@@ -103,15 +104,6 @@ const string Channel::getPassword() const {
 
 const string Channel::getName() const {
 	return name;
-}
-
-const string Channel::getModes() const {
-	string modes_str = "";
-	for ( size_t i = 0; i < modes.size(); i++ ) {
-		if ( modes[i].second )
-			modes_str += modes[i].first;
-	}
-	return modes_str;
 }
 
 const string Channel::getClientChannelList() const {

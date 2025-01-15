@@ -264,3 +264,12 @@ void ClientManager::quitCmd( int fd, string& input ) {
 	close( fd );									  // Close the connection
 	cout << RED << "Client <" << fd << "> Disconnected" << RESET << endl;
 }
+
+Channel* ClientManager::findChannelByName(const vector<Channel>& channels, const string& name) {
+    for (size_t i = 0; i < channels.size(); ++i) {
+        if (channels[i].getName() == name) {
+            return (Channel*)&channels[i];
+        }
+    }
+    return NULL;
+}

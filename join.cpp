@@ -7,15 +7,6 @@ bool isValidChannelName(const string& channel) {
     return !channel.empty() && (channel[0] == '#' || channel[0] == '&') && channel != "#" && channel != "&";
 }
 
-Channel* findChannelByName(const vector<Channel>& channels, const string& name) {
-    for (size_t i = 0; i < channels.size(); ++i) {
-        if (channels[i].getName() == name) {
-            return (Channel*)&channels[i];
-        }
-    }
-    return NULL;
-}
-
 void createAndJoinChannel(vector<Channel>& channels, Client& client, const string& name, const string& password = "") {
     Channel newChannel;
     newChannel.setName(name);
@@ -32,7 +23,7 @@ void handleExistingChannel(Channel& channel, Client& client, int fd, const strin
         return;
     }
 
-    if (channel.getInviteOnly() && !channel.getModeAtIndex(0)) {
+    if (channel.getInviteOnly()) {
         ClientManager::ft_send(fd, ERR_INVITEONLYCHAN(client.getNickName(), channel.getName()));
         return;
     }

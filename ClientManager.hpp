@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:43:17 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/15 11:04:32 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/15 12:05:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ class ClientManager {
 		void quitCmd( int, string& );
 		void joinCmd( int, string& );
 		void kickCmd( int, string& );
+		void modeCmd( int, string& );
 
 	public:
 		static void		   ft_send( int, const string& );
 		void parse( int, string& );
 		bool registerClient( int, string& );
 		void setPass( const string& );
+		Channel* findChannelByName(const vector<Channel>& channels, const string& name);
 };

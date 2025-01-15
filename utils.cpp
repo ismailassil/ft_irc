@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 10:26:41 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 10:37:55 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/15 12:02:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,14 @@ const vector< string > splitString( const string& str, char delim ) {
 	}
 	split.push_back( token );
 	return split;
+}
+
+int stringToInt(const std::string& str) {
+    std::stringstream ss(str);
+    int result;
+    ss >> result;
+    if (ss.fail()) {
+        throw std::invalid_argument("Invalid conversion from string to int");
+    }
+    return result;
 }
