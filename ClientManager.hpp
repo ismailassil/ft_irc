@@ -17,7 +17,7 @@
 
 class ClientManager {
 	private:
-		vector<int>		   fds;
+		vector< int >	   fds;
 		map< int, Client > cli;
 		vector< Channel >  channels;
 		string			   pass;
@@ -30,6 +30,8 @@ class ClientManager {
 		void quitCmd( int, string& );
 		void joinCmd( int, string& );
 		void kickCmd( int, string& );
+		void topicCmd( int, string& );
+		void modeCmd( int, string& );
 
 	public:
 		void parse( int, string& );
