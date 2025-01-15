@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 20:29:12 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/15 12:03:09 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/15 21:34:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include <iomanip>  // IWYU pragma: keep
 
 #include "Responses.hpp"
+#include "Channel.hpp"
 
 #define PASS "pass"
 #define NICK "nick"
@@ -37,6 +38,7 @@
 #define QUIT "quit"
 #define JOIN "join"
 #define KICK "kick"
+#define MODE "mode"
 
 using std::cerr;
 using std::cout;

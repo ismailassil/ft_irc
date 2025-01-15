@@ -3,18 +3,6 @@
 #include "Responses.hpp"
 #include "Channel.hpp"
 
-bool isValidChannel(const string& channel, const vector<Channel>& channels) {
-    if (channel.empty() || (channel[0] != '#' && channel[0] != '&')) {
-        return false;
-    }
-    for (vector<Channel>::const_iterator it = channels.begin(); it != channels.end(); it++) {
-        if (it->getName() == channel) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void handleModeO(Channel& channel, const string& mode, const string& nick, int fd, Client& client) {
     Client* targetClient = (Client*)channel.getClientInChannel(nick);
     if (!targetClient) {
@@ -34,7 +22,8 @@ void handleModeO(Channel& channel, const string& mode, const string& nick, int f
 
 void handleModeK(Channel& channel, const string& mode, const string& key, int fd, Client& client) {
     if (mode[0] == '+') {
-        channel.setKey(stringToInt(key));
+        channel.setKey(1);
+        channel.setPassword(key);
     } else {
         channel.setKey(0);
     }
@@ -66,7 +55,21 @@ void handleModeT(Channel& channel, const string& mode, int fd, Client& client) {
     channel.broadcast(reply, fd);
 }
 
+bool isValidMode(const string& mode) {
+    const string validModes = "itko";
+    for (size_t i = 1; i < mode.length(); ++i) {
+        if (validModes.find(mode[i]) == string::npos) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void processMode(Channel& channel, const string& mode, const vector<string>& splited, int fd, Client& client) {
+    if (!isValidMode(mode)) {
+        ClientManager::ft_send(fd, ERR_UNKNOWNMODE(client.getNickName(), channel.getName(), mode));
+        return;
+    }
     for (size_t i = 1; i < mode.length(); ++i) {
         switch (mode[i]) {
             case 'o':
@@ -109,14 +112,18 @@ void processMode(Channel& channel, const string& mode, const vector<string>& spl
 void ClientManager::modeCmd(int fd, string& cmd) {
     vector<string> splited = ft_split_tokens(cmd);
 
-    if (splited.size() < 3) {
+    if (splited.size() < 2) {
         ClientManager::ft_send(fd, ERR_NEEDMOREPARAMS(cli[fd].getNickName()));
         return;
     }
 
-    string channelName = splited[1];
-    if (!isValidChannel(channelName, channels)) {
-        ClientManager::ft_send(fd, ERR_NOSUCHCHANNEL(cli[fd].getNickName(), channelName));
+    if (splited[1][0] != '#' && splited[1][0] != '&') {
+        ClientManager::ft_send(fd, ERR_NOSUCHCHANNEL(cli[fd].getNickName(), splited[1]));
+        return;
+    }
+    string channelName = splited[1].substr(1);
+    if (!isValidChannel(splited[1])) {
+        ClientManager::ft_send(fd, ERR_NOSUCHCHANNEL(cli[fd].getNickName(), splited[1]));
         return;
     }
 
@@ -131,11 +138,14 @@ void ClientManager::modeCmd(int fd, string& cmd) {
         return;
     }
 
+    if (splited.size() == 2) {
+        printf("Channel modes: %s\n", channel->getModes().c_str());
+        return;
+    }
     string mode = splited[2];
     if (mode[0] != '+' && mode[0] != '-') {
         ClientManager::ft_send(fd, ERR_UNKNOWNMODE(cli[fd].getNickName(), channelName, mode));
         return;
     }
-
     processMode(*channel, mode, splited, fd, cli[fd]);
 }

@@ -13,6 +13,19 @@
 
 #include "ClientManager.hpp"
 
+bool ClientManager::isValidChannel(const string& channel) {
+    string channelName = channel.substr(1);
+    if (channel.empty() || (channel[0] != '#' && channel[0] != '&')) {
+        return false;
+    }
+    for (vector<Channel>::const_iterator it = channels.begin(); it != channels.end(); it++) {
+        if (it->getName() == channelName) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool ClientManager::isCmd( const string& str, const char* cmd ) {
 	if ( str.length() != strlen( cmd ) ) return false;
 	string tmp = str;
@@ -192,6 +205,9 @@ void ClientManager::parse( int fd, string& input ) {
 	// }
 	if ( isCmd( cmd, JOIN ) ) {
 		joinCmd( fd, input );
+	}
+	else if ( isCmd( cmd, MODE ) ) {
+		modeCmd( fd, input );
 	}
 	displayInfo( cli, channels, fd );
 
