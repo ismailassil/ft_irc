@@ -1,79 +1,135 @@
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "server.hpp"
 
-#include <cstring>
-#include <iostream>
+void error(std::string str, int exit_status)
+{
+	perror(str.c_str());
+	exit(exit_status);
+}
 
-int main() {
-	int				   server_fd, client_fd;
-	struct sockaddr_in server_addr, client_addr;
-	socklen_t		   client_addr_len = sizeof( client_addr );
-	char			   buffer[1024];
-	int				   port = 6667;	 // Default IRC port
+int server_init(char *port)
+{
+	int					socket_fd;
+	struct sockaddr_in	server_addr;
 
-	// Create the server socket
-	server_fd = socket( AF_INET, SOCK_STREAM, 0 );
-	if ( server_fd < 0 ) {
-		perror( "socket" );
-		return 1;
+
+	socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (socket_fd == -1)
+		error("socker() : ", 1);
+	memset(&server_addr, 0, sizeof(server_addr));
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.s_addr = INADDR_ANY;
+	server_addr.sin_port = htons(8080);
+	if (bind(socket_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) != 0)
+	{
+		close(socket_fd);
+		error("bind() : ", 1);
 	}
-
-	// Set up the server address struct
-	memset( &server_addr, 0, sizeof( server_addr ) );
-	server_addr.sin_family = AF_INET;  // Set the address family to IPv4
-	server_addr.sin_addr.s_addr =
-		INADDR_ANY;	 // Bind to all available interfaces
-	server_addr.sin_port =
-		htons( port );	// Convert the port to network byte order
-
-	// Bind the socket to the address and port
-	if ( bind( server_fd, (struct sockaddr *)&server_addr,
-			   sizeof( server_addr ) ) < 0 ) {
-		perror( "bind" );
-		close( server_fd );
-		return 1;
+	if (listen(socket_fd, BACKLOG) < 0)
+	{
+		close(socket_fd);
+		error("listen() : ", 1);
 	}
-
-	// Listen for incoming connections
-	if ( listen( server_fd, 5 ) < 0 ) {
-		perror( "listen" );
-		close( server_fd );
-		return 1;
-	}
-
 	std::cout << "Server listening on port " << port << std::endl;
+	return (socket_fd);
+}
 
-	// Accept a connection
-	client_fd =
-		accept( server_fd, (struct sockaddr *)&client_addr, &client_addr_len );
-	if ( client_fd < 0 ) {
-		perror( "accept" );
-		close( server_fd );
-		return 1;
+int	add_new_client(int &socket_fd, int &nfds, struct pollfd *fds)
+{
+	int	client_fd;
+	struct	sockaddr_in	client_addr;
+	socklen_t			addrelen;
+
+	std::cout << "New client" << std::endl;
+	memset(&client_addr, 0, sizeof(client_addr));
+	addrelen = sizeof(client_addr);
+	client_fd = accept(socket_fd, (struct sockaddr *)&client_addr, &addrelen);
+	if (client_fd < 0)
+		error("accept : ", 1);
+	else
+	{
+		fds[nfds].fd = client_fd;
+		fds[nfds].events = POLLIN;
+		nfds++;
 	}
+	return (client_fd);
+}
 
-	std::cout << "Client connected" << std::endl;
+void	delete_client(int &i, struct pollfd *fds, int &nfds)
+{
+	close(fds[i].fd);
+	for (int j = i; j < nfds - 1; j++)
+		fds[j] = fds[j + 1];
+	nfds--;
+}
 
-	// Read data from the client
-	ssize_t bytes_read = read( client_fd, buffer, sizeof( buffer ) - 1 );
-	if ( bytes_read < 0 ) {
-		perror( "read" );
-		close( client_fd );
-		close( server_fd );
-		return 1;
-	}
+void	server(int socket_fd)
+{
+	
+	struct pollfd		fds[MAXCLIENT + 1];
+	int					nfds;
+	int					client_fd;
 
-	buffer[bytes_read] = '\0';	// Null-terminate the buffer
-	std::cout << "Received message: " << buffer << std::endl;
-	std::string ss( buffer );
-	std::cout << "[" << ss << "]" << std::endl;
-	std::cout << ss.length() << std::endl;
+	fds[0].fd = socket_fd;
+	fds[0].events = POLLIN;
+	nfds = 1;
 
-	// Close the client and server sockets
-	close( client_fd );
-	close( server_fd );
+		int poll_res = poll(fds, nfds, -1);
+		if (poll_res < 0)
+		{
+			close(socket_fd);
+			error("poll() : ", 1);
+		}
+		if (fds[0].revents & POLLIN)
+			client_fd = add_new_client(socket_fd, nfds, fds);
+		for (int i = 1; i < nfds; i++)
+		{
+			if (fds[i].revents & POLLIN)
+			{
+				// if byte > 1024
+				char buffer[BUFFER_SIZE];
+				int byte = read(fds[i].fd, buffer, BUFFER_SIZE);
+				if (byte == 0)
+				{
+					delete_client(i, fds, nfds);
+					continue;
+				}
+				buffer[byte] = '\0';
+				std::cout << "fd = " << fds[i].fd << "Received: " << buffer << std::endl;
+			}
+			if (fds[i].revents & POLLHUP)
+				delete_client(i, fds, nfds);
+		}
+}
+void print_server_ip()
+{
+    char hostname[256];
+    struct hostent *host_entry;
+    char *IPbuffer;
 
+    // Get the hostname
+    gethostname(hostname, sizeof(hostname));
+    
+    // Get the host information
+    host_entry = gethostbyname(hostname);
+    
+    // Convert the first address from the host entry to a string
+    IPbuffer = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0]));
+
+    // Print the IP address
+    std::cout << "Server IP Address: " << IPbuffer << std::endl;
+}
+
+
+int main(int ac,char **av)
+{
+	int	socket_fd;
+
+	if (ac != 3)
+		return (1);
+	std::cout << "port = " << av[1] << std::endl;
+	std::cout << "pass = " << av[2] << std::endl;
+	print_server_ip();
+	socket_fd = server_init(av[1]);
+	server(socket_fd);
 	return 0;
 }
