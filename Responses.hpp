@@ -40,3 +40,5 @@
 #define ERR_USERNOTINCHANNEL( nickname, nick, chName ) ( ": 441 " + nickname + " " + nick + " #" + chName + " :You're not on that channel" + CRLF )
 #define ERR_CHANOPRIVSNEEDED( nickname, chName )	   ( ": 482 " + nickname + " #" + chName + " :You're not a channel operator" + CRLF )
 #define ERR_NORECIPIENT( nickname, command )		   ( ": 411 " + nickname + " " + command + " :No recipient given" + CRLF )
+#define ERR_TOOMANYTARGETS( nickname, targets )		   ( ": 407 " + nickname + " " + targets + " :Too many recipients" + CRLF )
+#define ERR_CANNOTSENDTOCHAN( nickname, chName )	   ( ": 404 " + nickname + " #" + chName + " :Cannot send to channel" + CRLF )

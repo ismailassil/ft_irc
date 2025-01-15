@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 10:26:41 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/15 13:19:47 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/15 16:53:02 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ const vector< string > ft_split_tokens( const string& input ) {
 const vector< string > splitString( const string& str, char delim ) {
 	vector< string > split;
 	string			 token = "";
+
 	for ( size_t i = 0; i < str.size(); i++ ) {
 		if ( str[i] == delim ) {
 			split.push_back( token );
