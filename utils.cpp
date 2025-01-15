@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iassil <iassil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 10:26:41 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/14 10:37:55 by iassil           ###   ########.fr       */
+/*   Updated: 2025/01/15 13:19:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,9 @@ const vector< string > splitString( const string& str, char delim ) {
 	}
 	split.push_back( token );
 	return split;
+}
+
+void ft_send( int fd, const string& str ) {
+	if ( send( fd, str.c_str(), str.size(), 0 ) == -1 )
+		cerr << "send() failed" << endl;
 }

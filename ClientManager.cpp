@@ -22,11 +22,6 @@ bool ClientManager::isCmd( const string& str, const char* cmd ) {
 	return true;
 }
 
-void ClientManager::ft_send( int fd, const string& str ) {
-	if ( send( fd, str.c_str(), str.size(), 0 ) == -1 )
-		cerr << "send() failed" << endl;
-}
-
 bool ClientManager::isValid( const string& str ) {
 	if ( str.empty() || str[0] == '#' || str[0] == '&' || str[0] == ':' ||
 		 isdigit( str[0] ) )
