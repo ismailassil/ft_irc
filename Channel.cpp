@@ -204,6 +204,8 @@ bool Channel::changeAdminToClient( const string &nick ) {
 // }
 
 void Channel::broadcast( const string &reply, const int fd ) {
-	(void)reply;
-	(void)fd;
+	for ( size_t i = 0; i < clients.size(); i++ ) {
+		if ( clients[i].getFd() != fd )
+			ft_send( clients[i].getFd(), reply );
+	}
 }
