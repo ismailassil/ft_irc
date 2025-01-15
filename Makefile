@@ -1,6 +1,6 @@
 NAME        := irc
 CXX         := c++
-CXXFLAGS    := -std=c++98 #-Wall -Wextra -Werror
+CXXFLAGS    := -std=c++98 -fsanitize=address -g #-Wall -Wextra -Werror
 SRCS        := $(wildcard *.cpp)
 OBJS        := $(SRCS:.cpp=.o)
 

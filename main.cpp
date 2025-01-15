@@ -17,6 +17,7 @@ int main() {
 	int				   port = 6667;	 // Default IRC port
 
 	ClientManager parser;
+	Channel tmp;
 	parser.setPass("he");
 	// Create the server socket
 	server_fd = socket( AF_INET, SOCK_STREAM, 0 );
@@ -79,9 +80,9 @@ int main() {
 		buffer[bytes_read] = '\0';	// Null-terminate the buffer
 		std::string ss( buffer );
 		if ( ss.length() > 0 ) {
-			std::cout << "Received message: " << buffer << std::endl;
-			std::cout << "Received message: " << ss.length() << std::endl;
-			parser.registerClient( client_fd, ss );
+			// std::cout << "Received message: " << buffer << std::endl;
+			// std::cout << "Received message: " << ss.length() << std::endl;
+			parser.parse( client_fd, ss );
 		}
 	}
 

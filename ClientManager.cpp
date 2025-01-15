@@ -117,25 +117,58 @@ void ClientManager::setPass( const string& p ) {
 	pass = p;
 }
 
+void displayInfo(const map<int, Client>& cli, const vector<Channel>& channels, int fd) {
+    cout << CYAN << "============================================================" << RESET << endl;
+    cout << GREEN << "Clients: " << RESET << endl;
+    for (map<int, Client>::const_iterator it = cli.begin(); it != cli.end(); it++) {
+        cout << YELLOW << "Client <" << it->first << "> " << RESET;
+        cout << MAGENTA << "Nickname: " << it->second.getNickName() << RESET << endl;
+    }
+    cout << GREEN << "Channels: " << RESET << endl;
+    for (vector<Channel>::const_iterator it = channels.begin(); it != channels.end(); it++) {
+        cout << BLUE << "Name: " << it->getName() << RESET << endl;
+		if (it->getPassword().empty())
+			cout << "Password: " << "None" << endl;
+		else
+			cout << "Password: " << it->getPassword() << endl;
+        cout << "Members: " << RESET << endl;
+        cout << it->getClientChannelList() << endl;
+    }
+    cout << RED << "Current Client: " << fd << RESET << endl;
+    cout << CYAN << "============================================================" << RESET << endl;
+}
+
 void ClientManager::parse( int fd, string& input ) {
-	if ( input.empty() ) return;
-
-	if ( rNewLine( input ) ) return;
-	size_t pos = input.find_first_of( "\t\v" );
-	if ( pos != string::npos ) {
-		input.erase( pos );
-		string buff = cli[fd].getBuffer();
-		buff.append( input );
-		cli[fd].setBuffer( buff );
-		return;
+	static int i = 1;
+	if (i == 1) {
+		Channel tmp;
+		tmp.setName("test");
+		tmp.setPassword("haha");
+		channels.push_back(tmp);
+		i = 0;
 	}
+	// if ( input.empty() ) return;
 
-	string buffer = cli[fd].getBuffer();
+	// if ( rNewLine( input ) ) return;
+	// size_t pos = input.find_first_of( "\t\v" );
+	// if ( pos != string::npos ) {
+	// 	input.erase( pos );
+	// 	string buff = cli[fd].getBuffer();
+	// 	buff.append( input );
+	// 	cli[fd].setBuffer( buff );
+	// 	return;
+	// }
 
-	if ( cli[fd].getRegistered() )
-		if ( !registerClient( fd, buffer ) )
-			return;
+	// string buffer = cli[fd].getBuffer();
 
+	// if ( cli[fd].getRegistered() )
+	// 	if ( !registerClient( fd, buffer ) )
+	// 		return;
+
+	cli[fd].setNickname( "iassil" );
+	cli[fd].setFd( fd );
+	cli[fd].setIpAdd("");
+	cli[fd].setUsername( "iassil" );
 	void ( ClientManager::* func[] )( int, string& ) = {
 		&ClientManager::nickCmd,
 		&ClientManager::quitCmd,
@@ -149,14 +182,18 @@ void ClientManager::parse( int fd, string& input ) {
 	if ( tokens.size() == 0 ) return;
 
 	string cmd = tokens.at( 0 );
-	transform( input.begin(), input.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
+	transform( cmd.begin(), cmd.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
 
-	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
-		if ( isCmd( cmd, cmdList[i] ) ) {
-			( this->*func[i] )( fd, input );
-			return;
-		}
+	// for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
+	// 	if ( isCmd( cmd, cmdList[i] ) ) {
+	// 		( this->*func[i] )( fd, input );
+	// 		return;
+	// 	}
+	// }
+	if ( isCmd( cmd, JOIN ) ) {
+		joinCmd( fd, input );
 	}
+	displayInfo( cli, channels, fd );
 
 	/*
 		- Remove CRNL and Check for \t\v
