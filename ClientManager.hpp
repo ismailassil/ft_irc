@@ -21,9 +21,10 @@ class ClientManager {
 		void topicCmd( int, string& );
 		void modeCmd( int, string& );
 		void privmsg( int, string& );
+		void partCmd( int, string& );
  
-		const Channel* getChannel(const string&);
-		const Client* getClient(const string&);
+		Channel* getChannel(const string&);
+		Client* getClient(const string&);
 
 		const string getPrefix(int);
 

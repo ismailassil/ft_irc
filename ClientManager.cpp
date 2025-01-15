@@ -170,7 +170,7 @@ const string ClientManager::getPass() const {
 	return pass;
 }
 
-const Client* ClientManager::getClient( const string& nick ) {
+Client* ClientManager::getClient( const string& nick ) {
 	for ( map< int, Client >::iterator it = cli.begin(); it != cli.end(); it++ ) {
 		if ( it->second.getNickName() == nick )
 			return &it->second;
@@ -178,7 +178,7 @@ const Client* ClientManager::getClient( const string& nick ) {
 	return NULL;
 }
  
-const Channel* ClientManager::getChannel(const string& name) {
+Channel* ClientManager::getChannel(const string& name) {
     for (vector<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
         Channel& channel = *it;
         if (channel.getName() == name)

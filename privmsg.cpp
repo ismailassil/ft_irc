@@ -12,13 +12,18 @@ void ClientManager::privmsg(int fd, string& input) {
     if (tokens[1][0] == ',' || tokens[1][tokens[1].length() - 1] == ',')
         return ft_send(fd, ERR_NORECIPIENT(cli[fd].getNickName(), tokens[0]));
 
-    string message;
+    string message = "";
     for (size_t i = 2; i < tokens.size(); i++) {
+        if (i == 2 && tokens[i][0] == ':')
+            tokens[i] = tokens[i].substr(1);
+        else {
+            message = tokens[i];
+            break ;
+        }
         message += tokens[i];
         if (i + 1 < tokens.size())
             message += " ";
     }
-
 
     vector<string> target_tokens = splitString(tokens[1], ',');
     if (target_tokens.size() == 0)
