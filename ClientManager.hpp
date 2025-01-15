@@ -35,6 +35,6 @@ class ClientManager {
 
 	public:
 		void parse( int, string& );
-		bool registerClient( int, string& );
+		void registerClient( int, string& );
 		void setPass( const string& );
 };
