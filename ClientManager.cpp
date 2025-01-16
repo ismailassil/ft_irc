@@ -56,7 +56,7 @@ void ClientManager::registerClient( int fd, string& input ) {
 				return ft_send( fd, ERR_NICKNAMEINUSE( nk ) );
 		}
 		if ( cli[fd].getNickName() == nk )
-			return ;
+			return;
 		if ( !cli[fd].getNickName().empty() )
 			ft_send( fd, ":" + cli[fd].getNickName() + " NICK " + nk + "\n" );
 		cli[fd].setNickname( nk );
@@ -102,7 +102,7 @@ void ClientManager::parse( int fd, string& input ) {
 	size_t isExist = cli.find( fd ) != cli.end();
 	if ( !isExist ) {
 		cli[fd] = Client();
-		cli[fd].setFd(fd);
+		cli[fd].setFd( fd );
 	}
 
 	string buffer = cli[fd].getBuffer();
@@ -114,26 +114,28 @@ void ClientManager::parse( int fd, string& input ) {
 	}
 	buffer.append( input );
 	cli[fd].setBuffer( buffer );
-	
+
 	//////////////////////////////////////////////////////////////////////
 	/////////////////////////// Search for cmd ///////////////////////////
-	const char* cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK, PART, TOPIC, MODE, PRIVMSG };
-	const vector< string > tokens = ft_split_tokens( input );
+	//////////////////////////////////////////////////////////////////////
+	const char*			   cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK, PART, TOPIC, MODE, PRIVMSG };
+	const vector< string > tokens	 = ft_split_tokens( input );
 	if ( tokens.size() == 0 ) return;
 
 	string cmd = tokens.at( 0 );
 	transform( input.begin(), input.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
-	
-	int len = sizeof(cmdList) / sizeof(cmdList[0]);
+
+	int	 len   = sizeof( cmdList ) / sizeof( cmdList[0] );
 	bool found = false;
-	for ( int i = 0; i < len; i++) {
-		if (isCmd(cmd, cmdList[i])) {
+	for ( int i = 0; i < len; i++ ) {
+		if ( isCmd( cmd, cmdList[i] ) ) {
 			found = true;
-			break ;
+			break;
 		}
 	}
 	if ( !found )
 		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) );
+	//////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
 
 	if ( !cli[fd].getRegistered() ) {
@@ -142,7 +144,7 @@ void ClientManager::parse( int fd, string& input ) {
 		return;
 	}
 
-	void ( ClientManager::* func[] )( int, string& ) = {
+	void ( ClientManager::*func[] )( int, string& ) = {
 		&ClientManager::nickCmd,
 		&ClientManager::quitCmd,
 		&ClientManager::joinCmd,
@@ -177,16 +179,16 @@ Client* ClientManager::getClient( const string& nick ) {
 	}
 	return NULL;
 }
- 
-Channel* ClientManager::getChannel(const string& name) {
-    for (vector<Channel>::iterator it = channels.begin(); it != channels.end(); it++) {
-        Channel& channel = *it;
-        if (channel.getName() == name)
-            return &channel;
-    }
-    return NULL;
+
+Channel* ClientManager::getChannel( const string& name ) {
+	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
+		Channel& channel = *it;
+		if ( channel.getName() == name )
+			return &channel;
+	}
+	return NULL;
 }
 
-const string ClientManager::getPrefix(int fd) {
+const string ClientManager::getPrefix( int fd ) {
 	return cli[fd].getNickName() + "!" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd();
 }

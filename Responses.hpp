@@ -42,3 +42,4 @@
 #define ERR_NORECIPIENT( nickname, command )		   ( ": 411 " + nickname + " " + command + " :No recipient given" + CRLF )
 #define ERR_TOOMANYTARGETS( nickname, targets )		   ( ": 407 " + nickname + " " + targets + " :Too many recipients" + CRLF )
 #define ERR_CANNOTSENDTOCHAN( nickname, chName )	   ( ": 404 " + nickname + " #" + chName + " :Cannot send to channel" + CRLF )
+#define ERR_NOTEXTTOSEND( nickname )				   ( ": 412 " + nickname + " :No text to send" + CRLF )
