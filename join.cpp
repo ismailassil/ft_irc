@@ -28,8 +28,13 @@ void handleExistingChannel(Channel& channel, Client& client, int fd, const strin
         return;
     }
 
-    if (!channel.getPassword().empty() && channel.getPassword() != password) {
+    if (channel.getKey() && channel.getPassword() != password) {
         ClientManager::ft_send(fd, ERR_BADCHANNELKEY(client.getNickName(), channel.getName()));
+        return;
+    }
+
+    if (channel.getLimit() != 0 && channel.getNumberOfClients() >= channel.getLimit()) {
+        ClientManager::ft_send(fd, ERR_CHANNELISFULL(client.getNickName(), channel.getName()));
         return;
     }
 

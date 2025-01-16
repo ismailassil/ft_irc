@@ -39,3 +39,4 @@
 #define ERR_BADCHANNELKEY( nickname, chName )		   ( ": 475 " + nickname + " #" + chName + " :Cannot join channel (+k)" + CRLF )
 #define ERR_NOTONCHANNEL( nickname, chName )		   ( ": 442 " + nickname + " #" + chName + " :You're not on that channel" + CRLF )
 #define ERR_USERNOTINCHANNEL( nickname, nick, chName ) ( ": 441 " + nickname + " " + nick + " #" + chName + " :You're not on that channel" + CRLF )
+#define ERR_CHANNELISFULL( nickname, chName )		   ( ": 471 " + nickname + " #" + chName + " :Cannot join channel (+l)" + CRLF )

@@ -57,6 +57,10 @@ void handleModeL( Channel& channel, char sign, const string& limit, int fd, Clie
 		return;
 	}
 	if ( sign == '+' ) {
+        if ( channel.getNumberOfClients() > channel.getLimit() ) {
+            ClientManager::ft_send( fd, ERR_CHANNELISFULL( client.getNickName(), channel.getName() ) );
+            return;
+        }
 		channel.setLimit( stringToInt( limit ) );
 		channel.setModeAtIndex( 1, true );
 	} else {
