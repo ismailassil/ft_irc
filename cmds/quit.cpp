@@ -13,7 +13,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
 		if ( it->getClient( fd ) ) {
 			it->removeClient( fd );
-			if ( it->getNumberOfClients() == 0 ) {
+			if ( it->getNumberOfClients() == 0 && it->getNumberOfAdmins() == 0 ) {
 				channels.erase( it );
 			} else {
 				string reply = ":" + cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd() + " QUIT :" + reason;
@@ -21,7 +21,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 			}
 		} else if ( it->getAdmin( fd ) ) {
 			it->removeAdmin( fd );
-			if ( it->getNumberOfClients() == 0 ) {
+			if ( it->getNumberOfClients() == 0 && it->getNumberOfAdmins() == 0 ) {
 				channels.erase( it );
 			} else {
 				string reply = ":" + cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd() + " QUIT :" + reason;

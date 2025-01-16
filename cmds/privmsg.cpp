@@ -24,6 +24,7 @@ void ClientManager::privmsg(int fd, string& input) {
     vector<string> target_tokens = splitString(tokens[1], ',');
     if (target_tokens.size() > 6)
         return ft_send(fd, ERR_TOOMANYTARGETS(cli[fd].getNickName(), tokens[1]));
+
     for (size_t i = 0; i < target_tokens.size(); i++) {
         string target = target_tokens[i];
         if (target.empty()) {

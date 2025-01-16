@@ -57,3 +57,4 @@ using std::setfill;
 const vector< string > splitString( const string& str, char delim );
 const vector< string > ft_split_tokens( const string& input );
 void ft_send( int fd, const string& str );
+const string getComment( vector<string> tokens, int index );

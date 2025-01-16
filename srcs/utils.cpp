@@ -31,3 +31,17 @@ void ft_send( int fd, const string& str ) {
 	if ( send( fd, str.c_str(), str.size(), 0 ) == -1 )
 		cerr << "send() failed" << endl;
 }
+
+const string getComment( vector<string> tokens, int index ) {
+	string topic;
+
+	if ( tokens.at( 2 )[0] == ':' ) {
+		tokens.at( 2 ).erase( 0, 1 );
+		for ( size_t i = 2; i < tokens.size(); i++ ) {
+			topic += tokens.at( i ) + " ";
+		}
+	} else {
+		topic = tokens.at( 2 );
+	}
+	return topic;
+}

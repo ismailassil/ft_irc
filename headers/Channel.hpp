@@ -38,6 +38,7 @@ class Channel {
 		int			  getKey() const;
 		int			  getLimit() const;
 		int			  getNumberOfClients() const;
+		int			  getNumberOfAdmins() const;
 		bool		  getModeAtIndex( const size_t ) const;
 		const string  getPassword() const;
 		const string  getName() const;

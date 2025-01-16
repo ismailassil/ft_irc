@@ -84,6 +84,10 @@ int Channel::getNumberOfClients() const {
 	return clients.size();
 }
 
+int Channel::getNumberOfAdmins() const {
+	return admins.size();
+}
+
 bool Channel::getModeAtIndex( const size_t index ) const {
 	return modes[index].second;
 }
