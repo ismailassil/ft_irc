@@ -6,7 +6,7 @@
 #    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/04 21:44:18 by iassil            #+#    #+#              #
-#    Updated: 2025/01/16 12:33:24 by codespace        ###   ########.fr        #
+#    Updated: 2025/01/16 12:46:29 by codespace        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,21 +14,21 @@ CPP				=	c++
 CPP				+=	-Wall -Wextra -Werror -std=c++98
 CPP				+=	-fsanitize=address -g
 RM				=	rm -f
-NAME			=	irc
+NAME			=	irc_server
 HEADER			=	headers/Channel.hpp  headers/Client.hpp  headers/ClientManager.hpp  headers/Responses.hpp  headers/bits.hpp
 
 FLD_NAME		=	._object_files
 
 ##### SOURCE FILES #######################################################################
 MAIN_FILE	=	main.cpp
-SRC_FILES	=	Channel.cpp  Client.cpp  ClientManager.cpp  Responses.cpp  bits.cpp
+SRC_FILES	=	Channel.cpp  Client.cpp  ClientManager.cpp  utils.cpp
 CMD_FILES	=	join.cpp  kick.cpp  nick.cpp  part.cpp  privmsg.cpp  quit.cpp  topic.cpp
 
 ##########################################################################################
 
 MAIN_SRC	=	$(addprefix /,$(MAIN_FILE))
 SRC_SRC		=	$(addprefix srcs/,$(SRC_FILES))
-CMD_SRC		=	$(addprefix request/,$(CMD_FILES))
+CMD_SRC		=	$(addprefix cmds/,$(CMD_FILES))
 
 MAIN_OBJ	=	$(addprefix $(FLD_NAME)/,$(MAIN_FILE:.cpp=.o))
 SRC_OBJ		=	$(addprefix $(FLD_NAME)/srcs/,$(SRC_FILES:.cpp=.o))
@@ -89,25 +89,20 @@ PAD := $(shell printf '%*s' $(PADDING) '')
 ###################################################
 
 art:
-	@echo ""
-	@echo ""
-	@echo "$(PAD)$(LIGHT_RED) ██▓ ██▀███   ▄████▄  $(RESET)"
-	@echo "$(PAD)$(LIGHT_RED)▓██▒▓██ ▒ ██▒▒██▀ ▀█  $(RESET)"
-	@echo "$(PAD)$(LIGHT_RED)▒██▒▓██ ░▄█ ▒▒▓█    ▄ $(RESET)"
-	@echo "$(PAD)$(RED)░██░▒██▀▀█▄  ▒▓▓▄ ▄██▒$(RESET)"
-	@echo "$(PAD)$(RED)░██░░██▓ ▒██▒▒ ▓███▀ ░$(RESET)"
-	@echo "$(PAD)$(RED)░▓  ░ ▒▓ ░▒▓░░ ░▒ ▒  ░$(RESET)"
-	@echo "$(PAD)$(RED) ▒ ░  ░▒ ░ ▒░  ░  ▒   $(RESET)"
-	@echo "$(PAD)$(DARK_RED) ▒ ░  ░░   ░ ░        $(RESET)"
-	@echo "$(PAD)$(DARK_RED) ░     ░     ░ ░      $(RESET)"
-	@echo "$(PAD)$(DARK_RED)             ░        $(RESET)"
-	@echo ""
-	@echo ""
+	@echo "$(PAD)$(LRD)   .=-.-.             _,.----.            ,-,--.     ,----.                     ,-.-.    ,----.               $(RESET)"
+	@echo "$(PAD)$(LRD)  /==/_ /.-.,.---.  .' .' -   \         ,-.'-  _\ ,-.--` , \  .-.,.---.  ,--.-./=/ ,/ ,-.--` , \  .-.,.---.   $(RESET)"
+	@echo "$(PAD)$(LRD) |==|, |/==/  `   \/==/  ,  ,-'        /==/_ ,_.'|==|-  _.-` /==/  `   \/==/, ||=| -||==|-  _.-` /==/  `   \  $(RESET)"
+	@echo "$(PAD)$(RED) |==|  |==|-, .=., |==|-   |  .        \==\  \   |==|   `.-.|==|-, .=., \==\,  \ / ,||==|   `.-.|==|-, .=., | $(RESET)"
+	@echo "$(PAD)$(RED) |==|- |==|   '='  /==|_   `-' \        \==\ -\ /==/_ ,    /|==|   '='  /\==\ - ' - /==/_ ,    /|==|   '='  / $(RESET)"
+	@echo "$(PAD)$(RED) |==| ,|==|- ,   .'|==|   _  , |        _\==\ ,\|==|    .-' |==|- ,   .'  \==\ ,   ||==|    .-' |==|- ,   .'  $(RESET)"
+	@echo "$(PAD)$(DRD) |==|- |==|_  . ,'.\==\.       /       /==/\/ _ |==|_  ,`-._|==|_  . ,'.  |==| -  ,/|==|_  ,`-._|==|_  . ,'.  $(RESET)"
+	@echo "$(PAD)$(DRD) /==/. /==/  /\ ,  )`-.`.___.-'        \==\ - , /==/ ,     //==/  /\ ,  ) \==\  _ / /==/ ,     //==/  /\ ,  ) $(RESET)"
+	@echo "$(PAD)$(DRD) `--`-``--`-`--`--'                     `--`---'`--`-----`` `--`-`--`--'   `--`--'  `--`-----`` `--`-`--`--'  $(RESET)"
 
 ########## Define ANSI escape codes for colors
-GREEN			:=	\033[1;32m
-YELLOW			:=	\033[33m
-LIGHT_RED		:=	\033[91m
-RED				:=	\033[31m
-DARK_RED		:=	\033[2;31m
-RESET			:=	\033[0m
+GREEN	:=	\033[1;32m
+YELLOW	:=	\033[33m
+LRD		:=	\033[91m
+RED		:=	\033[31m
+DRD		:=	\033[2;31m
+RESET	:=	\033[0m
