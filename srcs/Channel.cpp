@@ -1,4 +1,4 @@
-#include "Channel.hpp"
+#include "../headers/Channel.hpp"
 
 Channel::Channel() : invite_only( 0 ), topic( "" ), key( 0 ), limit( 0 ), name( "" ), password( "" ) {}
 

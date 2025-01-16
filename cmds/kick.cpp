@@ -1,5 +1,4 @@
-#include "ClientManager.hpp"
-#include "bits.hpp"
+#include "../headers/ClientManager.hpp"
 
 void ClientManager::kickCmd( int fd, string& cmd ) {
 	string			 reason;

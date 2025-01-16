@@ -1,7 +1,4 @@
-#include "ClientManager.hpp"
-#include "bits.hpp"
-#include "Responses.hpp"
-#include "Channel.hpp"
+#include "../headers/ClientManager.hpp"
 
 void ClientManager::joinCmd(int fd, string& cmd)
 {

@@ -1,4 +1,4 @@
-#include "ClientManager.hpp"
+#include "../headers/ClientManager.hpp"
 
 bool ClientManager::isCmd( const string& str, const char* cmd ) {
 	if ( str.length() != strlen( cmd ) ) return false;

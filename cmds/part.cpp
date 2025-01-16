@@ -1,4 +1,4 @@
-#include "ClientManager.hpp"
+#include "../headers/ClientManager.hpp"
 
 void ClientManager::partCmd( int fd, string& input ) {
 	vector< string > tokens = ft_split_tokens( input );

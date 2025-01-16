@@ -1,5 +1,4 @@
-#include "ClientManager.hpp"
-#include "bits.hpp"
+#include "../headers/ClientManager.hpp"
 
 void ClientManager::privmsg(int fd, string& input) {
     vector<string> tokens = ft_split_tokens(input);

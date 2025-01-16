@@ -1,4 +1,4 @@
-#include "ClientManager.hpp"
+#include "../headers/ClientManager.hpp"
 
 void ClientManager::nickCmd( int fd, string& input ) {
 	const vector< string > tokens = ft_split_tokens( input );

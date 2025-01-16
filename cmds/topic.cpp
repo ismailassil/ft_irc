@@ -1,5 +1,4 @@
-#include "ClientManager.hpp"
-#include "bits.hpp"
+#include "../headers/ClientManager.hpp"
 
 void ClientManager::topicCmd( int fd, string& input ) {
 	const vector< string > tokens = ft_split_tokens( input );

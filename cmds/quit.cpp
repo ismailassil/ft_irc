@@ -1,4 +1,4 @@
-#include "ClientManager.hpp"
+#include "../headers/ClientManager.hpp"
 
 void ClientManager::quitCmd( int fd, string& input ) {
 	const vector< string > tokens = ft_split_tokens( input );
