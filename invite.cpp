@@ -1,5 +1,4 @@
 #include "ClientManager.hpp"
-#include "bits.hpp"
 #include "Responses.hpp"
 #include "Channel.hpp"
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: obouchta <obouchta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 10:26:41 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/15 21:34:44 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/16 15:57:00 by obouchta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,8 @@ int stringToInt(const std::string& str) {
         throw std::invalid_argument("Invalid conversion from string to int");
     }
     return result;
+}
+
+bool isNumber(const std::string& s) {
+    return !s.empty() && std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun((int(*)(int))std::isdigit))) == s.end();
 }

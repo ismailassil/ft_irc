@@ -8,6 +8,10 @@ Channel::Channel() {
 	limit		= 0;
 	name		= "";
 	password	= "";
+	modes.push_back( make_pair( 'k', false ) );
+	modes.push_back( make_pair( 'l', false ) );
+	modes.push_back( make_pair( 'i', false ) );
+	modes.push_back( make_pair( 't', false ) );
 }
 
 Channel::~Channel() {
@@ -27,6 +31,7 @@ Channel &Channel::operator=( Channel const &src ) {
 	password	= src.password;
 	clients		= src.clients;
 	admins		= src.admins;
+	modes		= src.modes;
 	return *this;
 }
 
@@ -117,8 +122,11 @@ const string Channel::getName() const {
 const string Channel::getModes() const {
 	string modes_str = "";
 	for ( size_t i = 0; i < modes.size(); i++ ) {
+		modes_str += modes[i].first;
 		if ( modes[i].second )
-			modes_str += modes[i].first;
+			modes_str += ": true\n";
+		else
+			modes_str += ": false\n";
 	}
 	return modes_str;
 }

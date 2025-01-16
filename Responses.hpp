@@ -14,24 +14,6 @@
 #define RPL_TOPICIS( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + "\r\n" )
 #define RPL_TOPIC( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + CRLF )
 #define RPL_KICK( chName, nickname, reason )				( ": " + nickname + " KICK #" + chName + " " + nickname + " :" + reason + CRLF )
-#define DISPLAY_CHANNEL_MODES(channel, clientFd) { \
-    std::ostringstream modes; \
-    modes << "+"; \
-    if (channel.isInviteOnly()) modes << "i"; \
-    if (channel.isTopicRestricted()) modes << "t"; \
-    if (channel.hasKey()) modes << "k"; \
-    if (channel.hasLimit()) modes << "l"; \
-    \
-    std::string modeParams; \
-    if (channel.hasKey()) { \
-        modeParams += " " + channel.getKey(); \
-    } \
-    if (channel.hasLimit()) { \
-        modeParams += " " + std::to_string(channel.getLimit()); \
-    } \
-    \
-    ClientManager::ft_send(clientFd, RPL_CHANNELMODES(channel.getName(), modes.str(), modeParams)); \
-}
 #define RPL_INVITING( nickname, target, chName )			( ": " + nickname + " INVITE " + target + " #" + chName + CRLF )
 
 /////////////////////////////////

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bits.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: obouchta <obouchta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 20:29:12 by iassil            #+#    #+#             */
-/*   Updated: 2025/01/15 21:34:29 by codespace        ###   ########.fr       */
+/*   Updated: 2025/01/16 15:57:11 by obouchta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@
 #include <iomanip>  // IWYU pragma: keep
 
 #include "Responses.hpp"
-#include "Channel.hpp"
 
 #define PASS "pass"
 #define NICK "nick"
@@ -67,3 +66,4 @@ using std::setfill;
 const vector< string > splitString( const string& str, char delim );
 const vector< string > ft_split_tokens( const string& input );
 int stringToInt(const std::string& str);
+bool isNumber(const std::string& s);
