@@ -4,11 +4,11 @@ void ClientManager::topicCmd( int fd, string& input ) {
 	const vector< string > tokens = ft_split_tokens( input );
 
 	if ( tokens.size() < 2 ) {
-		return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) );
+		return ft_send( fd, ERR_NEEDMOREPARAMS( cli[fd].getNickName() ) );
 	}
 	string channelName = tokens.at( 1 );
 	if ( channelName[0] != '#' && channelName[0] != '&' ) {
-		return ft_send( fd, ERR_NOSUCHCHANNEL( string( "*" ), channelName ) );
+		return ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), channelName ) );
 	}
 	channelName.erase( 0, 1 );
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
@@ -28,5 +28,5 @@ void ClientManager::topicCmd( int fd, string& input ) {
 			return;
 		}
 	}
-	return ft_send( fd, ERR_NOSUCHCHANNEL( string( "*" ), channelName ) );
+	return ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), channelName ) );
 }

@@ -59,6 +59,6 @@ class Channel {
 		bool changeClientToAdmin( const string & );
 		bool changeAdminToClient( const string & );
 
-		// Send to All
+		// Send to All Clients
 		void broadcast( const string &, int ) const ;
 };

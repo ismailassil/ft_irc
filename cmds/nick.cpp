@@ -10,7 +10,7 @@ void ClientManager::nickCmd( int fd, string& input ) {
 		return ft_send( fd, ERR_ERRONEUSNICKNAME( erro ) );
 	}
 	if ( tokens.size() != 2 )
-		return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) );
+		return ft_send( fd, ERR_NEEDMOREPARAMS( cli[fd].getNickName() ) );
 	string nick = tokens.at( 1 );
 	if ( !isValid( nick ) )
 		return ft_send( fd, ERR_ERRONEUSNICKNAME( nick ) );

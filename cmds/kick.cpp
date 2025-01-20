@@ -5,7 +5,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 	vector< string > tokens	 = ft_split_tokens( input );
 
 	if ( tokens.size() < 3 )
-		return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) );
+		return ft_send( fd, ERR_NEEDMOREPARAMS( cli[fd].getNickName() ) );
 	if ( tokens.at( 1 ).at( 0 ) != '#' || tokens.at( 1 ).at( 0 ) != '&' )
 		return ft_send( fd, ERR_NOSUCHCHANNEL( tokens.at( 2 ), tokens.at( 1 ) ) );
 
@@ -13,7 +13,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 
 	vector< string > chName = splitString( tokens.at( 1 ), ',' );
 	if ( chName.size() != 1 || chName[0].empty() || chName[0] == "#" || chName[0] == "&" )
-		return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) );
+		return ft_send( fd, ERR_NEEDMOREPARAMS( cli[fd].getNickName() ) );
 
 	vector< string > nicknames = splitString( tokens.at( 2 ), ',' );
 	if (nicknames.size() > 6)

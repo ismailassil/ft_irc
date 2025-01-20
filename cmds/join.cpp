@@ -50,10 +50,8 @@ void handleExistingChannel(Channel& channel, Client& client, int fd, const strin
 void ClientManager::joinCmd(int fd, string& cmd) {
     vector<string> splited = ft_split_tokens(cmd);
 
-    if (splited.size() < 2) {
-        ft_send(fd, ERR_NEEDMOREPARAMS(string("*")));
-        return;
-    }
+    if (splited.size() < 2)
+        return ft_send(fd, ERR_NEEDMOREPARAMS(cli[fd].getNickName()));
     vector<string> chans = splitString(splited[1], ',');
     vector<string> passwords = (splited.size() == 3) ? splitString(splited[2], ',') : vector<string>();
 

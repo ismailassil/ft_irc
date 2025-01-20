@@ -63,7 +63,7 @@ void ClientManager::registerClient( int fd, string& input ) {
 		if ( !cli[fd].getAuthenticated() )
 			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ) );
 		if ( tokens.size() == 1 )
-			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) );
+			return ft_send( fd, ERR_NEEDMOREPARAMS( (cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName()) ) );
 		if ( tokens.size() > 2 ) {
 			string erro;
 			for ( vector< string >::const_iterator it = tokens.begin() + 1; it != tokens.end(); it++ )
@@ -85,11 +85,11 @@ void ClientManager::registerClient( int fd, string& input ) {
 	}
 	if ( isCmd( cmd, USER ) ) {
 		if ( !cli[fd].getAuthenticated() )
-			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ) );
+			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ));
 		if ( !cli[fd].getUserName().empty() )
-			return ft_send( fd, ERR_ALREADYREGISTERED( cli[fd].getNickName() ) );
+			return ft_send( fd, ERR_ALREADYREGISTERED( (cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName()) ) );
 		if ( tokens.size() < 5 )
-			return ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) );
+			return ft_send( fd, ERR_NEEDMOREPARAMS( (cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName()) ) );
 
 		string username = tokens.at( 0 );
 		if ( username.length() > 10 )
@@ -102,24 +102,25 @@ void ClientManager::registerClient( int fd, string& input ) {
 	}
 }
 
-bool ClientManager::rNewLine( string& input ) {
+bool ClientManager::removeWhiteSpace( string& input ) {
 	if ( input.empty() ) return true;
 
-	size_t pos = input.find( "\r\n" );
+	size_t pos = input.find( CRLF );
 	if ( pos != string::npos ) {
 		input.erase( pos );
 	}
-
-	size_t nPos = input.find_last_of( "\n" );
+ 
+	size_t nPos = input.find_last_of( LF );
 	if ( nPos != string::npos )
 		input.erase( nPos, 1 );
+
 	return false;
 }
 
 void ClientManager::parse( int fd, string& input ) {
 	if ( input.empty() ) return;
 
-	if ( rNewLine( input ) ) return;
+	if ( removeWhiteSpace( input ) ) return;
 
 	size_t isExist = cli.find( fd ) != cli.end();
 	if ( !isExist ) {
@@ -137,6 +138,8 @@ void ClientManager::parse( int fd, string& input ) {
 	buffer.append( input );
 	cli[fd].setBuffer( buffer );
 
+	cout << "Buffer: " << buffer << endl;
+	exit(1);
 	//////////////////////////////////////////////////////////////////////
 	/////////////////////////// Search for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////

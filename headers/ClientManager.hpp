@@ -10,7 +10,7 @@ class ClientManager {
 		vector< Channel >  channels;
 		string			   pass;
 
-		bool		 rNewLine( string& );
+		bool		 removeWhiteSpace( string& );
 		bool		 isCmd( const string&, const char* );
 		bool		 isValid( const string& str );
 		bool		 isChannel(const string& channel);
