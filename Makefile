@@ -14,7 +14,7 @@ CPP				=	c++
 CPP				+=	-Wall -Wextra -Werror -std=c++98
 CPP				+=	-fsanitize=address -g
 RM				=	rm -f
-NAME			=	irc_server
+NAME			=	ircserv	
 HEADER			=	headers/Channel.hpp  headers/Client.hpp  headers/ClientManager.hpp  headers/Responses.hpp  \
                     headers/bits.hpp headers/Server.hpp
 

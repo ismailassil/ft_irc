@@ -4,6 +4,15 @@ int stop_server = 0;
 
 Server::Server() { }
 
+void Server::printCurrentDateTime()
+{
+	time_t curr_time;
+	curr_time = time(NULL);
+
+	tm *tm_local = localtime(&curr_time);
+	cout << "[" << tm_local->tm_hour << ":" << tm_local->tm_min << ":" << tm_local->tm_sec << "] ";
+}
+
 Server::Server(const Server &copy)
 {
 	*this = copy;
@@ -13,11 +22,13 @@ Server::~Server() {
     for(int i = 0; i < nfds; i++){
         close(fds[i].fd);
     }
-	cout << "\nServer is shutting down" << endl;
+	cout << RED << "\n[Server] shutting down" << RESET << endl;
 }
 
 Server& Server::operator=(const Server &other)
 {
+    if (this == &other)
+        return *this;
     socket_fd = other.socket_fd;
     server_addr = other.server_addr;
     port = other.port;
@@ -37,20 +48,21 @@ void Server::add_client()
 
     memset(&client_addr, 0, sizeof(client_addr));
     addrlen = sizeof(client_addr);
-    cout << "client ip = " << inet_ntoa(client_addr.sin_addr) << endl;
+    // cout << "client ip = " << inet_ntoa(client_addr.sin_addr) << endl;
     client_fd = accept(socket_fd, (struct sockaddr *)&client_addr, &addrlen);
     if (client_fd < 0)
         return perror("accept : ");
     if (this->nfds >= MAXCLIENT + 1)
     {
-        cout << "Max clients reached. Closing connection." << endl;
+        cout << "[server] Max clients reached. Closing connection." << endl;
         close(client_fd);
         return;
     }
     fds[nfds].fd = client_fd;
     fds[nfds].events = POLLIN | POLLPRI;
     ++nfds;
-    cout << "Client <" << client_fd << "> is Connected" << endl;
+    printCurrentDateTime();
+    cout << CYAN << "[server] Client <" << client_fd << "> is Connected" << RESET << endl;
     send(client_fd, WELCOME_MSG, sizeof(WELCOME_MSG), 0);
 }
 
@@ -67,8 +79,9 @@ void    Server::read_msg(int &i)
         if (byte < BUFFER_SIZE - 1)
             break;
     }
+    printCurrentDateTime();
     if (!message.empty())
-        cout << "fd = " << fds[i].fd << " Received: " << message;
+        cout << "[client] Message received from client <" << fds[i].fd << "> : " << GREEN << message << RESET;
     if (byte == 0)
         remove_client(i);
     else if (byte < 0)
@@ -95,12 +108,15 @@ void    Server::server_init()
         close(socket_fd);
         error("bind()", 1);
     }
+    printCurrentDateTime();
+    std::cout << RED << "[server] running....." << RESET << std::endl;
     if (listen(socket_fd, BACKLOG) < 0)
     {
         close(socket_fd);
         error("listen()", 1);
     }
-    cout << "Server listening on port " << port << endl;
+    printCurrentDateTime();
+    cout << RED << "[Server] listening on port " << BLUE << port << RESET << endl;
 }
 
 Server::Server(string _port, string _password): port(_port), password(_password)
@@ -131,9 +147,10 @@ Server::Server(string _port, string _password): port(_port), password(_password)
 
 void	Server::remove_client(int &i)
 {
-    cout << "Client <" << fds[i].fd << "> is Disconnected" << endl;
+    cout << CYAN <<"[server] Client <" << fds[i].fd << "> is Disconnected"<< RESET << endl;
 	close(fds[i].fd);
 	for (int j = i; j < nfds - 1; j++)
 		fds[j] = fds[j + 1];
 	nfds--;
+    cout << "[server] Total client is : " << nfds - 1 << endl;
 }
