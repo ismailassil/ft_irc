@@ -48,6 +48,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 					channels.erase( it );
 				return;
 			}
+
 		}
 	}
 	if ( !chFound )

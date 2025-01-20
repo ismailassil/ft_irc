@@ -35,13 +35,13 @@ void ft_send( int fd, const string& str ) {
 const string getComment( vector<string> tokens, int index ) {
 	string topic;
 
-	if ( tokens.at( 2 )[0] == ':' ) {
-		tokens.at( 2 ).erase( 0, 1 );
-		for ( size_t i = 2; i < tokens.size(); i++ ) {
+	if ( tokens.at( index )[0] == ':' ) {
+		tokens.at( index ).erase( 0, 1 );
+		for ( size_t i = index; i < tokens.size(); i++ ) {
 			topic += tokens.at( i ) + " ";
 		}
 	} else {
-		topic = tokens.at( 2 );
+		topic = tokens.at( index );
 	}
 	return topic;
 }
