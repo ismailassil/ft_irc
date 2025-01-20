@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <cstring>
 #include <unistd.h>
+#include <signal.h> 
 #include <poll.h>
 #include <errno.h>
 #include <cstdio>
@@ -19,9 +20,10 @@
 #include <netdb.h>
 
 #define BACKLOG 4
-#define MAXCLIENT 1
+#define MAXCLIENT 5
 #define BUFFER_SIZE 1024
-
+#define Welcome_msg "Welcome to the server!\n"
+#define PASS_LENGH 4
 
 class Server
 {
@@ -32,6 +34,7 @@ class Server
 	std::string			password;
 	struct pollfd		fds[MAXCLIENT + 1];
 	int					nfds;
+	int					stop;
 
 	public :
 		Server(void);
@@ -40,8 +43,10 @@ class Server
 		Server& operator=(const Server &other);
 
 		Server (std::string port, std::string password);
-		int		add_client();
-		void	remove_client(int fd);
+		void	server_init();
+		void	add_client();
+		void	remove_client(int &fd);
+		void	read_msg(int &i);
 };
 
 #endif
