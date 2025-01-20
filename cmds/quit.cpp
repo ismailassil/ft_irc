@@ -32,5 +32,4 @@ void ClientManager::quitCmd( int fd, string& input ) {
 	cli.erase( fd );								  // Remove client from the Server
 	fds.erase( find( fds.begin(), fds.end(), fd ) );  // Remove the fd from the fd_set
 	close( fd );									  // Close the connection
-	cout << RED << "Client <" << fd << "> Disconnected" << RESET << endl;
 }

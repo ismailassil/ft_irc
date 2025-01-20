@@ -45,3 +45,25 @@ const string getComment( vector<string> tokens, int index ) {
 	}
 	return topic;
 }
+
+int stringToInt(const string& str) {
+    stringstream ss(str);
+    int result;
+
+    ss >> result;
+    if (ss.fail()) {
+        return -1;
+    }
+    return result;
+}
+
+bool isNumber(const string& s) {
+    if (s.empty())
+        return false;
+
+    for (size_t i = 0; i < s.length(); i++) {
+        if (!isdigit(s[i]))
+            return false;
+    }
+    return true;
+}

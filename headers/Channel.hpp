@@ -7,6 +7,7 @@ class Channel {
 		string						 topic;
 		int							 key;
 		int							 limit;
+		int							 topicRestrict;
 		string						 name;
 		string						 password;
 		vector< Client >			 clients;
@@ -27,6 +28,7 @@ class Channel {
 		void setPassword( const string & );
 		void setName( const string & );
 		void setModeAtIndex( const size_t, const bool );
+		void setTopicRestrict( const int topicRestrict );
 
 		bool		  	isClientInChannel( const string & ) const;
 		bool		  	isAdminInChannel( const string & ) const;

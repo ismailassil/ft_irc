@@ -1,5 +1,27 @@
 #include "../headers/ClientManager.hpp"
 
+bool ClientManager::isChannel(const string& channel) {
+    string channelName = channel.substr(1);
+    if (channel.empty() || (channel[0] != '#' && channel[0] != '&')) {
+        return false;
+    }
+    for (vector<Channel>::const_iterator it = channels.begin(); it != channels.end(); it++) {
+        if (it->getName() == channelName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Channel* ClientManager::findChannelByName(const vector<Channel>& channels, const string& name) {
+    for (size_t i = 0; i < channels.size(); ++i) {
+        if (channels[i].getName() == name) {
+            return (Channel*)&channels[i];
+        }
+    }
+    return NULL;
+}
+
 bool ClientManager::isCmd( const string& str, const char* cmd ) {
 	if ( str.length() != strlen( cmd ) ) return false;
 	string tmp = str;
@@ -118,7 +140,7 @@ void ClientManager::parse( int fd, string& input ) {
 	//////////////////////////////////////////////////////////////////////
 	/////////////////////////// Search for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
-	const char*			   cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK, PART, TOPIC, MODE, PRIVMSG };
+	const char*			   cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK, PART, TOPIC, MODE, PRIVMSG, INVITE };
 	const vector< string > tokens	 = ft_split_tokens( input );
 	if ( tokens.size() == 0 ) return;
 
@@ -149,6 +171,11 @@ void ClientManager::parse( int fd, string& input ) {
 		&ClientManager::quitCmd,
 		&ClientManager::joinCmd,
 		&ClientManager::kickCmd,
+		&ClientManager::partCmd,
+		&ClientManager::topicCmd,
+		&ClientManager::modeCmd,
+		&ClientManager::privmsgCmd,
+		&ClientManager::inviteCmd
 	};
 
 	if ( isCmd( cmd, USER ) || isCmd( cmd, PASS ) )

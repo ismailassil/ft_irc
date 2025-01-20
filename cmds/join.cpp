@@ -1,88 +1,80 @@
 #include "../headers/ClientManager.hpp"
 
-void ClientManager::joinCmd(int fd, string& cmd)
-{
-    cout << "joinCmd" << endl;
-    vector<string> passwords;
-    bool hasPasswords = false;
-    vector<string> splited = ft_split_tokens(cmd);
-    if (splited.size() < 2)
-    {
-        ft_send( fd, ERR_NEEDMOREPARAMS( string( "*" ) ) );
+bool isValidChannelName(const string& channel) {
+    return !channel.empty() && (channel[0] == '#' || channel[0] == '&') && channel != "#" && channel != "&";
+}
+
+void createAndJoinChannel(vector<Channel>& channels, Client& client, const string& name, const string& password = "") {
+    Channel newChannel;
+    newChannel.setName(name);
+    if (!password.empty()) {
+        newChannel.setPassword(password);
+    }
+    newChannel.addClient(client);
+    newChannel.addAdmin(client);
+    channels.push_back(newChannel);
+}
+
+void handleExistingChannel(Channel& channel, Client& client, int fd, const string& password) {
+    if (channel.isClientInChannel(client.getNickName())) {
         return;
     }
-    hasPasswords = splited.size() == 3;
-    // splited[0]: cmd
-    // splited[1]: channels
-    // splited[2]: passwords
-    vector<string> chans = splitString(splited[1], ',');
-    if (hasPasswords)
-        passwords = splitString(splited[2], ',');
-    int j = 0;
-    for (size_t i = 0; i < chans.size(); i++)
-    {
-        if (chans[i][0] != '#' && chans[i][0] != '&')
-            return ft_send(fd, ERR_NOSUCHCHANNEL(cli[fd].getNickName(), chans[i]));
-        // check if channel already exists
-        bool exists = false;
-        for (size_t k = 0; k < channels.size(); k++)
-        {
-            if (channels[k].getName() == chans[i])
-            {
-                exists = true;
-                break;
-            }
-        }
-        if (!exists)
-        {
-            Channel newChannel;
-            newChannel.setName(chans[i]);
-            if (hasPasswords)
-                newChannel.setPassword(passwords[j]);
-            newChannel.addClient(cli[fd]);
-            newChannel.addAdmin(cli[fd]);
-            channels.push_back(newChannel);
-            j++;
-        }
-        else
-        {
-            for (size_t k = 0; k < channels.size(); k++)
-            {
-                if (channels[k].getName() == chans[i])
-                {
-                    if (channels[k].isClientInChannel(cli[fd].getNickName()))
-                        return;
-                    break;
-                }
-            }
-            // join client to channel if not invite only and password is correct
-            for (size_t k = 0; k < channels.size(); k++)
-            {
-                if (channels[k].getName() == chans[i])
-                {
-                    if (channels[k].getInviteOnly() && !channels[k].getModeAtIndex(0))
-                        return ft_send(fd, ERR_INVITEONLYCHAN(string("*"), chans[i]));
-                    if (hasPasswords && channels[k].getPassword() != passwords[j])
-                    {
-                        ft_send(fd, ERR_BADCHANNELKEY(string("*"), chans[i]));
-                        return;
-                    }
-                    channels[k].addClient(cli[fd]);
-                    string joinMsg = ":" + cli[fd].getNickName() + " JOIN :" + channels[k].getName() + "\r\n";
-                    ft_send(fd, joinMsg);
-                    channels[k].broadcast(joinMsg, fd);
-                    string topic = channels[k].getTopic();
-                    if (!topic.empty()) {
-                        ft_send(fd, RPL_TOPIC(cli[fd].getNickName(), channels[k].getName(), topic));
-                    }
-                    string names = channels[k].getClientChannelList(); // collect all members’ nicks
-                    ft_send(fd, RPL_NAMREPLY(cli[fd].getNickName(), channels[k].getName(), names));
-                    // 5. Send RPL_ENDOFNAMES (366)
-                    ft_send(fd, RPL_ENDOFNAMES(cli[fd].getNickName(), channels[k].getName()));
 
-                    return;
-                }
-            }
+    if (channel.getInviteOnly()) {
+        ft_send(fd, ERR_INVITEONLYCHAN(client.getNickName(), channel.getName()));
+        return;
+    }
+
+    if (channel.getKey() && channel.getPassword() != password) {
+        ft_send(fd, ERR_BADCHANNELKEY(client.getNickName(), channel.getName()));
+        return;
+    }
+
+    if (channel.getLimit() != 0 && channel.getNumberOfClients() >= channel.getLimit()) {
+        ft_send(fd, ERR_CHANNELISFULL(client.getNickName(), channel.getName()));
+        return;
+    }
+
+    channel.addClient(client);
+    string joinMsg = ":" + client.getNickName() + " JOIN :" + channel.getName() + "\r\n";
+    ft_send(fd, joinMsg);
+    channel.broadcast(joinMsg, fd);
+
+    if (!channel.getTopic().empty()) {
+        ft_send(fd, RPL_TOPIC(client.getNickName(), channel.getName(), channel.getTopic()));
+    }
+    ft_send(fd, RPL_NAMREPLY(client.getNickName(), channel.getName(), channel.getClientChannelList()));
+    ft_send(fd, RPL_ENDOFNAMES(client.getNickName(), channel.getName()));
+}
+
+void ClientManager::joinCmd(int fd, string& cmd) {
+    vector<string> splited = ft_split_tokens(cmd);
+
+    if (splited.size() < 2) {
+        ft_send(fd, ERR_NEEDMOREPARAMS(string("*")));
+        return;
+    }
+    vector<string> chans = splitString(splited[1], ',');
+    vector<string> passwords = (splited.size() == 3) ? splitString(splited[2], ',') : vector<string>();
+
+    for (size_t i = 0, j = 0; i < chans.size(); ++i) {
+
+        if (!isValidChannelName(chans[i])) {
+            ft_send(fd, ERR_NOSUCHCHANNEL(cli[fd].getNickName(), chans[i]));
+            j++;
+            continue;
         }
+
+        string chanName = chans[i].substr(1);
+        Channel* channel = findChannelByName(channels, chanName);
+
+        if (!channel) {
+            string password = (j < passwords.size()) ? passwords[j] : "";
+            createAndJoinChannel(channels, cli[fd], chanName, password);
+        } else {
+            string password = (j < passwords.size()) ? passwords[j] : "";
+            handleExistingChannel(*channel, cli[fd], fd, password);
+        }
+        j++;
     }
 }

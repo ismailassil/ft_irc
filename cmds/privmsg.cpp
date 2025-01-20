@@ -1,6 +1,6 @@
 #include "../headers/ClientManager.hpp"
 
-void ClientManager::privmsg(int fd, string& input) {
+void ClientManager::privmsgCmd(int fd, string& input) {
     vector<string> tokens = ft_split_tokens(input);
 
     if (tokens.size() < 2)

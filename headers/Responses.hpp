@@ -14,6 +14,7 @@
 #define RPL_TOPICIS( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + "\r\n" )
 #define RPL_TOPIC( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + CRLF )
 #define RPL_KICK( chName, nickname, reason )				( ": " + nickname + " KICK #" + chName + " " + nickname + " :" + reason + CRLF )
+#define RPL_INVITING( nickname, target, chName )			( ": " + nickname + " INVITE " + target + " #" + chName + CRLF )
 
 /////////////////////////////////
 //////////// ERRORS /////////////
@@ -43,3 +44,4 @@
 #define ERR_TOOMANYTARGETS( nickname, targets )		   ( ": 407 " + nickname + " " + targets + " :Too many recipients" + CRLF )
 #define ERR_CANNOTSENDTOCHAN( nickname, chName )	   ( ": 404 " + nickname + " #" + chName + " :Cannot send to channel" + CRLF )
 #define ERR_NOTEXTTOSEND( nickname )				   ( ": 412 " + nickname + " :No text to send" + CRLF )
+#define ERR_CHANNELISFULL( nickname, chName )		   ( ": 471 " + nickname + " #" + chName + " :Cannot join channel (+l)" + CRLF )

@@ -6,6 +6,7 @@
 #include <algorithm>  // IWYU pragma: keep
 #include <cctype>	  // IWYU pragma: keep
 #include <cstring>	  // IWYU pragma: keep
+#include <functional>
 #include <iostream>	  // IWYU pragma: keep
 #include <map>		  // IWYU pragma: keep
 #include <sstream>	  // IWYU pragma: keep
@@ -29,6 +30,7 @@
 #define TOPIC "topic"
 #define MODE "mode"
 #define PRIVMSG "privmsg"
+#define INVITE "invite"
 
 using std::cerr;
 using std::cout;
@@ -45,6 +47,10 @@ using std::transform;
 using std::vector;
 using std::setw;
 using std::setfill;
+using std::ostringstream;
+using std::stringstream;
+using std::find_if;
+using std::not1;
 
 #define RED		"\x1b[31m"
 #define GREEN	"\x1b[1;32m"
@@ -58,3 +64,5 @@ const vector< string > splitString( const string& str, char delim );
 const vector< string > ft_split_tokens( const string& input );
 void ft_send( int fd, const string& str );
 const string getComment( vector<string> tokens, int index );
+bool isNumber(const string& s);
+int stringToInt(const string& str);
