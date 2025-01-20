@@ -43,8 +43,14 @@ void ClientManager::partCmd( int fd, string& input ) {
 
 			string reply = ":" + getPrefix( fd ) + " PART " + target + " :" + message + CRLF;
 			channel->broadcast( reply, fd );
-			if ( channel->getNumberOfClients() == 0 && channel->getNumberOfAdmins() == 0 )
-				channels.erase( find( channels.begin(), channels.end(), *channel ) );
+			if ( channel->getNumberOfClients() == 0 && channel->getNumberOfAdmins() == 0 ) {
+				for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
+					if ( it->getName() == channel->getName() ) {
+						channels.erase( it );
+						break;
+					}
+				}
+			}
 		} else {
 			ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), target ) );
 		}
