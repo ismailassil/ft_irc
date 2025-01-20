@@ -6,7 +6,6 @@
 #include <algorithm>  // IWYU pragma: keep
 #include <cctype>	  // IWYU pragma: keep
 #include <cstring>	  // IWYU pragma: keep
-#include <functional>
 #include <iostream>	  // IWYU pragma: keep
 #include <map>		  // IWYU pragma: keep
 #include <sstream>	  // IWYU pragma: keep
@@ -17,6 +16,22 @@
 #include <cstring>	  // IWYU pragma: keep
 #include <sstream>   // IWYU pragma: keep
 #include <iomanip>  // IWYU pragma: keep
+#include <arpa/inet.h>  // IWYU pragma: keep
+#include <netdb.h>  // IWYU pragma: keep
+#include <sys/socket.h>  // IWYU pragma: keep
+#include <netinet/in.h>  // IWYU pragma: keep
+#include <cstring>  // IWYU pragma: keep
+#include <unistd.h>  // IWYU pragma: keep
+#include <signal.h>   // IWYU pragma: keep
+#include <poll.h>  // IWYU pragma: keep
+#include <errno.h>  // IWYU pragma: keep
+#include <cstdio>  // IWYU pragma: keep
+#include <cstdlib>  // IWYU pragma: keep
+
+#define BACKLOG 4
+#define MAXCLIENT 5
+#define BUFFER_SIZE 1024
+#define PASS_LENGH 4
 
 #include "Responses.hpp"
 
@@ -50,7 +65,7 @@ using std::setfill;
 using std::ostringstream;
 using std::stringstream;
 using std::find_if;
-using std::not1;
+using std::memset;
 
 #define RED		"\x1b[31m"
 #define GREEN	"\x1b[1;32m"
@@ -59,6 +74,10 @@ using std::not1;
 #define MAGENTA "\x1b[1;35m"
 #define CYAN	"\x1b[1;36m"
 #define RESET	"\x1b[0m"
+
+void    handle_signal(int signal);
+int     parse_input(int &ac, char **&av);
+void    error(string str, int exit_status);
 
 const vector< string > splitString( const string& str, char delim );
 const vector< string > ft_split_tokens( const string& input );

@@ -3,6 +3,7 @@
 #define CRLF    "\r\n"
 #define LF      "\n"
 
+#define WELCOME_MSG "Welcome to the server!\n"
 #define RPL_CONNECTED( nickname )						    ( ": " + nickname + " : Welcome to the IRC server!" + CRLF )
 #define RPL_UMODEIS( hostname, chName, mode, user )			":" + hostname + " MODE " + chName + " " + mode + " " + user + CRLF
 #define RPL_CREATIONTIME( nickname, chName, creationtime )	": 329 " + nickname + " #" + chName + " " + creationtime + CRLF

@@ -1,6 +1,7 @@
 main.dSYM
 main
 ._object_files
+.vscode
 
 ### C++ ###
 # Prerequisites

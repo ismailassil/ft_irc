@@ -6,7 +6,7 @@
 #    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/04 21:44:18 by iassil            #+#    #+#              #
-#    Updated: 2025/01/20 17:06:53 by codespace        ###   ########.fr        #
+#    Updated: 2025/01/20 17:50:58 by codespace        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,13 +15,14 @@ CPP				+=	-Wall -Wextra -Werror -std=c++98
 CPP				+=	-fsanitize=address -g
 RM				=	rm -f
 NAME			=	irc_server
-HEADER			=	headers/Channel.hpp  headers/Client.hpp  headers/ClientManager.hpp  headers/Responses.hpp  headers/bits.hpp
+HEADER			=	headers/Channel.hpp  headers/Client.hpp  headers/ClientManager.hpp  headers/Responses.hpp  \
+                    headers/bits.hpp headers/Server.hpp
 
 FLD_NAME		=	._object_files
 
 ##### SOURCE FILES #######################################################################
 MAIN_FILE	=	main.cpp
-SRC_FILES	=	Channel.cpp  Client.cpp  ClientManager.cpp  utils.cpp
+SRC_FILES	=	Channel.cpp  Client.cpp  ClientManager.cpp  utils.cpp Server.cpp
 CMD_FILES	=	invite.cpp  join.cpp  kick.cpp  mode.cpp  nick.cpp  part.cpp  privmsg.cpp  quit.cpp  topic.cpp
 
 ##########################################################################################
