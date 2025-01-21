@@ -122,11 +122,11 @@ void ClientManager::parse( int fd, string& input ) {
 
 	if ( removeWhiteSpace( input ) ) return;
 
-	size_t isExist = cli.find( fd ) != cli.end();
-	if ( !isExist ) {
-		cli[fd] = Client();
-		cli[fd].setFd( fd );
-	}
+	// size_t isExist = cli.find( fd ) != cli.end();
+	// if ( !isExist ) {
+	// 	cli[fd] = Client();
+	// 	cli[fd].setFd( fd );
+	// }
 
 	string buffer = cli[fd].getBuffer();
 
@@ -234,5 +234,14 @@ void ClientManager::removeClient( int fd ) {
 			else
 				channel.removeClient( fd );
 		}
+	}
+}
+
+void ClientManager::addNewClient( int fd, ) {
+	size_t isExist = cli.find( fd ) != cli.end();
+	if ( !isExist ) {
+		cli[fd] = Client();
+		cli[fd].setFd( fd );
+		cli[fd].setIpAdd( inet_ntoa( ip ) );
 	}
 }

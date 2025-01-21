@@ -55,6 +55,7 @@ void Server::add_client() {
 		close( client_fd );
 		return;
 	}
+	clientManager.addNewClient( client_fd, client_addr.sin_addr );
 	fds[nfds].fd	 = client_fd;
 	fds[nfds].events = POLLIN | POLLPRI;
 	++nfds;

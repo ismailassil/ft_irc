@@ -16,7 +16,7 @@
 #define RPL_TOPICIS( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + "\r\n" )
 #define RPL_TOPIC( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + CRLF )
 #define RPL_KICK( chName, nickname, reason )				( ": " + nickname + " KICK #" + chName + " " + nickname + " :" + reason + CRLF )
-#define RPL_INVITING( nickname, target, chName )			( ": " + nickname + " INVITE " + target + " #" + chName + CRLF )
+#define RPL_INVITING( nickname, target, chName )			( ": 341 " + nickname + " INVITE " + target + " #" + chName + CRLF )
 
 /////////////////////////////////
 //////////// ERRORS /////////////

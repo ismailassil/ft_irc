@@ -6,7 +6,6 @@ class Client {
 		int							   fd;
 		bool						   authenticated;
 		bool						   registered;
-		bool						   loggedIn;
 		string						   nickname;
 		string						   userName;
 		string						   buffer;
@@ -28,7 +27,6 @@ class Client {
 		bool		 getRegistered() const;
 		bool		 getInviteChannel( string &ChName ) const;
 		const string getNickName() const;
-		bool		 getLoggedIn() const;
 		const string getUserName() const;
 		const string getIpAdd() const;
 		const string getBuffer() const;
@@ -37,7 +35,6 @@ class Client {
 		void setFd( const int fd );
 		void setAuthenticated( const bool value );
 		void setNickname( const string &nickName );
-		void setLoggedIn( const bool value );
 		void setUsername( const string &username );
 		void setBuffer( const string &received );
 		void setRegistered( const bool value );

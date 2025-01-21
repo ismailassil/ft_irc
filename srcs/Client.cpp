@@ -4,7 +4,6 @@ Client::Client()
 	: fd( -1 ),
 	  authenticated( false ),
 	  registered( false ),
-	  loggedIn( false ),
 	  nickname( "" ),
 	  userName( "" ),
 	  buffer( "" ),
@@ -16,7 +15,6 @@ Client::Client( const string &nickname, const string &username, int fd )
 	: fd( fd ),
 	  authenticated( false ),
 	  registered( false ),
-	  loggedIn( false ),
 	  nickname( nickname ),
 	  userName( username ),
 	  buffer( "" ),
@@ -35,7 +33,6 @@ Client &Client::operator=( Client const &src ) {
 		fd			   = src.fd;
 		authenticated  = src.authenticated;
 		registered	   = src.registered;
-		loggedIn	   = src.loggedIn;
 		nickname	   = src.nickname;
 		userName	   = src.userName;
 		buffer		   = src.buffer;
@@ -67,10 +64,6 @@ const string Client::getNickName() const {
 	return nickname;
 }
 
-bool Client::getLoggedIn() const {
-	return loggedIn;
-}
-
 const string Client::getUserName() const {
 	return userName;
 }
@@ -97,10 +90,6 @@ void Client::setRegistered( const bool value ) {
 
 void Client::setNickname( const string &nickName ) {
 	this->nickname = nickName;
-}
-
-void Client::setLoggedIn( const bool value ) {
-	this->loggedIn = value;
 }
 
 void Client::setUsername( const string &userName ) {
