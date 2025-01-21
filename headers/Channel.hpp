@@ -40,7 +40,6 @@ class Channel {
 		int			  getKey() const;
 		int			  getLimit() const;
 		int			  getNumberOfClients() const;
-		int			  getNumberOfAdmins() const;
 		bool		  getModeAtIndex( const size_t ) const;
 		const string  getPassword() const;
 		const string  getName() const;
@@ -50,6 +49,7 @@ class Channel {
 		const Client *getAdmin( const int ) const;
 		const Client *getClientInChannel( const string & ) const;
 		const Client *getAdminInChannel( const string & ) const;
+		bool		  getTopicRestrict() const;
 
 		// Methods
 		void addAdmin( const Client );

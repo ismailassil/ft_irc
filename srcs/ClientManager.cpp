@@ -91,7 +91,7 @@ void ClientManager::registerClient( int fd, string& input ) {
 		if ( tokens.size() < 5 )
 			return ft_send( fd, ERR_NEEDMOREPARAMS( ( cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName() ) ) );
 
-		string username = tokens.at( 0 );
+		string username = tokens.at( 1 );
 		if ( username.length() > 10 )
 			username = tokens.at( 0 ).substr( 0, 10 );
 		cli[fd].setUsername( username );
@@ -141,8 +141,8 @@ void ClientManager::parse( int fd, string& input ) {
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
-	const char*			   cmdList[] = { NICK, QUIT, JOIN, PART, TOPIC, MODE, \
-										PRIVMSG, KICK, INVITE, USER, PASS };
+	const char*			   cmdList[] = { NICK, JOIN, TOPIC, MODE, PRIVMSG,
+										 KICK, INVITE, USER, PASS };
 	const vector< string > tokens	 = ft_split_tokens( input );
 	if ( tokens.size() == 0 ) return;
 
@@ -170,15 +170,12 @@ void ClientManager::parse( int fd, string& input ) {
 
 	void ( ClientManager::* func[] )( int, string& ) = {
 		&ClientManager::nickCmd,
-		&ClientManager::quitCmd,
 		&ClientManager::joinCmd,
-		&ClientManager::partCmd,
 		&ClientManager::topicCmd,
 		&ClientManager::modeCmd,
 		&ClientManager::privmsgCmd,
 		&ClientManager::kickCmd,
-		&ClientManager::inviteCmd
-	};
+		&ClientManager::inviteCmd };
 
 	if ( isCmd( cmd, USER ) || isCmd( cmd, PASS ) )
 		return ft_send( fd, ERR_ALREADYREGISTERED( cli[fd].getNickName() ) );

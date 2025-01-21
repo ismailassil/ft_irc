@@ -24,9 +24,9 @@ void ClientManager::kickCmd( int fd, string& input ) {
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
 		if ( channelName == it->getName() ) {
 			chFound = true;
-			if ( !it->isClientInChannel( cli[fd].getNickName() ) )
+			if ( !it->isInChannel( cli[fd].getNickName() ) )
 				return ft_send( fd, ERR_NOTONCHANNEL( cli[fd].getNickName(), channelName ) );
-			if ( it->getClient( fd ) )
+			if ( it->isAdminInChannel( cli[fd].getNickName() ) )
 				return ft_send( fd, ERR_NOTOPERATOR( cli[fd].getNickName() ) );
 
 			for ( size_t i = 0; i < nicknames.size(); i++ ) {
@@ -34,17 +34,17 @@ void ClientManager::kickCmd( int fd, string& input ) {
 					ft_send( fd, ERR_NOSUCHNICK( nicknames[i], cli[fd].getNickName() ) );
 					continue;
 				}
-				if ( it->isClientInChannel( nicknames[i] ) )
+				if ( it->isInChannel( nicknames[i] ) ) {
 					it->removeClient( it->getClientInChannel( nicknames[i] )->getFd() );
-				else if ( it->isAdminInChannel( nicknames[i] ) )
-					it->removeAdmin( it->getAdminInChannel( nicknames[i] )->getFd() );
-				else {
+					if ( it->isAdminInChannel( nicknames[i] ) )
+						it->removeAdmin( it->getAdminInChannel( nicknames[i] )->getFd() );
+				} else {
 					ft_send( fd, ERR_USERNOTINCHANNEL( cli[fd].getNickName(), channelName, nicknames[i] ) );
 					continue;
 				}
 				string reply = ":" + cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd() + " KICK #" + channelName + " " + nicknames[i] + " :" + reason;
 				it->broadcast( reply, fd );
-				if ( it->getNumberOfClients() == 0 && it->getNumberOfAdmins() == 0 )
+				if ( it->getNumberOfClients() == 0 )
 					channels.erase( it );
 				return;
 			}

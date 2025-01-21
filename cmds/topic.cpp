@@ -17,7 +17,7 @@ void ClientManager::topicCmd( int fd, string& input ) {
 				if ( tokens.size() == 2 ) {
 					return ft_send( fd, RPL_TOPICIS( cli[fd].getNickName(), channelName, it->getTopic() ) );
 				} else {
-					if ( it->getModes().find( 't' ) != string::npos && it->getClient( fd ) ) {
+					if ( it->getTopicRestrict() && !it->isAdminInChannel( cli[fd].getNickName() ) ) {
 						return ft_send( fd, ERR_CHANOPRIVSNEEDED( cli[fd].getNickName(), channelName ) );
 					}
 					string topic = getComment( tokens, 2 );

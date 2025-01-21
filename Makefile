@@ -6,7 +6,7 @@
 #    By: iassil <iassil@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/04 21:44:18 by iassil            #+#    #+#              #
-#    Updated: 2025/01/21 11:21:18 by iassil           ###   ########.fr        #
+#    Updated: 2025/01/21 13:30:56 by iassil           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ FLD_NAME		=	._object_files
 ##### SOURCE FILES #######################################################################
 MAIN_FILE	=	main.cpp
 SRC_FILES	=	Channel.cpp  Client.cpp  ClientManager.cpp  utils.cpp Server.cpp
-CMD_FILES	=	invite.cpp  join.cpp  kick.cpp  mode.cpp  nick.cpp  part.cpp  privmsg.cpp  quit.cpp  topic.cpp
+CMD_FILES	=	invite.cpp  join.cpp    kick.cpp    mode.cpp    nick.cpp    privmsg.cpp topic.cpp
 
 ##########################################################################################
 

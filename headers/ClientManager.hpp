@@ -20,13 +20,11 @@ class ClientManager {
 		Channel*	 getChannel( const string& );
 
 		void nickCmd( int, string& );
-		void quitCmd( int, string& );
 		void joinCmd( int, string& );
 		void kickCmd( int, string& );
 		void topicCmd( int, string& );
 		void modeCmd( int, string& );
 		void privmsgCmd( int, string& );
-		void partCmd( int, string& );
 		void inviteCmd( int, string& );
 
 	public:

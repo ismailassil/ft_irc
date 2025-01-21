@@ -94,10 +94,6 @@ int Channel::getNumberOfClients() const {
 	return clients.size();
 }
 
-int Channel::getNumberOfAdmins() const {
-	return admins.size();
-}
-
 bool Channel::getModeAtIndex( const size_t index ) const {
 	return modes[index].second;
 }
@@ -231,8 +227,13 @@ bool Channel::changeAdminToClient( const string &nick ) {
 // }
 
 void Channel::broadcast( const string &reply, const int fd ) const {
+	(void)fd;
 	for ( size_t i = 0; i < clients.size(); i++ ) {
-		if ( clients[i].getFd() != fd )
-			ft_send( clients[i].getFd(), reply );
+		ft_send( clients[i].getFd(), reply );
+		// if ( clients[i].getFd() != fd )
 	}
+}
+
+bool Channel::getTopicRestrict() const {
+	return topicRestrict;
 }
