@@ -55,7 +55,7 @@ bool Client::getRegistered() const {
 	return registered;
 }
 
-bool Client::getInviteChannel( string &ChName ) const {
+bool Client::getInviteChannel( const string &ChName ) const {
 	return find( ChannelsInvite.begin(), ChannelsInvite.end(), ChName ) !=
 		   ChannelsInvite.end();
 }
@@ -102,4 +102,8 @@ void Client::setBuffer( const string &received ) {
 
 void Client::setIpAdd( const string &ipAdd ) {
 	this->ipAdd = ipAdd;
+}
+
+void Client::addInvitedChannel( const string &channelName ) {
+	ChannelsInvite.push_back( channelName );
 }

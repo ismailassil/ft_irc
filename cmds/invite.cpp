@@ -45,6 +45,7 @@ void    ClientManager::inviteCmd(int fd, string& cmd) {
         return;
     }
 
+    targetClient->addInvitedChannel(channelName);
     string reply = RPL_INVITING(cli[fd].getNickName(), targetClient->getNickName(), channelName);
     ft_send(targetClient->getFd(), reply);
 

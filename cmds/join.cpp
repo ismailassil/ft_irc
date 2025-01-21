@@ -20,7 +20,7 @@ void handleExistingChannel(Channel& channel, Client& client, int fd, const strin
         return;
     }
 
-    if (channel.getInviteOnly()) {
+    if (channel.getInviteOnly() && !client.getInviteChannel(channel.getName())) {
         ft_send(fd, ERR_INVITEONLYCHAN(client.getNickName(), channel.getName()));
         return;
     }

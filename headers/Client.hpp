@@ -13,6 +13,9 @@ class Client {
 		vector< string >			   ChannelsInvite;
 		vector< pair< string, bool > > channels;
 
+		// Methods
+		void addInvitedChannel( const string &channelName );
+
 	public:
 		// Constructors and Destructor
 		Client();
@@ -25,7 +28,7 @@ class Client {
 		int			 getFd() const;
 		bool		 getAuthenticated() const;
 		bool		 getRegistered() const;
-		bool		 getInviteChannel( string &ChName ) const;
+		bool		 getInviteChannel( const string &ChName ) const;
 		const string getNickName() const;
 		const string getUserName() const;
 		const string getIpAdd() const;
