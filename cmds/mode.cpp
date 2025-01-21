@@ -16,7 +16,8 @@ void handleModeO( Channel& channel, char sign, const string& nick, int fd, Clien
 		return;
 	}
 
-	if ( sign == '+' && !channel.isAdminInChannel( client.getNickName() ) ) {
+	if ( sign == '+' && !channel.isAdminInChannel( targetClient->getNickName() ) ) {
+		printf("client added\n");
 		channel.addAdmin( *targetClient );
 	} else {
 		channel.removeAdmin( targetClient->getFd() );
@@ -168,14 +169,15 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 		return;
 	}
 
+	if ( splited.size() == 2 ) {
+		ft_send( fd, displayChannelModes( cli[fd].getNickName(), channelName, channel->getModes() ) );
+		return;
+	}
+
 	if ( !channel->isAdminInChannel( cli[fd].getNickName() ) ) {
 		ft_send( fd, ERR_CHANOPRIVSNEEDED( cli[fd].getNickName(), channelName ) );
 		return;
 	}
 
-	if ( splited.size() == 2 ) {
-		ft_send( fd, displayChannelModes( cli[fd].getNickName(), channelName, channel->getModes() ) );
-		return;
-	}
 	processMode( splited, *channel, fd, cli[fd] );
 }
