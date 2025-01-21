@@ -39,7 +39,7 @@
 #define ERR_INVITEONLYCHAN( nickname, chName )		   ( ": 403 " + nickname + " #" + chName + " :Cannot join channel (+i)" + CRLF )
 #define ERR_BADCHANNELKEY( nickname, chName )		   ( ": 475 " + nickname + " #" + chName + " :Cannot join channel (+k)" + CRLF )
 #define ERR_NOTONCHANNEL( nickname, chName )		   ( ": 442 " + nickname + " #" + chName + " :You're not on that channel" + CRLF )
-#define ERR_USERNOTINCHANNEL( nickname, nick, chName ) ( ": 441 " + nickname + " " + nick + " #" + chName + " :You're not on that channel" + CRLF )
+#define ERR_USERNOTINCHANNEL( nickname, nick, chName ) ( ": 441 " + nickname + " " + nick + " #" + chName + " :They aren't on that channel" + CRLF )
 #define ERR_CHANOPRIVSNEEDED( nickname, chName )	   ( ": 482 " + nickname + " #" + chName + " :You're not a channel operator" + CRLF )
 #define ERR_NORECIPIENT( nickname, command )		   ( ": 411 " + nickname + " " + command + " :No recipient given" + CRLF )
 #define ERR_TOOMANYTARGETS( nickname, targets )		   ( ": 407 " + nickname + " " + targets + " :Too many recipients" + CRLF )
