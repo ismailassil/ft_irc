@@ -10,8 +10,10 @@ FLD_NAME		=	._object_files
 
 ##### SOURCE FILES #######################################################################
 MAIN_FILE	=	main.cpp
-SRC_FILES	=	Channel.cpp  Client.cpp  ClientManager.cpp  utils.cpp Server.cpp
-CMD_FILES	=	invite.cpp  join.cpp    kick.cpp    mode.cpp    nick.cpp    privmsg.cpp topic.cpp
+SRC_FILES	=	Channel.cpp		Client.cpp	ClientManager.cpp	utils.cpp	Server.cpp
+CMD_FILES	=	invite.cpp	join.cpp	kick.cpp			\
+				mode.cpp	nick.cpp	privmsg.cpp			\
+				topic.cpp
 
 ##########################################################################################
 
