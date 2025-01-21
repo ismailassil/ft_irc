@@ -116,8 +116,6 @@ Server::Server( const string &_port, const string &_password )
 		for ( int i = 1; i < nfds; i++ ) {
 			if ( fds[i].revents & POLLIN )
 				read_msg( i );
-			if ( fds[i].revents & POLLHUP )
-				remove_client( i );
 		}
 	}
 }
