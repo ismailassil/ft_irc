@@ -1,7 +1,6 @@
 #include "../headers/Channel.hpp"
 
 Channel::Channel() : invite_only( 0 ), topic( "" ), key( 0 ), limit( 0 ), topicRestrict( 0 ), name( "" ), password( "" ) {
-	modes.push_back( make_pair( 'o', false ) );
 	modes.push_back( make_pair( 'k', false ) );
 	modes.push_back( make_pair( 'l', false ) );
 	modes.push_back( make_pair( 'i', false ) );

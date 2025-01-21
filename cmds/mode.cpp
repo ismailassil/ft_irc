@@ -17,7 +17,6 @@ void handleModeO( Channel& channel, char sign, const string& nick, int fd, Clien
 	}
 
 	if ( sign == '+' && !channel.isAdminInChannel( targetClient->getNickName() ) ) {
-		printf("client added\n");
 		channel.addAdmin( *targetClient );
 	} else {
 		channel.removeAdmin( targetClient->getFd() );
@@ -35,6 +34,7 @@ void handleModeK( Channel& channel, char sign, const string& key, int fd, Client
 	} else {
 		channel.setKey( 0 );
 	}
+	channel.setModeAtIndex( 'k', sign == '+' );
 	string mode	 = sign == '+' ? "+k" : "-k";
 	string reply = sign == '+'
 					   ? RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "*****" )
@@ -50,16 +50,14 @@ void handleModeL( Channel& channel, char sign, const string& limit, int fd, Clie
 	}
 	if ( sign == '+' ) {
 		if ( channel.getLimit() && channel.getNumberOfClients() > channel.getLimit() ) {
-			printf("channel members: %d, input limit: %d\n", channel.getNumberOfClients(), stringToInt(limit));
 			ft_send( fd, ERR_CHANNELISFULL( client.getNickName(), channel.getName() ) );
 			return;
 		}
 		channel.setLimit( stringToInt( limit ) );
-		channel.setModeAtIndex( 1, true );
 	} else {
 		channel.setLimit( 0 );
-		channel.setModeAtIndex( 1, false );
 	}
+	channel.setModeAtIndex( 'l', sign == '+' );
 	string mode	 = sign == '+' ? "+l " + limit : "-l";
 	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "" );
 	channel.broadcast( reply, fd );
@@ -67,7 +65,7 @@ void handleModeL( Channel& channel, char sign, const string& limit, int fd, Clie
 
 void handleModeI( Channel& channel, char sign, int fd, Client& client ) {
 	channel.setInviteOnly( sign == '+' );
-	channel.setModeAtIndex( 2, sign == '+' );
+	channel.setModeAtIndex( 'i', sign == '+' );
 	string mode	 = sign == '+' ? "+i" : "-i";
 	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "" );
 	channel.broadcast( reply, fd );
@@ -75,7 +73,7 @@ void handleModeI( Channel& channel, char sign, int fd, Client& client ) {
 
 void handleModeT( Channel& channel, char sign, int fd, Client& client ) {
 	channel.setTopicRestrict( sign == '+' );
-	channel.setModeAtIndex( 3, sign == '+' );
+	channel.setModeAtIndex( 't', sign == '+' );
 	string mode	 = sign == '+' ? "+t" : "-t";
 	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "" );
 	channel.broadcast( reply, fd );
