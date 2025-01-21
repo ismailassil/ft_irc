@@ -12,7 +12,7 @@ class Channel {
 		string						 password;
 		vector< Client >			 clients;
 		vector< Client >			 admins;
-		vector< pair< char, bool > > modes;
+		map< char, bool >			modes;
 
 	public:
 		Channel();
@@ -27,7 +27,7 @@ class Channel {
 		void setLimit( const int );
 		void setPassword( const string & );
 		void setName( const string & );
-		void setModeAtIndex( const size_t, const bool );
+		void setModeAtIndex( const char, const bool );
 		void setTopicRestrict( const int topicRestrict );
 
 		bool isClientInChannel( const string & ) const;
@@ -40,7 +40,7 @@ class Channel {
 		int			  getKey() const;
 		int			  getLimit() const;
 		int			  getNumberOfClients() const;
-		bool		  getModeAtIndex( const size_t ) const;
+		bool		  getModeAtIndex( char ) const;
 		const string  getPassword() const;
 		const string  getName() const;
 		const string  getModes() const;

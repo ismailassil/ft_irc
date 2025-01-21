@@ -1,10 +1,10 @@
 #include "../headers/Channel.hpp"
 
 Channel::Channel() : invite_only( 0 ), topic( "" ), key( 0 ), limit( 0 ), topicRestrict( 0 ), name( "" ), password( "" ) {
-	modes.push_back( make_pair( 'k', false ) );
-	modes.push_back( make_pair( 'l', false ) );
-	modes.push_back( make_pair( 'i', false ) );
-	modes.push_back( make_pair( 't', false ) );
+	modes['k'] = false;
+	modes['l'] = false;
+	modes['i'] = false;
+	modes['t'] = false;
 }
 
 Channel::~Channel() {
@@ -66,8 +66,8 @@ void Channel::setName( const string &name ) {
 	this->name = name;
 }
 
-void Channel::setModeAtIndex( const size_t index, const bool mode ) {
-	modes[index].second = mode;
+void Channel::setModeAtIndex( const char index, const bool mode ) {
+	modes.at( index ) = mode;
 }
 
 void Channel::setTopicRestrict( const int topicRestrict ) {
@@ -94,8 +94,8 @@ int Channel::getNumberOfClients() const {
 	return clients.size();
 }
 
-bool Channel::getModeAtIndex( const size_t index ) const {
-	return modes[index].second;
+bool Channel::getModeAtIndex( char mode ) const {
+	return modes.at( mode );
 }
 
 bool Channel::isClientInChannel( const string &nick ) const {
@@ -123,12 +123,16 @@ const string Channel::getName() const {
 }
 
 const string Channel::getModes() const {
-	string modes_str = "+";
-	for ( size_t i = 0; i < modes.size(); i++ ) {
-		if ( modes[i].second )
-			modes_str += modes[i].first;
-	}
-	return modes_str;
+	string mode = "";
+	if ( modes.at('k') )
+		mode += "k";
+	if ( modes.at('l') )
+		mode += "l";
+	if ( modes.at('i') )
+		mode += "i";
+	if ( modes.at('t') )
+		mode += "t";
+	return mode;
 }
 
 const string Channel::getClientChannelList() const {
