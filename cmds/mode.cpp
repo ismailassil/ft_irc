@@ -3,16 +3,9 @@
 
 string displayChannelModes( const string&			clientNickName,
 							const string&			channelName,
-							const string&			modes,
-							const vector< string >& modeParams ) {
+							const string&			modes ) {
 	ostringstream response;
-	response << ":server 324 " << clientNickName << " " << channelName << " ";
-	response << modes;
-
-	for ( vector< string >::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it ) {
-		response << " " << *it;
-	}
-
+	response << ":server 324 " << clientNickName << " #" << channelName << " " << modes << CRLF;
 	return response.str();
 }
 
@@ -23,7 +16,7 @@ void handleModeO( Channel& channel, char sign, const string& nick, int fd, Clien
 		return;
 	}
 
-	if ( sign == '+' ) {
+	if ( sign == '+' && !channel.isAdminInChannel( client.getNickName() ) ) {
 		channel.addAdmin( *targetClient );
 	} else {
 		channel.removeAdmin( targetClient->getFd() );
@@ -51,11 +44,12 @@ void handleModeK( Channel& channel, char sign, const string& key, int fd, Client
 
 void handleModeL( Channel& channel, char sign, const string& limit, int fd, Client& client ) {
 	if ( sign == '+' && !isNumber( limit ) ) {
-		ft_send( fd, ERR_NEEDMODEPARM( channel.getName(), "l" ) );
+		ft_send( fd, ERR_NEEDMOREPARAMS( client.getNickName() ) );
 		return;
 	}
 	if ( sign == '+' ) {
-		if ( channel.getNumberOfClients() > channel.getLimit() ) {
+		if ( channel.getLimit() && channel.getNumberOfClients() > channel.getLimit() ) {
+			printf("channel members: %d, input limit: %d\n", channel.getNumberOfClients(), stringToInt(limit));
 			ft_send( fd, ERR_CHANNELISFULL( client.getNickName(), channel.getName() ) );
 			return;
 		}
@@ -65,8 +59,8 @@ void handleModeL( Channel& channel, char sign, const string& limit, int fd, Clie
 		channel.setLimit( 0 );
 		channel.setModeAtIndex( 1, false );
 	}
-	string mode	 = sign == '+' ? "+l" : "-l";
-	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, limit );
+	string mode	 = sign == '+' ? "+l " + limit : "-l";
+	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "" );
 	channel.broadcast( reply, fd );
 }
 
@@ -101,7 +95,7 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 		return;
 	}
 	vector< string > params = splited.size() > 3 ? vector< string >( splited.begin() + 3, splited.end() ) : vector< string >();
-	size_t			 j		= 0;
+	size_t j = 0;
 	for ( size_t i = 1; i < mode.length(); ++i ) {
 		if ( mode[i] == '+' || mode[i] == '-' ) {
 			sign = mode[i];
@@ -109,7 +103,7 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 		}
 		switch ( mode[i] ) {
 			case 'o':
-				if ( params.size() < j + 1 ) {
+				if ( sign == '+' && params.size() < j + 1 ) {
 					ft_send( fd, ERR_NEEDMOREPARAMS( cli.getNickName() ) );
 				} else {
 					handleModeO( channel, sign, params[j], fd, cli );
@@ -117,16 +111,16 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 				}
 				break;
 			case 'k':
-				if ( params.size() < j + 1 ) {
-					ft_send( fd, ERR_NEEDMODEPARM( channel.getName(), mode ) );
+				if ( sign == '+' && params.size() < j + 1 ) {
+					ft_send( fd, ERR_NEEDMOREPARAMS( cli.getNickName() ) );
 				} else {
 					handleModeK( channel, sign, params[j], fd, cli );
+					j++;
 				}
-				j++;
 				break;
 			case 'l':
-				if ( params.size() < j + 1 ) {
-					ft_send( fd, ERR_NEEDMODEPARM( channel.getName(), mode ) );
+				if ( sign == '+' && params.size() < j + 1 ) {
+					ft_send( fd, ERR_NEEDMOREPARAMS( cli.getNickName() ) );
 				} else {
 					handleModeL( channel, sign, params[j], fd, cli );
 					j++;
@@ -174,14 +168,14 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 		return;
 	}
 
+	if ( !channel->isAdminInChannel( cli[fd].getNickName() ) ) {
+		ft_send( fd, ERR_CHANOPRIVSNEEDED( cli[fd].getNickName(), channelName ) );
+		return;
+	}
+
 	if ( splited.size() == 2 ) {
-		vector< string > emptyParams;
-		ft_send( fd, displayChannelModes( cli[fd].getNickName(), channelName, channel->getModes(), emptyParams ) );
+		ft_send( fd, displayChannelModes( cli[fd].getNickName(), channelName, channel->getModes() ) );
 		return;
 	}
 	processMode( splited, *channel, fd, cli[fd] );
-	// display the channels with their modes
-	for ( size_t i = 0; i < channels.size(); i++ ) {
-		printf( "Channel: %s, modes: %s\n", channels[i].getName().c_str(), channels[i].getModes().c_str() );
-	}
 }
