@@ -3,16 +3,16 @@
 
 class Channel {
 	private:
-		int							 invite_only;
-		string						 topic;
-		int							 key;
-		int							 limit;
-		int							 topicRestrict;
-		string						 name;
-		string						 password;
-		vector< Client >			 clients;
-		vector< Client >			 admins;
-		map< char, bool >			modes;
+		int				  invite_only;
+		string			  topic;
+		int				  key;
+		int				  limit;
+		int				  topicRestrict;
+		string			  name;
+		string			  password;
+		vector< Client >  clients;
+		vector< Client >  admins;
+		map< char, bool > modes;
 
 	public:
 		Channel();

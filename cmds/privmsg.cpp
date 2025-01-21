@@ -39,7 +39,7 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 				ft_send( fd, ERR_CANNOTSENDTOCHAN( cli[fd].getNickName(), target ) );
 				continue;
 			}
-			string reply = ":" + getPrefix( fd ) + " PRIVMSG " + target + " :" + message + CRLF;
+			string reply = ":" + getPrefix( fd ) + " PRIVMSG #" + target + " :" + message + CRLF;
 			channel->broadcast( reply, fd );
 		} else {
 			const Client* client = getClient( target );

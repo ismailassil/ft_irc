@@ -124,13 +124,13 @@ const string Channel::getName() const {
 
 const string Channel::getModes() const {
 	string mode = "";
-	if ( modes.at('k') )
+	if ( modes.at( 'k' ) )
 		mode += "k";
-	if ( modes.at('l') )
+	if ( modes.at( 'l' ) )
 		mode += "l";
-	if ( modes.at('i') )
+	if ( modes.at( 'i' ) )
 		mode += "i";
-	if ( modes.at('t') )
+	if ( modes.at( 't' ) )
 		mode += "t";
 	return mode;
 }
