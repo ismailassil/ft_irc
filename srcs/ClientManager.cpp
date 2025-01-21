@@ -141,13 +141,13 @@ void ClientManager::parse( int fd, string& input ) {
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
-	const char*			   cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK,
-										 PART, TOPIC, MODE, PRIVMSG, INVITE };
+	const char*			   cmdList[] = { NICK, QUIT, JOIN, PART, TOPIC, MODE, \
+										PRIVMSG, KICK, INVITE, USER, PASS };
 	const vector< string > tokens	 = ft_split_tokens( input );
 	if ( tokens.size() == 0 ) return;
 
 	string cmd = tokens.at( 0 );
-	transform( input.begin(), input.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
+	transform( cmd.begin(), cmd.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
 
 	int	 len   = sizeof( cmdList ) / sizeof( cmdList[0] );
 	bool found = false;
@@ -172,12 +172,13 @@ void ClientManager::parse( int fd, string& input ) {
 		&ClientManager::nickCmd,
 		&ClientManager::quitCmd,
 		&ClientManager::joinCmd,
-		&ClientManager::kickCmd,
 		&ClientManager::partCmd,
 		&ClientManager::topicCmd,
 		&ClientManager::modeCmd,
 		&ClientManager::privmsgCmd,
-		&ClientManager::inviteCmd };
+		&ClientManager::kickCmd,
+		&ClientManager::inviteCmd
+	};
 
 	if ( isCmd( cmd, USER ) || isCmd( cmd, PASS ) )
 		return ft_send( fd, ERR_ALREADYREGISTERED( cli[fd].getNickName() ) );
