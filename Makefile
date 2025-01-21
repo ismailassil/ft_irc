@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
+#    By: iassil <iassil@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/04 21:44:18 by iassil            #+#    #+#              #
-#    Updated: 2025/01/20 17:50:58 by codespace        ###   ########.fr        #
+#    Updated: 2025/01/21 09:24:13 by iassil           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ OBJ 		=	$(MAIN_OBJ) $(SRC_OBJ) $(CMD_OBJ)
 all: $(NAME)
 
 run: $(NAME) art
-	@./$(NAME)
+	@./$(NAME) 6667 hehe
 
 $(FLD_NAME)/%.o: ./%.cpp $(HEADER)
 	@mkdir -p $(dir $@)

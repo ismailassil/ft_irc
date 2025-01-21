@@ -32,7 +32,7 @@ void ft_send( int fd, const string& str ) {
 		cerr << "send() failed" << endl;
 }
 
-const string getComment( vector<string> tokens, int index ) {
+const string getComment( vector< string > tokens, int index ) {
 	string topic;
 
 	if ( tokens.at( index )[0] == ':' ) {
@@ -46,76 +46,69 @@ const string getComment( vector<string> tokens, int index ) {
 	return topic;
 }
 
-int stringToInt(const string& str) {
-    stringstream ss(str);
-    int result;
+int stringToInt( const string& str ) {
+	stringstream ss( str );
+	int			 result;
 
-    ss >> result;
-    if (ss.fail()) {
-        return -1;
-    }
-    return result;
+	ss >> result;
+	if ( ss.fail() ) {
+		return -1;
+	}
+	return result;
 }
 
-bool isNumber(const string& s) {
-    if (s.empty())
-        return false;
+bool isNumber( const string& s ) {
+	if ( s.empty() )
+		return false;
 
-    for (size_t i = 0; i < s.length(); i++) {
-        if (!isdigit(s[i]))
-            return false;
-    }
-    return true;
+	for ( size_t i = 0; i < s.length(); i++ ) {
+		if ( !isdigit( s[i] ) )
+			return false;
+	}
+	return true;
 }
 
-extern int  stop_server;
+extern int stop_server;
 
-void error(string str, int exit_status) {
-	perror(str.c_str());
-	exit(exit_status);
+void error( string str, int exit_status ) {
+	perror( str.c_str() );
+	exit( exit_status );
 }
 
-void    handle_signal(int signal) {
+void handle_signal( int signal ) {
 	(void)signal;
-    stop_server = 1;
+	stop_server = 1;
 }
 
-int parse_input(int &ac, char **&av) {
-    string port;
-    string password;
-    int         port_n;
+int parse_input( int& ac, char**& av ) {
+	string port;
+	string password;
+	int	   port_n;
 
-	if (ac != 3)
-    {
-        cerr << "ERROR : ./ircserv <port> <password>" << endl;
-		return (1);
-    }
-	port = av[1];
+	if ( ac != 3 ) {
+		cerr << "ERROR: ./ircserv <port> <password>" << endl;
+		return ( 1 );
+	}
+	port	 = av[1];
 	password = av[2];
-    if (port.empty() || password.empty())
-    {
-        cerr << "ERROR : Empty parametre is not allowed" << endl;
-        return (1);
-    }
-    for (size_t i = 0; i < port.size(); i++)
-    {
-        if (!isdigit(port.at(i)))
-        {
-            cerr << "ERROR : port must only contains numbers" << endl;
-            return (1);
-        }
-    }
-    port_n = atoi(port.c_str());
-    if (port_n > 65535 || port_n < 1024)
-    {
-        cerr << "ERROR : port number must be between [1024 - 65535]" << endl;
-        return (1);
-    }
-    if (password.size() < PASS_LENGH)
-    {
-        cerr << "ERROR : password size must be over " << PASS_LENGH << endl;
-        return (1);
-    }
-    return (0);
+	if ( port.empty() || password.empty() ) {
+		cerr << "ERROR: Empty argument is not allowed" << endl;
+		return ( 1 );
+	}
+	for ( size_t i = 0; i < port.size(); i++ ) {
+		if ( !isdigit( port.at( i ) ) ) {
+			cerr << "ERROR: port must only contains numbers" << endl;
+			return ( 1 );
+		}
+	}
+	port_n = atoi( port.c_str() );
+	if ( port_n > 65535 || port_n < 1024 ) {
+		cerr << "ERROR: port number must be between [1024 - 65535]" << endl;
+		return ( 1 );
+	}
+	if ( password.size() < PASS_LENGH && password.size() > PASS_MAXLEN ) {
+		cerr << "ERROR: password size must be between [" << PASS_LENGH << " - " << PASS_MAXLEN << "]" << endl;
+		return ( 1 );
+	}
+	return ( 0 );
 }
-

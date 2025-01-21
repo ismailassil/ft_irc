@@ -42,24 +42,4 @@ class Client {
 		void setBuffer( const string &received );
 		void setRegistered( const bool value );
 		void setIpAdd( const string &ipadd );
-
-		void printAll () {
-			cout << "fd: " << fd << endl;
-			cout << "authenticated: " << authenticated
-				 << endl;
-			cout << "registered: " << registered << endl;
-			cout << "loggedIn: " << loggedIn << endl;
-			cout << "nickname: " << nickname << endl;
-			cout << "userName: " << userName << endl;
-			cout << "buffer: " << buffer << endl;
-			cout << "ipAdd: " << ipAdd << endl;
-			cout << "ChannelsInvite: ";
-			for ( size_t i = 0; i < ChannelsInvite.size(); i++ )
-				cout << ChannelsInvite[i] << " ";
-			cout << endl;
-			cout << "channels: ";
-			for ( size_t i = 0; i < channels.size(); i++ )
-				cout << channels[i].first << " ";
-			cout << endl;
-		}
 };

@@ -1,17 +1,17 @@
 
 #include "../headers/ClientManager.hpp"
 
-string displayChannelModes( const string&       clientNickName,
-                                const string&   channelName,
-                                const string&   modes,
-                                const vector< string >& modeParams ) {
+string displayChannelModes( const string&			clientNickName,
+							const string&			channelName,
+							const string&			modes,
+							const vector< string >& modeParams ) {
 	ostringstream response;
 	response << ":server 324 " << clientNickName << " " << channelName << " ";
 	response << modes;
 
-    for ( vector<string>::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it ) {
-        response << " " << *it;
-    }
+	for ( vector< string >::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it ) {
+		response << " " << *it;
+	}
 
 	return response.str();
 }
@@ -55,10 +55,10 @@ void handleModeL( Channel& channel, char sign, const string& limit, int fd, Clie
 		return;
 	}
 	if ( sign == '+' ) {
-        if ( channel.getNumberOfClients() > channel.getLimit() ) {
-            ft_send( fd, ERR_CHANNELISFULL( client.getNickName(), channel.getName() ) );
-            return;
-        }
+		if ( channel.getNumberOfClients() > channel.getLimit() ) {
+			ft_send( fd, ERR_CHANNELISFULL( client.getNickName(), channel.getName() ) );
+			return;
+		}
 		channel.setLimit( stringToInt( limit ) );
 		channel.setModeAtIndex( 1, true );
 	} else {
@@ -88,13 +88,13 @@ void handleModeT( Channel& channel, char sign, int fd, Client& client ) {
 
 void processMode( vector< string > splited, Channel& channel, int fd, Client& cli ) {
 	string mode = splited[2];
-    for ( size_t i = 0; i < mode.length(); ++i ) {
-        char c = mode[i];
-        if ( c != '+' && c != '-' && string( "oklit" ).find( c ) == string::npos ) {
-            ft_send( fd, ERR_UNKNOWNMODE( cli.getNickName(), channel.getName(), mode ) );
-            return;
-        }
-    }
+	for ( size_t i = 0; i < mode.length(); ++i ) {
+		char c = mode[i];
+		if ( c != '+' && c != '-' && string( "oklit" ).find( c ) == string::npos ) {
+			ft_send( fd, ERR_UNKNOWNMODE( cli.getNickName(), channel.getName(), mode ) );
+			return;
+		}
+	}
 	char sign = mode[0];
 	if ( sign != '+' && sign != '-' ) {
 		ft_send( fd, ERR_UNKNOWNMODE( cli.getNickName(), channel.getName(), mode ) );
@@ -172,13 +172,13 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 	if ( !channel->isClientInChannel( cli[fd].getNickName() ) ) {
 		ft_send( fd, ERR_NOTONCHANNEL( cli[fd].getNickName(), channelName ) );
 		return;
-    }
+	}
 
-    if ( splited.size() == 2 ) {
-        vector<string> emptyParams;
-        ft_send( fd, displayChannelModes( cli[fd].getNickName(), channelName, channel->getModes(), emptyParams ) );
-        return;
-    }
+	if ( splited.size() == 2 ) {
+		vector< string > emptyParams;
+		ft_send( fd, displayChannelModes( cli[fd].getNickName(), channelName, channel->getModes(), emptyParams ) );
+		return;
+	}
 	processMode( splited, *channel, fd, cli[fd] );
 	// display the channels with their modes
 	for ( size_t i = 0; i < channels.size(); i++ ) {

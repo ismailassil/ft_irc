@@ -1,73 +1,68 @@
 #pragma once
+#include <arpa/inet.h>	 // IWYU pragma: keep
+#include <errno.h>		 // IWYU pragma: keep
+#include <netdb.h>		 // IWYU pragma: keep
+#include <netinet/in.h>	 // IWYU pragma: keep
+#include <poll.h>		 // IWYU pragma: keep
+#include <signal.h>		 // IWYU pragma: keep
 #include <stdio.h>		 // IWYU pragma: keep
 #include <sys/socket.h>	 // IWYU pragma: keep
 #include <unistd.h>		 // IWYU pragma: keep
 
 #include <algorithm>  // IWYU pragma: keep
 #include <cctype>	  // IWYU pragma: keep
+#include <cstdio>	  // IWYU pragma: keep
+#include <cstdlib>	  // IWYU pragma: keep
 #include <cstring>	  // IWYU pragma: keep
+#include <iomanip>	  // IWYU pragma: keep
 #include <iostream>	  // IWYU pragma: keep
 #include <map>		  // IWYU pragma: keep
 #include <sstream>	  // IWYU pragma: keep
 #include <string>	  // IWYU pragma: keep
 #include <utility>	  // IWYU pragma: keep
 #include <vector>	  // IWYU pragma: keep
-#include <string>	  // IWYU pragma: keep
-#include <cstring>	  // IWYU pragma: keep
-#include <sstream>   // IWYU pragma: keep
-#include <iomanip>  // IWYU pragma: keep
-#include <arpa/inet.h>  // IWYU pragma: keep
-#include <netdb.h>  // IWYU pragma: keep
-#include <sys/socket.h>  // IWYU pragma: keep
-#include <netinet/in.h>  // IWYU pragma: keep
-#include <cstring>  // IWYU pragma: keep
-#include <unistd.h>  // IWYU pragma: keep
-#include <signal.h>   // IWYU pragma: keep
-#include <poll.h>  // IWYU pragma: keep
-#include <errno.h>  // IWYU pragma: keep
-#include <cstdio>  // IWYU pragma: keep
-#include <cstdlib>  // IWYU pragma: keep
 
-#define BACKLOG 4
-#define MAXCLIENT 5
+#define BACKLOG		4
+#define MAXCLIENT	5
 #define BUFFER_SIZE 1024
-#define PASS_LENGH 4
+#define PASS_LENGH	4
+#define PASS_MAXLEN 15
 
 #include "Responses.hpp"
 
-#define PASS "pass"
-#define NICK "nick"
-#define USER "user"
-#define QUIT "quit"
-#define JOIN "join"
-#define KICK "kick"
-#define PART "part"
-#define TOPIC "topic"
-#define MODE "mode"
+#define PASS	"pass"
+#define NICK	"nick"
+#define USER	"user"
+#define QUIT	"quit"
+#define JOIN	"join"
+#define KICK	"kick"
+#define PART	"part"
+#define TOPIC	"topic"
+#define MODE	"mode"
 #define PRIVMSG "privmsg"
-#define INVITE "invite"
+#define INVITE	"invite"
 
 using std::cerr;
 using std::cout;
 using std::endl;
 using std::equal;
+using std::find_if;
 using std::getline;
 using std::istringstream;
 using std::make_pair;
 using std::map;
+using std::memset;
+using std::ostringstream;
 using std::pair;
+using std::setfill;
+using std::setw;
 using std::string;
+using std::stringstream;
 using std::tolower;
 using std::transform;
 using std::vector;
-using std::setw;
-using std::setfill;
-using std::ostringstream;
-using std::stringstream;
-using std::find_if;
-using std::memset;
 
-#define RED		"\x1b[31m"
+#define RED		"\x1b[1;31m"
 #define GREEN	"\x1b[1;32m"
 #define YELLOW	"\x1b[1;33m"
 #define BLUE	"\x1b[1;34m"
@@ -75,13 +70,13 @@ using std::memset;
 #define CYAN	"\x1b[1;36m"
 #define RESET	"\x1b[0m"
 
-void    handle_signal(int signal);
-int     parse_input(int &ac, char **&av);
-void    error(string str, int exit_status);
+void handle_signal( int signal );
+int	 parse_input( int& ac, char**& av );
+void error( string str, int exit_status );
 
 const vector< string > splitString( const string& str, char delim );
 const vector< string > ft_split_tokens( const string& input );
-void ft_send( int fd, const string& str );
-const string getComment( vector<string> tokens, int index );
-bool isNumber(const string& s);
-int stringToInt(const string& str);
+void				   ft_send( int fd, const string& str );
+const string		   getComment( vector< string > tokens, int index );
+bool				   isNumber( const string& s );
+int					   stringToInt( const string& str );

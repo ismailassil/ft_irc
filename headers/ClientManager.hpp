@@ -13,11 +13,11 @@ class ClientManager {
 		bool		 removeWhiteSpace( string& );
 		bool		 isCmd( const string&, const char* );
 		bool		 isValid( const string& str );
-		bool		 isChannel(const string& channel);
-		const string getPrefix(int);
-		Client*		 getClient(const string&);
-		Channel*	 findChannelByName(const vector<Channel>& channels, const string& name);
-		Channel*	 getChannel(const string&);
+		bool		 isChannel( const string& channel );
+		const string getPrefix( int );
+		Client*		 getClient( const string& );
+		Channel*	 findChannelByName( const vector< Channel >& channels, const string& name );
+		Channel*	 getChannel( const string& );
 
 		void nickCmd( int, string& );
 		void quitCmd( int, string& );
@@ -32,7 +32,9 @@ class ClientManager {
 	public:
 		void parse( int, string& );
 		void registerClient( int, string& );
-		
-		void 		 setPass( const string& );
+		void checkFd( int );
+		void removeClient( int );
+
+		void		 setPass( const string& );
 		const string getPass() const;
 };

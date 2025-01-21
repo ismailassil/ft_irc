@@ -1,25 +1,25 @@
 #include "../headers/ClientManager.hpp"
 
-bool ClientManager::isChannel(const string& channel) {
-    string channelName = channel.substr(1);
-    if (channel.empty() || (channel[0] != '#' && channel[0] != '&')) {
-        return false;
-    }
-    for (vector<Channel>::const_iterator it = channels.begin(); it != channels.end(); it++) {
-        if (it->getName() == channelName) {
-            return true;
-        }
-    }
-    return false;
+bool ClientManager::isChannel( const string& channel ) {
+	string channelName = channel.substr( 1 );
+	if ( channel.empty() || ( channel[0] != '#' && channel[0] != '&' ) ) {
+		return false;
+	}
+	for ( vector< Channel >::const_iterator it = channels.begin(); it != channels.end(); it++ ) {
+		if ( it->getName() == channelName ) {
+			return true;
+		}
+	}
+	return false;
 }
 
-Channel* ClientManager::findChannelByName(const vector<Channel>& channels, const string& name) {
-    for (size_t i = 0; i < channels.size(); ++i) {
-        if (channels[i].getName() == name) {
-            return (Channel*)&channels[i];
-        }
-    }
-    return NULL;
+Channel* ClientManager::findChannelByName( const vector< Channel >& channels, const string& name ) {
+	for ( size_t i = 0; i < channels.size(); ++i ) {
+		if ( channels[i].getName() == name ) {
+			return (Channel*)&channels[i];
+		}
+	}
+	return NULL;
 }
 
 bool ClientManager::isCmd( const string& str, const char* cmd ) {
@@ -63,7 +63,7 @@ void ClientManager::registerClient( int fd, string& input ) {
 		if ( !cli[fd].getAuthenticated() )
 			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ) );
 		if ( tokens.size() == 1 )
-			return ft_send( fd, ERR_NEEDMOREPARAMS( (cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName()) ) );
+			return ft_send( fd, ERR_NEEDMOREPARAMS( ( cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName() ) ) );
 		if ( tokens.size() > 2 ) {
 			string erro;
 			for ( vector< string >::const_iterator it = tokens.begin() + 1; it != tokens.end(); it++ )
@@ -85,11 +85,11 @@ void ClientManager::registerClient( int fd, string& input ) {
 	}
 	if ( isCmd( cmd, USER ) ) {
 		if ( !cli[fd].getAuthenticated() )
-			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ));
+			return ft_send( fd, ERR_NOTREGISTERED( string( "*" ) ) );
 		if ( !cli[fd].getUserName().empty() )
-			return ft_send( fd, ERR_ALREADYREGISTERED( (cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName()) ) );
+			return ft_send( fd, ERR_ALREADYREGISTERED( ( cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName() ) ) );
 		if ( tokens.size() < 5 )
-			return ft_send( fd, ERR_NEEDMOREPARAMS( (cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName()) ) );
+			return ft_send( fd, ERR_NEEDMOREPARAMS( ( cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName() ) ) );
 
 		string username = tokens.at( 0 );
 		if ( username.length() > 10 )
@@ -109,7 +109,7 @@ bool ClientManager::removeWhiteSpace( string& input ) {
 	if ( pos != string::npos ) {
 		input.erase( pos );
 	}
- 
+
 	size_t nPos = input.find_last_of( LF );
 	if ( nPos != string::npos )
 		input.erase( nPos, 1 );
@@ -138,12 +138,11 @@ void ClientManager::parse( int fd, string& input ) {
 	buffer.append( input );
 	cli[fd].setBuffer( buffer );
 
-	cout << "Buffer: " << buffer << endl;
-	exit(1);
 	//////////////////////////////////////////////////////////////////////
-	/////////////////////////// Search for cmd ///////////////////////////
+	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
-	const char*			   cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK, PART, TOPIC, MODE, PRIVMSG, INVITE };
+	const char*			   cmdList[] = { NICK, USER, PASS, QUIT, JOIN, KICK,
+										 PART, TOPIC, MODE, PRIVMSG, INVITE };
 	const vector< string > tokens	 = ft_split_tokens( input );
 	if ( tokens.size() == 0 ) return;
 
@@ -169,7 +168,7 @@ void ClientManager::parse( int fd, string& input ) {
 		return;
 	}
 
-	void ( ClientManager::*func[] )( int, string& ) = {
+	void ( ClientManager::* func[] )( int, string& ) = {
 		&ClientManager::nickCmd,
 		&ClientManager::quitCmd,
 		&ClientManager::joinCmd,
@@ -178,8 +177,7 @@ void ClientManager::parse( int fd, string& input ) {
 		&ClientManager::topicCmd,
 		&ClientManager::modeCmd,
 		&ClientManager::privmsgCmd,
-		&ClientManager::inviteCmd
-	};
+		&ClientManager::inviteCmd };
 
 	if ( isCmd( cmd, USER ) || isCmd( cmd, PASS ) )
 		return ft_send( fd, ERR_ALREADYREGISTERED( cli[fd].getNickName() ) );
@@ -221,4 +219,23 @@ Channel* ClientManager::getChannel( const string& name ) {
 
 const string ClientManager::getPrefix( int fd ) {
 	return cli[fd].getNickName() + "!" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd();
+}
+
+void ClientManager::checkFd( int fd ) {
+}
+
+void ClientManager::removeClient( int fd ) {
+	int isExist = cli.find( fd ) != cli.end();
+	if ( isExist ) {
+		cli.erase( fd );
+	}
+	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
+		Channel& channel = *it;
+		if ( channel.isInChannel( cli[fd].getNickName() ) ) {
+			if ( channel.isAdminInChannel( cli[fd].getNickName() ) )
+				channel.removeAdmin( fd );
+			else
+				channel.removeClient( fd );
+		}
+	}
 }

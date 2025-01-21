@@ -9,14 +9,14 @@ void ClientManager::kickCmd( int fd, string& input ) {
 	if ( tokens.at( 1 ).at( 0 ) != '#' || tokens.at( 1 ).at( 0 ) != '&' )
 		return ft_send( fd, ERR_NOSUCHCHANNEL( tokens.at( 2 ), tokens.at( 1 ) ) );
 
-	const string	 reason = getComment(tokens, 3);
+	const string reason = getComment( tokens, 3 );
 
 	vector< string > chName = splitString( tokens.at( 1 ), ',' );
 	if ( chName.size() != 1 || chName[0].empty() || chName[0] == "#" || chName[0] == "&" )
 		return ft_send( fd, ERR_NEEDMOREPARAMS( cli[fd].getNickName() ) );
 
 	vector< string > nicknames = splitString( tokens.at( 2 ), ',' );
-	if (nicknames.size() > 6)
+	if ( nicknames.size() > 6 )
 		return ft_send( fd, ERR_TOOMANYTARGETS( cli[fd].getNickName(), nicknames[6] ) );
 
 	const string& channelName = chName[0].substr( 1 );
@@ -48,7 +48,6 @@ void ClientManager::kickCmd( int fd, string& input ) {
 					channels.erase( it );
 				return;
 			}
-
 		}
 	}
 	if ( !chFound )

@@ -16,7 +16,7 @@ Channel::Channel( Channel const &src ) {
 
 Channel &Channel::operator=( Channel const &src ) {
 	if ( this != &src ) {
-		invite_only   = src.invite_only;
+		invite_only	  = src.invite_only;
 		topic		  = src.topic;
 		key			  = src.key;
 		limit		  = src.limit;

@@ -2,6 +2,7 @@ main.dSYM
 main
 ._object_files
 .vscode
+ircserv
 
 ### C++ ###
 # Prerequisites

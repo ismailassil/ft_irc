@@ -51,7 +51,6 @@ int Client::getFd() const {
 }
 
 bool Client::getAuthenticated() const {
-	cout << authenticated << endl;
 	return authenticated;
 }
 

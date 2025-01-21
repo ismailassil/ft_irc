@@ -30,9 +30,9 @@ class Channel {
 		void setModeAtIndex( const size_t, const bool );
 		void setTopicRestrict( const int topicRestrict );
 
-		bool		  	isClientInChannel( const string & ) const;
-		bool		  	isAdminInChannel( const string & ) const;
-		bool 			isInChannel( const string & ) const;
+		bool isClientInChannel( const string & ) const;
+		bool isAdminInChannel( const string & ) const;
+		bool isInChannel( const string & ) const;
 
 		// Getters
 		int			  getInviteOnly() const;
@@ -60,5 +60,5 @@ class Channel {
 		bool changeAdminToClient( const string & );
 
 		// Send to All Clients
-		void broadcast( const string &, int ) const ;
+		void broadcast( const string &, int ) const;
 };
