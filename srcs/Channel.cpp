@@ -138,9 +138,10 @@ const string Channel::getModes() const {
 const string Channel::getClientChannelList() const {
 	string list = "";
 	for ( size_t i = 0; i < clients.size(); i++ ) {
-		list += clients[i].getNickName();
-		if ( i + 1 < clients.size() )
-			list += " ";
+		if ( isAdminInChannel( clients[i].getNickName() ) )
+			list += "@" + clients[i].getNickName() + " ";
+		else
+			list += clients[i].getNickName() + " ";
 	}
 	return list;
 }

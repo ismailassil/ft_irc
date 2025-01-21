@@ -10,7 +10,7 @@
 #define RPL_CHANNELMODES( nickname, chName, modes )			": 324 " + nickname + " #" + chName + " " + modes + CRLF
 #define RPL_CHANGEMODE( hostname, chName, mode, arguments ) ( ":" + hostname + " MODE #" + chName + " " + mode + " " + arguments + CRLF )
 #define RPL_NICKCHANGE( oldnickname, nickname )				( ":" + oldnickname + " NICK " + nickname + CRLF )
-#define RPL_JOINMSG( hostname, ipaddress, chName )			( ":" + hostname + "@" + ipaddress + " JOIN #" + chName + CRLF )
+#define RPL_JOINMSG( nick, username, ipaddress, chName )	( ":" + nick + "!" + username + "@" + ipaddress + " JOIN #" + chName + CRLF )
 #define RPL_NAMREPLY( nickname, chName, clientslist )		( ": 353 " + nickname + " @ #" + chName + " :" + clientslist + CRLF )
 #define RPL_ENDOFNAMES( nickname, chName )					( ": 366 " + nickname + " #" + chName + " :END of /NAMES list" + CRLF )
 #define RPL_TOPICIS( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + "\r\n" )
