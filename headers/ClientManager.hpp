@@ -33,7 +33,7 @@ class ClientManager {
 		void parse( int, string& );
 		void registerClient( int, string& );
 		void removeClient( int );
-		void addNewClient( int, struct in_addr );
+		void addNewClient( int, struct in_addr ip );
 
 		void		 setPass( const string& );
 		const string getPass() const;

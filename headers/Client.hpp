@@ -13,9 +13,6 @@ class Client {
 		vector< string >			   ChannelsInvite;
 		vector< pair< string, bool > > channels;
 
-		// Methods
-		void addInvitedChannel( const string &channelName );
-
 	public:
 		// Constructors and Destructor
 		Client();
@@ -42,4 +39,7 @@ class Client {
 		void setBuffer( const string &received );
 		void setRegistered( const bool value );
 		void setIpAdd( const string &ipadd );
+
+		// Methods
+		void addInvitedChannel( const string &channelName );
 };

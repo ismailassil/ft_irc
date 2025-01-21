@@ -237,7 +237,7 @@ void ClientManager::removeClient( int fd ) {
 	}
 }
 
-void ClientManager::addNewClient( int fd, ) {
+void ClientManager::addNewClient( int fd, struct in_addr ip ) {
 	size_t isExist = cli.find( fd ) != cli.end();
 	if ( !isExist ) {
 		cli[fd] = Client();
