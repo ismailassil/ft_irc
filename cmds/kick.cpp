@@ -49,7 +49,10 @@ void ClientManager::kickCmd( int fd, string& input ) {
 					ft_send( fd, ERR_USERNOTINCHANNEL( cli[fd].getNickName(), nicknames[i], channelName ) );
 					continue;
 				}
-				string reply = ":" + cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd() + " KICK #" + channelName + " " + nicknames[i] + " :" + reason + CRLF;
+				string reply = ":" + cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd() + " KICK #" + channelName + " " + nicknames[i];
+				if ( !reason.empty() )
+					reply += " :" + reason;
+				reply += CRLF;
 				it->broadcast( reply, fd );
 				if ( it->getNumberOfClients() == 0 )
 					channels.erase( it );
