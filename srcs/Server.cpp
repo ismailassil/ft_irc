@@ -1,8 +1,18 @@
 #include "../headers/Server.hpp"
 
-int stop_server = 0;
+int			  stop_server  = 0;
+int			  Server::nfds = 0;
+struct pollfd Server::fds[MAXCLIENT + 1];
 
 Server::Server() {}
+
+Server::~Server() {
+	for ( int i = 0; i < nfds; i++ ) {
+		close( fds[i].fd );
+	}
+	printCurrentDateTime();
+	cout << YELLOW << "\n[server] Shutting down" << RESET << endl;
+}
 
 void Server::printCurrentDateTime() {
 	time_t curr_time;
@@ -16,14 +26,6 @@ Server::Server( const Server &copy ) {
 	*this = copy;
 }
 
-Server::~Server() {
-	for ( int i = 0; i < nfds; i++ ) {
-		close( fds[i].fd );
-	}
-	printCurrentDateTime();
-	cout << YELLOW << "\n[server] Shutting down" << RESET << endl;
-}
-
 Server &Server::operator=( const Server &other ) {
 	if ( this == &other )
 		return *this;
@@ -31,10 +33,10 @@ Server &Server::operator=( const Server &other ) {
 	server_addr = other.server_addr;
 	port		= other.port;
 	password	= other.password;
-	nfds		= other.nfds;
-	for ( int i = 0; i < nfds; i++ ) {
-		fds[i] = other.fds[i];
-	}
+	// nfds		= other.nfds;
+	// for ( int i = 0; i < nfds; i++ ) {
+	// 	fds[i] = other.fds[i];
+	// }
 	return ( *this );
 }
 

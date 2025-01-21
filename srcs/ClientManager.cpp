@@ -221,9 +221,6 @@ const string ClientManager::getPrefix( int fd ) {
 	return cli[fd].getNickName() + "!" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd();
 }
 
-void ClientManager::checkFd( int fd ) {
-}
-
 void ClientManager::removeClient( int fd ) {
 	int isExist = cli.find( fd ) != cli.end();
 	if ( isExist ) {

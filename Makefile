@@ -6,7 +6,7 @@
 #    By: iassil <iassil@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/04 21:44:18 by iassil            #+#    #+#              #
-#    Updated: 2025/01/21 09:24:13 by iassil           ###   ########.fr        #
+#    Updated: 2025/01/21 11:21:18 by iassil           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CPP				+=	-fsanitize=address -g
 RM				=	rm -f
 NAME			=	ircserv	
 HEADER			=	headers/Channel.hpp  headers/Client.hpp  headers/ClientManager.hpp  headers/Responses.hpp  \
-                    headers/bits.hpp headers/Server.hpp
+					headers/bits.hpp headers/Server.hpp
 
 FLD_NAME		=	._object_files
 

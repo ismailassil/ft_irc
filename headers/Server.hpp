@@ -1,6 +1,6 @@
 #ifndef SERVER_HPP
-
 #define SERVER_HPP
+
 #include "ClientManager.hpp"
 #include "bits.hpp"
 
@@ -22,8 +22,8 @@ class Server {
 	public:
 		Server( void );
 		Server( Server const &copy );
-		~Server( void );
 		Server &operator=( const Server &other );
+		~Server( void );
 
 		Server( const string &port, const string &password );
 		void		server_init();
