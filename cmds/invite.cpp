@@ -34,14 +34,15 @@ void    ClientManager::inviteCmd(int fd, string& cmd) {
         return;
     }
 
-    Client* targetClient = (Client*)channel->getClientInChannel(splited[1]);
-    if (!targetClient) {
+    Client* targetClient = getClient(splited[1]);
+
+    if (!targetClient)
+    {
         ft_send(fd, ERR_NOSUCHNICK(channelName, splited[1]));
-        return;
+        return ;
     }
 
     if (targetClient->getNickName() == cli[fd].getNickName()) {
-        ft_send(fd, ERR_NOSUCHNICK(channelName, splited[1]));
         return;
     }
 
