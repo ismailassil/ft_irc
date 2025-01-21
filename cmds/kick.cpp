@@ -44,7 +44,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 					it->removeClient( it->getClientInChannel( nicknames[i] )->getFd() );
 					if ( it->isAdminInChannel( nicknames[i] ) )
 						it->removeAdmin( it->getAdminInChannel( nicknames[i] )->getFd() );
-					ft_send( fd, RPL_KICK( channelName, cli[fd].getNickName(), reason ) );
+					ft_send( it->getClientInChannel( nicknames[i] )->getFd(), RPL_KICK( channelName, cli[fd].getNickName(), reason ) );
 				} else {
 					ft_send( fd, ERR_USERNOTINCHANNEL( cli[fd].getNickName(), nicknames[i], channelName ) );
 					continue;
