@@ -9,6 +9,7 @@ void createAndJoinChannel(vector<Channel>& channels, Client& client, const strin
     newChannel.setName(name);
     if (!password.empty()) {
         newChannel.setPassword(password);
+        newChannel.setKey(true);
     }
     newChannel.addClient(client);
     newChannel.addAdmin(client);
