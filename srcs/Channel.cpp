@@ -123,7 +123,7 @@ const string Channel::getName() const {
 }
 
 const string Channel::getModes() const {
-	string modes_str = "";
+	string modes_str = "+";
 	for ( size_t i = 0; i < modes.size(); i++ ) {
 		if ( modes[i].second )
 			modes_str += modes[i].first;
