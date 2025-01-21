@@ -33,15 +33,31 @@ all: $(NAME)
 run: $(NAME) art
 	@./$(NAME) 6667 hehe
 
-$(FLD_NAME)/%.o: ./%.cpp $(HEADER)
+$(FLD_NAME)/%.o: ./%.cpp headers/Server.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/%.o: ./srcs/%.cpp $(HEADER)
+$(FLD_NAME)/srcs/Channel.o: ./srcs/Channel.cpp headers/Channel.hpp headers/Client.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/cmds/%.o: ./cmds/%.cpp $(HEADER)
+$(FLD_NAME)/srcs/Client.o: ./srcs/Client.cpp headers/Client.hpp headers/bits.hpp
+	@mkdir -p $(dir $@)
+	@$(CPP) -c $< -o $@
+
+$(FLD_NAME)/srcs/ClientManager.o: ./srcs/ClientManager.cpp headers/ClientManager.hpp headers/Client.hpp headers/Channel.hpp headers/bits.hpp
+	@mkdir -p $(dir $@)
+	@$(CPP) -c $< -o $@
+
+$(FLD_NAME)/srcs/Server.o: ./srcs/Server.cpp headers/Server.hpp headers/ClientManager.hpp headers/bits.hpp
+	@mkdir -p $(dir $@)
+	@$(CPP) -c $< -o $@
+
+$(FLD_NAME)/srcs/utils.o: ./srcs/utils.cpp headers/bits.hpp
+	@mkdir -p $(dir $@)
+	@$(CPP) -c $< -o $@
+
+$(FLD_NAME)/cmds/%.o: ./cmds/%.cpp headers/ClientManager.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 

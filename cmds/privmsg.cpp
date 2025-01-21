@@ -5,20 +5,17 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 
 	if ( tokens.size() < 2 )
 		return ft_send( fd, ERR_NEEDMOREPARAMS( cli[fd].getNickName() ) );
-	if ( tokens.size() != 3 )
+	if ( tokens.size() < 3 )
 		return ft_send( fd, ERR_NOTEXTTOSEND( cli[fd].getNickName() ) );
 
 	string message = "";
-	for ( size_t i = 2; i < tokens.size(); i++ ) {
-		if ( i == 2 && tokens[i][0] == ':' )
-			tokens[i] = tokens[i].substr( 1 );
-		else {
-			message = tokens[i];
-			break;
+	if ( tokens.at( 2 )[0] == ':' ) {
+		tokens.at( 2 ).erase( 0, 1 );
+		for ( size_t i = 2; i < tokens.size(); i++ ) {
+			message += tokens.at( i ) + " ";
 		}
-		message += tokens[i];
-		if ( i + 1 < tokens.size() )
-			message += " ";
+	} else {
+		message = tokens.at( 2 );
 	}
 
 	vector< string > target_tokens = splitString( tokens[1], ',' );
@@ -32,7 +29,8 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 			continue;
 		}
 		if ( target[0] == '#' || target[0] == '&' ) {
-			const Channel* channel = getChannel( target.substr( 1 ) );
+			target				   = target.substr( 1 );
+			const Channel* channel = getChannel( target );
 			if ( !channel ) {
 				ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), target ) );
 				continue;

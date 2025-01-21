@@ -6,18 +6,18 @@
 
 class Server {
 	private:
-		int					 socket_fd;
-		struct sockaddr_in	 server_addr;
-		string				 port;
-		string				 password;
-		static struct pollfd fds[MAXCLIENT + 1];
-		static int			 nfds;
-		ClientManager		 clientManager;
+		int				   socket_fd;
+		struct sockaddr_in server_addr;
+		string			   port;
+		string			   password;
+		struct pollfd	   fds[MAXCLIENT + 1];
+		int				   nfds;
+		ClientManager	   clientManager;
 
-		void		add_client();
-		void		remove_client( int & );
-		void		read_msg( int & );
-		static void printCurrentDateTime();
+		void add_client();
+		void remove_client( int & );
+		void read_msg( int & );
+		void printCurrentDateTime();
 
 	public:
 		Server( void );
@@ -26,8 +26,7 @@ class Server {
 		~Server( void );
 
 		Server( const string &port, const string &password );
-		void		server_init();
-		static void remove_fd( int & );
+		void server_init();
 };
 
 #endif
