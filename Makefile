@@ -2,7 +2,8 @@ CPP				=	c++
 CPP				+=	-Wall -Wextra -Werror -std=c++98
 CPP				+=	-fsanitize=address -g
 RM				=	rm -f
-NAME			=	ircserv	
+NAME			=	ircserv
+NAME_BONUS		=	bot
 HEADER			=	headers/Channel.hpp  headers/Client.hpp  headers/ClientManager.hpp  headers/Responses.hpp  \
 					headers/bits.hpp headers/Server.hpp
 
@@ -13,17 +14,20 @@ MAIN_FILE	=	main.cpp
 SRC_FILES	=	Channel.cpp		Client.cpp	ClientManager.cpp	utils.cpp	Server.cpp
 CMD_FILES	=	invite.cpp	join.cpp	kick.cpp			\
 				mode.cpp	nick.cpp	privmsg.cpp			\
-				topic.cpp
+				topic.cpp	ping.cpp
+BOT_FILES	=	Bot.cpp		main.cpp
 
 ##########################################################################################
 
 MAIN_SRC	=	$(addprefix /,$(MAIN_FILE))
 SRC_SRC		=	$(addprefix srcs/,$(SRC_FILES))
 CMD_SRC		=	$(addprefix cmds/,$(CMD_FILES))
+BOT_SRC		=	$(addprefix bonus/,$(BOT_FILES))
 
 MAIN_OBJ	=	$(addprefix $(FLD_NAME)/,$(MAIN_FILE:.cpp=.o))
 SRC_OBJ		=	$(addprefix $(FLD_NAME)/srcs/,$(SRC_FILES:.cpp=.o))
 CMD_OBJ 	=	$(addprefix $(FLD_NAME)/cmds/,$(CMD_FILES:.cpp=.o))
+BOT_OBJ		=	$(addprefix $(FLD_NAME)/bonus/,$(BOT_FILES:.cpp=.o))
 
 OBJ 		=	$(MAIN_OBJ) $(SRC_OBJ) $(CMD_OBJ)
 
@@ -32,6 +36,10 @@ all: $(NAME)
 
 run: $(NAME) art
 	@./$(NAME) 6667 hehe
+
+$(FLD_NAME)/bonus/%.o: ./bonus/%.cpp bonus/Bot.hpp
+	@mkdir -p $(dir $@)
+	@$(CPP) -c $< -o $@
 
 $(FLD_NAME)/%.o: ./%.cpp headers/Server.hpp
 	@mkdir -p $(dir $@)
@@ -67,10 +75,16 @@ $(NAME): $(OBJ)
 	@$(CPP) $^ -o $@
 	@echo "$(GREEN)[ ✓ ] Executable file Compiled Successfully!$(RESET)"
 
+bonus: $(BOT_OBJ)
+	@echo "$(YELLOW)[ ~ ] Compilation of the Objects files...$(RESET)"
+	@$(CPP) $^ -o $(NAME_BONUS)
+	@echo "$(GREEN)[ ✓ ] Executable file Compiled Successfully!$(RESET)"
+
+
 clean:
 	@echo "$(YELLOW)[ ~ ] Removing Object files $(RESET)"
-	@$(RM) $(OBJ)
-	@$(RM) -rf $(FLD_NAME)
+	@$(RM) $(OBJ) $(BOT_OBJ)
+	@$(RM) -rf $(FLD_NAME) $(NAME_BONUS)
 	@echo "$(GREEN)[ ✓ ] Object files removed successfully!$(RESET)"
 	
 fclean: clean

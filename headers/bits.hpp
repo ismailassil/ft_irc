@@ -14,6 +14,7 @@
 #include <cstdio>	  // IWYU pragma: keep
 #include <cstdlib>	  // IWYU pragma: keep
 #include <cstring>	  // IWYU pragma: keep
+#include <fstream>	  // IWYU pragma: keep
 #include <iomanip>	  // IWYU pragma: keep
 #include <iostream>	  // IWYU pragma: keep
 #include <map>		  // IWYU pragma: keep
@@ -21,7 +22,6 @@
 #include <string>	  // IWYU pragma: keep
 #include <utility>	  // IWYU pragma: keep
 #include <vector>	  // IWYU pragma: keep
-#include <fstream>  // IWYU pragma: keep
 
 #define BACKLOG		4
 #define MAXCLIENT	5
@@ -40,7 +40,8 @@
 #define MODE	"mode"
 #define PRIVMSG "privmsg"
 #define INVITE	"invite"
-#define PING "ping"
+#define PING	"ping"
+#define PONG	"pong"
 
 using std::cerr;
 using std::cout;
@@ -48,6 +49,7 @@ using std::endl;
 using std::equal;
 using std::find_if;
 using std::getline;
+using std::ifstream;
 using std::istringstream;
 using std::make_pair;
 using std::map;
@@ -58,10 +60,10 @@ using std::setfill;
 using std::setw;
 using std::string;
 using std::stringstream;
+using std::to_string;
 using std::tolower;
 using std::transform;
 using std::vector;
-using std::to_string;
 
 #define RED		"\x1b[1;31m"
 #define GREEN	"\x1b[1;32m"

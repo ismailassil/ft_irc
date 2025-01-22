@@ -41,10 +41,11 @@ void ClientManager::kickCmd( int fd, string& input ) {
 					continue;
 				}
 				if ( it->isInChannel( nicknames[i] ) ) {
-					it->removeClient( it->getClientInChannel( nicknames[i] )->getFd() );
+					int client_fd = it->getClientInChannel( nicknames[i] )->getFd();
+					it->removeClient( client_fd );
 					if ( it->isAdminInChannel( nicknames[i] ) )
-						it->removeAdmin( it->getAdminInChannel( nicknames[i] )->getFd() );
-					ft_send( it->getClientInChannel( nicknames[i] )->getFd(), RPL_KICK( channelName, cli[fd].getNickName(), reason ) );
+						it->removeAdmin( client_fd );
+					ft_send( client_fd, RPL_KICK( channelName, cli[fd].getNickName(), reason ) );
 				} else {
 					ft_send( fd, ERR_USERNOTINCHANNEL( cli[fd].getNickName(), nicknames[i], channelName ) );
 					continue;

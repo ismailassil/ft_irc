@@ -140,7 +140,7 @@ void ClientManager::parse( int fd, string& input ) {
 	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
 	const char*			   cmdList[] = { NICK, JOIN, TOPIC, MODE, PRIVMSG,
-										 KICK, INVITE, USER, PASS };
+										 KICK, INVITE, PING, USER, PASS };
 	const vector< string > tokens	 = ft_split_tokens( input );
 	if ( tokens.size() == 0 ) return;
 
@@ -173,7 +173,8 @@ void ClientManager::parse( int fd, string& input ) {
 		&ClientManager::modeCmd,
 		&ClientManager::privmsgCmd,
 		&ClientManager::kickCmd,
-		&ClientManager::inviteCmd };
+		&ClientManager::inviteCmd,
+		&ClientManager::pingCmd };
 
 	if ( isCmd( cmd, USER ) || isCmd( cmd, PASS ) )
 		return ft_send( fd, ERR_ALREADYREGISTERED( cli[fd].getNickName() ) );

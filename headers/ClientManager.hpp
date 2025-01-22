@@ -26,6 +26,7 @@ class ClientManager {
 		void modeCmd( int, string& );
 		void privmsgCmd( int, string& );
 		void inviteCmd( int, string& );
+		void pingCmd( int, string& );
 
 	public:
 		void parse( int, string& );
