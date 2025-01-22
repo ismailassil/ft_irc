@@ -8,15 +8,7 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 	if ( tokens.size() < 3 )
 		return ft_send( fd, ERR_NOTEXTTOSEND( cli[fd].getNickName() ) );
 
-	string message = "";
-	if ( tokens.at( 2 )[0] == ':' ) {
-		tokens.at( 2 ).erase( 0, 1 );
-		for ( size_t i = 2; i < tokens.size(); i++ ) {
-			message += tokens.at( i ) + " ";
-		}
-	} else {
-		message = tokens.at( 2 );
-	}
+	string message = getText( input, tokens, 2 );
 
 	vector< string > target_tokens = splitString( tokens[1], ',' );
 	if ( target_tokens.size() > 6 )

@@ -20,9 +20,9 @@ void ClientManager::topicCmd( int fd, string& input ) {
 					if ( it->getTopicRestrict() && !it->isAdminInChannel( cli[fd].getNickName() ) ) {
 						return ft_send( fd, ERR_CHANOPRIVSNEEDED( cli[fd].getNickName(), channelName ) );
 					}
-					string topic = getComment( tokens, 2 );
+					string topic = getText( input, tokens, 2 );
 					it->setTopic( topic );
-					return it->broadcast( RPL_TOPIC( cli[fd].getNickName(), channelName, topic ), fd );
+					return it->broadcast( RPL_TOPIC( cli[fd].getNickName(), channelName, topic ) );
 				}
 			}
 			return;

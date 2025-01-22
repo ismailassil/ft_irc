@@ -226,15 +226,16 @@ bool Channel::changeAdminToClient( const string &nick ) {
 	return false;
 }
 
-// void Channel::sendBroadcast( const string& reply ) {
-// 	(void)reply;
-// }
-
 void Channel::broadcast( const string &reply, const int fd ) const {
-	(void)fd;
+	for ( size_t i = 0; i < clients.size(); i++ ) {
+		if ( clients[i].getFd() != fd )
+			ft_send( clients[i].getFd(), reply );
+	}
+}
+
+void Channel::broadcast( const string &reply ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		ft_send( clients[i].getFd(), reply );
-		// if ( clients[i].getFd() != fd )
 	}
 }
 

@@ -12,7 +12,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 
 	string reason = "";
 	if ( tokens.size() > 3 )
-		reason = getComment( tokens, 3 );
+		reason = getText( input, tokens, 3 );
 
 	vector< string > chName = splitString( tokens.at( 1 ), ',' );
 	if ( chName.size() != 1 || chName[0].empty() )
@@ -53,7 +53,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 				if ( !reason.empty() )
 					reply += " :" + reason;
 				reply += CRLF;
-				it->broadcast( reply, fd );
+				it->broadcast( reply );
 				if ( it->getNumberOfClients() == 0 )
 					channels.erase( it );
 				return;

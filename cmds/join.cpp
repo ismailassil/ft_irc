@@ -14,7 +14,7 @@ void createAndJoinChannel(vector<Channel>& channels, Client& client, const strin
     newChannel.addClient(client);
     newChannel.addAdmin(client);
     channels.push_back(newChannel);
-    newChannel.broadcast(RPL_JOINMSG(client.getNickName(), client.getUserName(), client.getIpAdd(), newChannel.getName()), client.getFd());
+    newChannel.broadcast(RPL_JOINMSG(client.getNickName(), client.getUserName(), client.getIpAdd(), newChannel.getName()));
 }
 
 void handleExistingChannel(Channel& channel, Client& client, int fd, const string& password) {
@@ -38,7 +38,7 @@ void handleExistingChannel(Channel& channel, Client& client, int fd, const strin
     }
 
     channel.addClient(client);
-    channel.broadcast(RPL_JOINMSG(client.getNickName(), client.getUserName(), client.getIpAdd(), channel.getName()), client.getFd());
+    channel.broadcast(RPL_JOINMSG(client.getNickName(), client.getUserName(), client.getIpAdd(), channel.getName()));
     if (!channel.getTopic().empty()) {
         ft_send(fd, RPL_TOPIC(client.getNickName(), channel.getName(), channel.getTopic()));
     }
