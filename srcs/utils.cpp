@@ -116,6 +116,10 @@ int parse_input( int& ac, char**& av ) {
 			cerr << "ERROR: port must not contains white-spaces" << endl;
 			return ( 1 );
 		}
+		if ( isprint( password.at( i ) ) == 0 ) {
+			cerr << "ERROR: port must only contains printable characters" << endl;
+			return ( 1 );
+		}
 	}
 	for ( size_t i = 0; i < port.size(); i++ ) {
 		if ( !isdigit( port.at( i ) ) ) {
@@ -128,8 +132,8 @@ int parse_input( int& ac, char**& av ) {
 		cerr << "ERROR: port number must be between [1024 - 65535]" << endl;
 		return ( 1 );
 	}
-	if ( password.size() < PASS_LENGH && password.size() > PASS_MAXLEN ) {
-		cerr << "ERROR: password size must be between [" << PASS_LENGH << " - " << PASS_MAXLEN << "]" << endl;
+	if ( password.size() < PASS_LENGH || password.size() > PASS_MAXLEN ) {
+		cerr << "ERROR: password size must be between " << PASS_LENGH << " and " << PASS_MAXLEN << " characters" << endl;
 		return ( 1 );
 	}
 	return ( 0 );

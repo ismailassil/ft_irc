@@ -1,5 +1,6 @@
 #include "../headers/ClientManager.hpp"
 
+#include <cctype>
 #include <cstdio>
 #include <string>
 
@@ -107,6 +108,14 @@ void ClientManager::registerClient( int fd, string& input ) {
 
 bool ClientManager::checkWhiteSpaces( int fd, string& input ) {
 	if ( input.empty() ) return true;
+
+	for ( string::const_iterator it = input.begin(); it != input.end(); ++it ) {
+		if ( !std::isprint(*it) ) {
+			string client_name = cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName();
+			ft_send( fd, ERR_UNKNOWNCOMMAND( client_name , input ) );
+			return true;
+		}
+	}
 
 	cli[fd].setBuffer( cli[fd].getBuffer() + input );
 	string buffer = cli[fd].getBuffer();

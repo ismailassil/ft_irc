@@ -27,7 +27,7 @@
 #define MAXCLIENT	5
 #define BUFFER_SIZE 1024
 #define PASS_LENGH	4
-#define PASS_MAXLEN 15
+#define PASS_MAXLEN 16
 
 #include "Responses.hpp"
 
