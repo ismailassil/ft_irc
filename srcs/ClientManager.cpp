@@ -156,7 +156,10 @@ void ClientManager::parse( int fd, string& input ) {
 	const char*			   cmdList[] = { NICK, JOIN, TOPIC, MODE, PRIVMSG,
 										 KICK, INVITE, PING, USER, PASS };
 	const vector< string > tokens	 = ft_split_tokens( buffer );
-	if ( tokens.size() == 0 ) return;
+	if ( tokens.size() == 0 ) {
+		cli[fd].setBuffer( "" );
+		return;
+	}
 
 	string cmd = tokens.at( 0 );
 	transform( cmd.begin(), cmd.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
@@ -199,7 +202,6 @@ void ClientManager::parse( int fd, string& input ) {
 
 	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
 		if ( isCmd( cmd, cmdList[i] ) ) {
-			found = true;
 			( this->*func[i] )( fd, buffer );
 			cli[fd].setBuffer( "" );
 			return;
