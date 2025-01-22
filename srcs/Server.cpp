@@ -81,7 +81,6 @@ void Server::server_init() {
 		error( "socket()", 1 );
 	int reuse = 1;
 	setsockopt( socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof( reuse ) );
-	memset( &fds, 0, sizeof( fds ) );
 	memset( &this->server_addr, 0, sizeof( this->server_addr ) );
 	server_addr.sin_family		= AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;
