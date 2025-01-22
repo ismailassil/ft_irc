@@ -218,7 +218,7 @@ Channel* ClientManager::getChannel( const string& name ) {
 }
 
 const string ClientManager::getPrefix( int fd ) {
-	return cli[fd].getNickName() + "!" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd();
+	return cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd();
 }
 
 void ClientManager::removeClient( int fd ) {
@@ -229,10 +229,12 @@ void ClientManager::removeClient( int fd ) {
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
 		Channel& channel = *it;
 		if ( channel.isInChannel( cli[fd].getNickName() ) ) {
+			channel.removeClient( fd );
 			if ( channel.isAdminInChannel( cli[fd].getNickName() ) )
 				channel.removeAdmin( fd );
-			else
-				channel.removeClient( fd );
+			if ( channel.getNumberOfClients() == 0 ) {
+				channels.erase( it );
+			}
 		}
 	}
 }

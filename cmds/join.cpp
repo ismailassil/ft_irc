@@ -4,7 +4,7 @@ bool isValidChannelName(const string& channel) {
     return !channel.empty() && (channel[0] == '#' || channel[0] == '&') && channel != "#" && channel != "&";
 }
 
-void createAndJoinChannel(vector<Channel>& channels, Client& client, const string& name, const string& password = "") {
+void createAndJoinChannel(vector<Channel>& channels, Client& client, int fd, const string& name, const string& password = "") {
     Channel newChannel;
     newChannel.setName(name);
     if (!password.empty()) {
@@ -13,8 +13,11 @@ void createAndJoinChannel(vector<Channel>& channels, Client& client, const strin
     }
     newChannel.addClient(client);
     newChannel.addAdmin(client);
+	newChannel.setCreationDate();
     channels.push_back(newChannel);
     newChannel.broadcast(RPL_JOINMSG(client.getNickName(), client.getUserName(), client.getIpAdd(), newChannel.getName()));
+	ft_send(fd, RPL_NAMREPLY(client.getNickName(), newChannel.getName(), newChannel.getClientChannelList()));
+    ft_send(fd, RPL_ENDOFNAMES(client.getNickName(), newChannel.getName()));
 }
 
 void handleExistingChannel(Channel& channel, Client& client, int fd, const string& password) {
@@ -67,7 +70,7 @@ void ClientManager::joinCmd(int fd, string& cmd) {
 
         if (!channel) {
             string password = (j < passwords.size()) ? passwords[j] : "";
-            createAndJoinChannel(channels, cli[fd], chanName, password);
+			createAndJoinChannel(channels, cli[fd], fd, chanName, password);
         } else {
             string password = (j < passwords.size()) ? passwords[j] : "";
             handleExistingChannel(*channel, cli[fd], fd, password);

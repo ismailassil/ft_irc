@@ -5,9 +5,9 @@
 
 #define WELCOME_MSG											"Welcome to the server!\n"
 #define RPL_CONNECTED( nickname )							( ": 001 " + nickname + " : Welcome to the IRC server!" + CRLF )
-#define RPL_UMODEIS( hostname, chName, mode, user )			":" + hostname + " MODE " + chName + " " + mode + " " + user + CRLF
-#define RPL_CREATIONTIME( nickname, chName, creationtime )	": 329 " + nickname + " #" + chName + " " + creationtime + CRLF
-#define RPL_CHANNELMODES( nickname, chName, modes )			": 324 " + nickname + " #" + chName + " " + modes + CRLF
+#define RPL_UMODEIS( hostname, chName, mode, user )			( ":" + hostname + " MODE " + chName + " " + mode + " " + user + CRLF )
+#define RPL_CREATIONTIME( nickname, chName, creationtime )	( ": 329 " + nickname + " #" + chName + " " + creationtime + CRLF )
+#define RPL_CHANNELMODES( nickname, chName, modes )			( ": 324 " + nickname + " #" + chName + " " + modes + CRLF )
 #define RPL_CHANGEMODE( hostname, chName, mode, arguments ) ( ":" + hostname + " MODE #" + chName + " " + mode + " " + arguments + CRLF )
 #define RPL_NICKCHANGE( oldnickname, nickname )				( ":" + oldnickname + " NICK " + nickname + CRLF )
 #define RPL_JOINMSG( nick, username, ipaddress, chName )	( ":" + nick + "!" + username + "@" + ipaddress + " JOIN #" + chName + CRLF )
@@ -18,6 +18,7 @@
 #define RPL_KICK( chName, nickname, reason )				( ": " + nickname + " KICK #" + chName + " " + nickname + " :" + reason + CRLF )
 #define RPL_INVITING( nickname, target, chName )			( ": 341 " + nickname + " INVITE " + target + " #" + chName + CRLF )
 #define RPL_PONG( nickname, token )							( ":PONG " + token + CRLF )
+#define RPL_TOPICWHOTIME( nickname, chName, author, date )	( ": 333 " + nickname + " #" + chName + " " + author + " " + date + CRLF )
 
 /////////////////////////////////
 //////////// ERRORS /////////////

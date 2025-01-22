@@ -5,6 +5,8 @@ class Channel {
 	private:
 		int				  invite_only;
 		string			  topic;
+		string			  topicAuthor;
+		string			  topicDate;
 		int				  key;
 		int				  limit;
 		int				  topicRestrict;
@@ -13,6 +15,7 @@ class Channel {
 		vector< Client >  clients;
 		vector< Client >  admins;
 		map< char, bool > modes;
+		string			  creationDate;
 
 	public:
 		Channel();
@@ -29,6 +32,9 @@ class Channel {
 		void setName( const string & );
 		void setModeAtIndex( const char, const bool );
 		void setTopicRestrict( const int topicRestrict );
+		void setTopicAuthor( const string & );
+		void setTopicDate( const string & );
+		void setCreationDate();
 
 		bool isClientInChannel( const string & ) const;
 		bool isAdminInChannel( const string & ) const;
@@ -50,6 +56,9 @@ class Channel {
 		const Client *getClientInChannel( const string & ) const;
 		const Client *getAdminInChannel( const string & ) const;
 		bool		  getTopicRestrict() const;
+		const string  getTopicAuthor() const;
+		const string  getTopicDate() const;
+		const string  getCreationDate() const;
 
 		// Methods
 		void addAdmin( const Client );

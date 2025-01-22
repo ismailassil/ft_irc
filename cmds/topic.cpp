@@ -22,7 +22,11 @@ void ClientManager::topicCmd( int fd, string& input ) {
 					}
 					string topic = getText( input, tokens, 2 );
 					it->setTopic( topic );
-					return it->broadcast( RPL_TOPIC( cli[fd].getNickName(), channelName, topic ) );
+					it->setTopicAuthor( cli[fd].getNickName() );
+					it->setTopicDate( getTimestamp() );
+					it->broadcast( RPL_TOPIC( cli[fd].getNickName(), channelName, topic ) );
+					it->broadcast( RPL_TOPICWHOTIME( cli[fd].getNickName(), channelName, it->getTopicAuthor(), it->getTopicDate() ) );
+					return;
 				}
 			}
 			return;

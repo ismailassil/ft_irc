@@ -1,11 +1,11 @@
 
 #include "../headers/ClientManager.hpp"
 
-string displayChannelModes( const string&			clientNickName,
-							const string&			channelName,
-							const string&			modes ) {
+string displayChannelModes( const string& clientNickName,
+							const string& channelName,
+							const string& modes ) {
 	ostringstream response;
-	response << ":server 324 " << clientNickName << " #" << channelName << " " << modes << CRLF;
+	response << ": 324 " << clientNickName << " #" << channelName << " " << modes << CRLF;
 	return response.str();
 }
 
@@ -94,7 +94,7 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 		return;
 	}
 	vector< string > params = splited.size() > 3 ? vector< string >( splited.begin() + 3, splited.end() ) : vector< string >();
-	size_t j = 0;
+	size_t			 j		= 0;
 	for ( size_t i = 1; i < mode.length(); ++i ) {
 		if ( mode[i] == '+' || mode[i] == '-' ) {
 			sign = mode[i];
@@ -169,6 +169,7 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 
 	if ( splited.size() == 2 ) {
 		ft_send( fd, displayChannelModes( cli[fd].getNickName(), channelName, channel->getModes() ) );
+		ft_send( fd, RPL_CREATIONTIME( cli[fd].getNickName(), channelName, channel->getCreationDate() ) );
 		return;
 	}
 

@@ -143,3 +143,11 @@ bool hasOnlyWhitespaces( const string& str ) {
 	}
 	return true;
 }
+
+string getTimestamp() {
+	time_t		 currentTime = time( NULL );
+	stringstream timestamp;
+	timestamp << currentTime;
+
+	return timestamp.str();
+}

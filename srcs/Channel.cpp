@@ -1,14 +1,13 @@
 #include "../headers/Channel.hpp"
 
-Channel::Channel() : invite_only( 0 ), topic( "" ), key( 0 ), limit( 0 ), topicRestrict( 0 ), name( "" ), password( "" ) {
+Channel::Channel() : invite_only( 0 ), topic( "" ), topicAuthor( "" ), topicDate( "" ), key( 0 ), limit( 0 ), topicRestrict( 0 ), name( "" ), password( "" ), creationDate( "" ) {
 	modes['k'] = false;
 	modes['l'] = false;
 	modes['i'] = false;
 	modes['t'] = false;
 }
 
-Channel::~Channel() {
-}
+Channel::~Channel() {}
 
 Channel::Channel( Channel const &src ) {
 	*this = src;
@@ -26,6 +25,9 @@ Channel &Channel::operator=( Channel const &src ) {
 		clients		  = src.clients;
 		admins		  = src.admins;
 		modes		  = src.modes;
+		topicAuthor	  = src.topicAuthor;
+		topicDate	  = src.topicDate;
+		creationDate  = src.creationDate;
 	}
 	return *this;
 }
@@ -178,6 +180,26 @@ const Client *Channel::getAdminInChannel( const string &name ) const {
 	return NULL;
 }
 
+const string Channel::getTopicAuthor() const {
+	return topicAuthor;
+}
+
+const string Channel::getTopicDate() const {
+	return topicDate;
+}
+
+const string Channel::getCreationDate() const {
+	return creationDate;
+}
+
+void Channel::setCreationDate() {
+	time_t		  _time = time( NULL );
+	ostringstream oss;
+
+	oss << _time;
+	creationDate = string( oss.str() );
+}
+
 void Channel::addClient( const Client newClient ) {
 	clients.push_back( newClient );
 }
@@ -241,4 +263,12 @@ void Channel::broadcast( const string &reply ) const {
 
 bool Channel::getTopicRestrict() const {
 	return topicRestrict;
+}
+
+void Channel::setTopicAuthor( const string &author ) {
+	topicAuthor = author;
+}
+
+void Channel::setTopicDate( const string &date ) {
+	topicDate = date;
 }
