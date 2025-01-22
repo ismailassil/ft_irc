@@ -21,6 +21,7 @@
 #include <string>	  // IWYU pragma: keep
 #include <utility>	  // IWYU pragma: keep
 #include <vector>	  // IWYU pragma: keep
+#include <fstream>  // IWYU pragma: keep
 
 #define BACKLOG		4
 #define MAXCLIENT	5
@@ -33,14 +34,13 @@
 #define PASS	"pass"
 #define NICK	"nick"
 #define USER	"user"
-#define QUIT	"quit"
 #define JOIN	"join"
 #define KICK	"kick"
-#define PART	"part"
 #define TOPIC	"topic"
 #define MODE	"mode"
 #define PRIVMSG "privmsg"
 #define INVITE	"invite"
+#define PING "ping"
 
 using std::cerr;
 using std::cout;
@@ -61,6 +61,7 @@ using std::stringstream;
 using std::tolower;
 using std::transform;
 using std::vector;
+using std::to_string;
 
 #define RED		"\x1b[1;31m"
 #define GREEN	"\x1b[1;32m"
