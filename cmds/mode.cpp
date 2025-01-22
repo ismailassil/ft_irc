@@ -24,10 +24,10 @@ void handleModeO( Channel& channel, char sign, const string& nick, int fd, Clien
 
 	string mode	 = sign == '+' ? "+o" : "-o";
 	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, nick );
-	channel.broadcast( reply, fd );
+	channel.broadcast( reply );
 }
 
-void handleModeK( Channel& channel, char sign, const string& key, int fd, Client& client ) {
+void handleModeK( Channel& channel, char sign, const string& key, Client& client ) {
 	if ( sign == '+' ) {
 		channel.setKey( 1 );
 		channel.setPassword( key );
@@ -40,7 +40,7 @@ void handleModeK( Channel& channel, char sign, const string& key, int fd, Client
 					   ? RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "*****" )
 					   : RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "" );
 
-	channel.broadcast( reply, fd );
+	channel.broadcast( reply );
 }
 
 void handleModeL( Channel& channel, char sign, const string& limit, int fd, Client& client ) {
@@ -60,23 +60,23 @@ void handleModeL( Channel& channel, char sign, const string& limit, int fd, Clie
 	channel.setModeAtIndex( 'l', sign == '+' );
 	string mode	 = sign == '+' ? "+l " + limit : "-l";
 	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "" );
-	channel.broadcast( reply, fd );
+	channel.broadcast( reply );
 }
 
-void handleModeI( Channel& channel, char sign, int fd, Client& client ) {
+void handleModeI( Channel& channel, char sign, Client& client ) {
 	channel.setInviteOnly( sign == '+' );
 	channel.setModeAtIndex( 'i', sign == '+' );
 	string mode	 = sign == '+' ? "+i" : "-i";
 	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "" );
-	channel.broadcast( reply, fd );
+	channel.broadcast( reply );
 }
 
-void handleModeT( Channel& channel, char sign, int fd, Client& client ) {
+void handleModeT( Channel& channel, char sign, Client& client ) {
 	channel.setTopicRestrict( sign == '+' );
 	channel.setModeAtIndex( 't', sign == '+' );
 	string mode	 = sign == '+' ? "+t" : "-t";
 	string reply = RPL_CHANGEMODE( client.getNickName(), channel.getName(), mode, "" );
-	channel.broadcast( reply, fd );
+	channel.broadcast( reply );
 }
 
 void processMode( vector< string > splited, Channel& channel, int fd, Client& cli ) {
@@ -113,7 +113,7 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 				if ( sign == '+' && params.size() < j + 1 ) {
 					ft_send( fd, ERR_NEEDMOREPARAMS( cli.getNickName() ) );
 				} else {
-					handleModeK( channel, sign, params[j], fd, cli );
+					handleModeK( channel, sign, params[j], cli );
 					j++;
 				}
 				break;
@@ -126,10 +126,10 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 				}
 				break;
 			case 'i':
-				handleModeI( channel, sign, fd, cli );
+				handleModeI( channel, sign, cli );
 				break;
 			case 't':
-				handleModeT( channel, sign, fd, cli );
+				handleModeT( channel, sign, cli );
 				break;
 			default:
 				ft_send( fd, ERR_UNKNOWNMODE( cli.getNickName(), channel.getName(), mode ) );

@@ -22,7 +22,7 @@ void ClientManager::topicCmd( int fd, string& input ) {
 					}
 					string topic = getText( input, tokens, 2 );
 					it->setTopic( topic );
-					return it->broadcast( RPL_TOPIC( cli[fd].getNickName(), channelName, topic ), fd );
+					return it->broadcast( RPL_TOPIC( cli[fd].getNickName(), channelName, topic ) );
 				}
 			}
 			return;

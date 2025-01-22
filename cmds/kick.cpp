@@ -53,7 +53,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 				if ( !reason.empty() )
 					reply += " :" + reason;
 				reply += CRLF;
-				it->broadcast( reply, fd );
+				it->broadcast( reply );
 				if ( it->getNumberOfClients() == 0 )
 					channels.erase( it );
 				return;

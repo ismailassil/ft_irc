@@ -51,5 +51,5 @@ void    ClientManager::inviteCmd(int fd, string& cmd) {
     ft_send(targetClient->getFd(), reply);
 
     reply = RPL_INVITING(cli[fd].getNickName(), targetClient->getNickName(), channelName);
-    channel->broadcast(reply, fd);
+    channel->broadcast(reply);
 }
