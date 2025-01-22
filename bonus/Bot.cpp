@@ -1,12 +1,16 @@
 #include "Bot.hpp"
 
-#include <unistd.h>
+extern int stop_bot;
 
 Bot::Bot( void ) {
+	signal( SIGINT, handle_signal );
+	signal( SIGTERM, handle_signal );
+	signal( SIGHUP, handle_signal );
+	signal( SIGPIPE, SIG_IGN );
+
 	cout << GREEN << "[Bot] is Starting" << RESET << endl;
 	initVars();
 	openConfigFile();
-	// generate a function name that parses the config file
 
 	socket_fd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( socket_fd == -1 )
@@ -30,6 +34,7 @@ Bot::Bot( const Bot& copy ) {
 
 Bot::~Bot( void ) {
 	close( socket_fd );
+	cout << RED << "[Bot] is Stopping" << RESET << endl;
 }
 
 Bot& Bot::operator=( const Bot& other ) {
@@ -169,7 +174,7 @@ void Bot::run() {
 
 	srand( time( NULL ) );
 	cout << YELLOW << "Bot is running" << RESET << endl;
-	while ( true ) {
+	while ( stop_bot == 0 ) {
 		message = read_msg();
 		if ( message.empty() ) {
 			continue;

@@ -40,7 +40,7 @@ run: $(NAME) art
 run_bonus: bonus bonus_art
 	@./bot
 
-$(FLD_NAME)/bonus/%.o: ./bonus/%.cpp bonus/Bot.hpp
+$(FLD_NAME)/bonus/%.o: ./bonus/%.cpp bonus/Bot.hpp headers/bits.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
@@ -80,7 +80,7 @@ $(NAME): $(OBJ)
 
 bonus: $(NAME_BONUS)
 
-$(NAME_BONUS): $(BOT_OBJ) headers/bits.hpp
+$(NAME_BONUS): $(BOT_OBJ) 
 	@echo "$(YELLOW)[ ~ ] Compilation of the Objects files...$(RESET)"
 	@$(CPP) $^ -o $(NAME_BONUS)
 	@echo "$(GREEN)[ ✓ ] Executable file Compiled Successfully!$(RESET)"
