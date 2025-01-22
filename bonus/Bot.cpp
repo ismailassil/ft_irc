@@ -1,5 +1,7 @@
 #include "Bot.hpp"
 
+#include <unistd.h>
+
 Bot::Bot( void ) {
 	cout << GREEN << "[Bot] is Starting" << RESET << endl;
 	initVars();
@@ -16,6 +18,7 @@ Bot::Bot( void ) {
 	if ( connect( socket_fd, (struct sockaddr*)&server_addr, sizeof( server_addr ) ) < 0 )
 		error( "connect()", 1 );
 
+	usleep( 10000 );
 	read_msg();
 
 	authentificate();
@@ -41,9 +44,9 @@ Bot& Bot::operator=( const Bot& other ) {
 }
 
 void Bot::openConfigFile() {
-	ifstream file( "bot/botConfig" );
+	ifstream file( "bonus/botConfig.conf" );
 	if ( !file.is_open() )
-		error( "botConfig", 1 );
+		error( "Conf file", 1 );
 
 	string line, prt;
 	while ( getline( file, line ) ) {
@@ -83,7 +86,7 @@ void Bot::openConfigFile() {
 void Bot::authentificate() {
 	const string& msg1 = "pass " + password + CRLF;
 	send_msg( msg1 );
-	usleep( 100 );
+	usleep( 10000 );
 	////
 	string message = read_msg();
 	if ( !message.empty() ) {
@@ -95,7 +98,7 @@ void Bot::authentificate() {
 	////
 	const string& msg2 = string( "nick bot" ) + CRLF;
 	send_msg( msg2 );
-	usleep( 100 );
+	usleep( 10000 );
 	////
 	message = read_msg();
 	if ( !message.empty() ) {
@@ -115,7 +118,7 @@ void Bot::send_msg( const string& msg ) {
 const string Bot::read_msg() {
 	struct timeval timeout;
 	timeout.tv_sec	= 0;
-	timeout.tv_usec = 100;
+	timeout.tv_usec = 10000;
 	setsockopt( socket_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof( timeout ) );
 
 	char	buffer[BUFFER_SIZE];
@@ -178,6 +181,9 @@ void Bot::run() {
 
 			const string& clientName = message.substr( preStart, preEnd - preStart );
 
+			printCurrentDateTime();
+			cout << message << endl;
+
 			string response;
 			if ( message.find( "ping" ) != string::npos ) {
 				response = "PONG";
@@ -194,4 +200,19 @@ void Bot::run() {
 void Bot::error( string str, int exit_status ) {
 	perror( str.c_str() );
 	exit( exit_status );
+}
+
+void Bot::printCurrentDateTime() {
+	time_t curr_time;
+	curr_time = time( NULL );
+
+	tm* tm_local = localtime( &curr_time );
+	if ( tm_local == NULL )
+		return;
+	cout << "[" << tm_local->tm_mday << "-"
+		 << setfill( '0' ) << setw( 2 ) << tm_local->tm_mon + 1 << "-"
+		 << tm_local->tm_year + 1900 << "] ["
+		 << setw( 2 ) << tm_local->tm_hour << ":"
+		 << setw( 2 ) << tm_local->tm_min << ":"
+		 << setw( 2 ) << tm_local->tm_sec << "] ";
 }

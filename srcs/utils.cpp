@@ -51,15 +51,15 @@ void ft_send( int fd, const string& str ) {
 }
 
 const string getText( const string& input, vector< string > tokens, int index ) {
-	string topic;
+	string msg;
 
 	if ( tokens.at( index )[0] == ':' ) {
 		size_t pos = input.find( tokens.at( index ) );
-		topic	   = input.substr( pos + 1 );
+		msg		   = input.substr( pos + 1 );
 	} else {
-		topic = tokens.at( index );
+		msg = tokens.at( index );
 	}
-	return topic;
+	return msg;
 }
 
 int stringToInt( const string& str ) {

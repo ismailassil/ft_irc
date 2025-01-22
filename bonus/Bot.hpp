@@ -17,6 +17,8 @@ class Bot {
 		void		 error( string str, int exit_status );
 		const string read_msg();
 
+		void printCurrentDateTime();
+
 	public:
 		Bot( void );
 		Bot( Bot const &copy );
