@@ -134,3 +134,12 @@ int parse_input( int& ac, char**& av ) {
 	}
 	return ( 0 );
 }
+
+bool hasOnlyWhitespaces( const string& str ) {
+	for ( string::const_iterator it = str.begin(); it != str.end(); ++it ) {
+		if ( !isspace( static_cast< unsigned char >( *it ) ) ) {
+			return false;
+		}
+	}
+	return true;
+}

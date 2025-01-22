@@ -1,4 +1,5 @@
 #include "../headers/Server.hpp"
+#include <csignal>
 
 int stop_server = 0;
 
@@ -73,6 +74,8 @@ void Server::server_init() {
 	signal( SIGINT, handle_signal );
 	signal( SIGTERM, handle_signal );
 	signal( SIGHUP, handle_signal );
+	signal( SIGPIPE, SIG_IGN );
+
 	socket_fd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( socket_fd == -1 )
 		error( "socket()", 1 );

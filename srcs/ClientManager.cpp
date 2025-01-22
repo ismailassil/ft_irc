@@ -1,5 +1,8 @@
 #include "../headers/ClientManager.hpp"
 
+#include <cstdio>
+#include <string>
+
 bool ClientManager::isChannel( const string& channel ) {
 	string channelName = channel.substr( 1 );
 	if ( channel.empty() || ( channel[0] != '#' && channel[0] != '&' ) ) {
@@ -102,8 +105,20 @@ void ClientManager::registerClient( int fd, string& input ) {
 	}
 }
 
-bool ClientManager::removeWhiteSpace( string& input ) {
+bool ClientManager::checkWhiteSpaces( int fd, string& input ) {
 	if ( input.empty() ) return true;
+
+	cli[fd].setBuffer( cli[fd].getBuffer() + input );
+	string buffer = cli[fd].getBuffer();
+
+	if ( buffer.find( CRLF ) == string::npos && buffer.find( LF ) == string::npos ) {
+		return true;
+	}
+
+	if ( hasOnlyWhitespaces( buffer ) ) {
+		cli[fd].setBuffer( "" );
+		return true;
+	}
 
 	size_t pos = input.find( CRLF );
 	if ( pos != string::npos ) {
@@ -120,28 +135,16 @@ bool ClientManager::removeWhiteSpace( string& input ) {
 }
 
 void ClientManager::parse( int fd, string& input ) {
-	if ( input.empty() ) return;
-
-	if ( removeWhiteSpace( input ) ) return;
+	if ( checkWhiteSpaces( fd, input ) ) return;
 
 	string buffer = cli[fd].getBuffer();
-
-	size_t pos = input.find_first_of( "\t\v" );
-	if ( pos != string::npos ) {
-		input.erase( pos );
-		buffer.append( input );
-		cli[fd].setBuffer( buffer );
-		return;
-	}
-	buffer.append( input );
-	cli[fd].setBuffer( buffer );
 
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
 	const char*			   cmdList[] = { NICK, JOIN, TOPIC, MODE, PRIVMSG,
 										 KICK, INVITE, PING, USER, PASS };
-	const vector< string > tokens	 = ft_split_tokens( input );
+	const vector< string > tokens	 = ft_split_tokens( buffer );
 	if ( tokens.size() == 0 ) return;
 
 	string cmd = tokens.at( 0 );
@@ -182,7 +185,7 @@ void ClientManager::parse( int fd, string& input ) {
 	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
 		if ( isCmd( cmd, cmdList[i] ) ) {
 			found = true;
-			( this->*func[i] )( fd, input );
+			( this->*func[i] )( fd, buffer );
 			cli[fd].setBuffer( "" );
 			return;
 		}
