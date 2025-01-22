@@ -4,11 +4,11 @@
 #include "../headers/bits.hpp"
 
 class Bot {
-		int					  socket_fd;
-		struct sockaddr_in	  server_addr;
-		string				  password;
-		int					  port;
-		std::vector< string > facts;
+		int				   socket_fd;
+		struct sockaddr_in server_addr;
+		string			   password;
+		int				   port;
+		vector< string >   facts;
 
 		void		 initVars();
 		void		 openConfigFile();
