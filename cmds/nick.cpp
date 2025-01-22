@@ -21,6 +21,11 @@ void ClientManager::nickCmd( int fd, string& input ) {
 	if ( cli[fd].getNickName() == nick )
 		return;
 	if ( !cli[fd].getNickName().empty() )
-		ft_send( fd, ":" + cli[fd].getNickName() + " NICK " + nick + "\n" );
+		ft_send( fd, ":" + cli[fd].getNickName() + " NICK " + nick + CRLF );
+	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
+		if ( it->isInChannel( cli[fd].getNickName() ) ) {
+			it->broadcast( ":" + getPrefix( fd ) + " NICK " + nick + CRLF, fd );
+		}
+	}
 	cli[fd].setNickname( nick );
 }

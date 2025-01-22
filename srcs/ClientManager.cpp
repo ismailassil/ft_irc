@@ -84,7 +84,7 @@ void ClientManager::registerClient( int fd, string& input ) {
 		if ( cli[fd].getNickName() == nk )
 			return;
 		if ( !cli[fd].getNickName().empty() )
-			ft_send( fd, ":" + cli[fd].getNickName() + " NICK " + nk + "\n" );
+			ft_send( fd, ":" + cli[fd].getNickName() + " NICK " + nk + CRLF );
 		cli[fd].setNickname( nk );
 	}
 	if ( isCmd( cmd, USER ) ) {
@@ -233,7 +233,7 @@ Channel* ClientManager::getChannel( const string& name ) {
 }
 
 const string ClientManager::getPrefix( int fd ) {
-	return cli[fd].getNickName() + "!~" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd();
+	return cli[fd].getNickName() + "!" + cli[fd].getUserName() + "@" + cli[fd].getIpAdd();
 }
 
 void ClientManager::removeClient( int fd ) {
