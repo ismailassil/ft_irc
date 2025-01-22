@@ -39,7 +39,7 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 				ft_send( fd, ERR_NOSUCHNICK( cli[fd].getNickName(), target ) );
 				continue;
 			}
-			string reply = ":" + cli[fd].getNickName() + " PRIVMSG " + target + " :" + message + CRLF;
+			string reply = ":" + getPrefix(fd) + " PRIVMSG " + target + " :" + message + CRLF;
 			ft_send( client->getFd(), reply );
 		}
 	}

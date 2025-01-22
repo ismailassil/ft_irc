@@ -109,14 +109,6 @@ void ClientManager::registerClient( int fd, string& input ) {
 bool ClientManager::checkWhiteSpaces( int fd, string& input ) {
 	if ( input.empty() ) return true;
 
-	for ( string::const_iterator it = input.begin(); it != input.end(); ++it ) {
-		if ( !std::isprint(*it) ) {
-			string client_name = cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName();
-			ft_send( fd, ERR_UNKNOWNCOMMAND( client_name , input ) );
-			return true;
-		}
-	}
-
 	cli[fd].setBuffer( cli[fd].getBuffer() + input );
 	string buffer = cli[fd].getBuffer();
 
@@ -129,16 +121,26 @@ bool ClientManager::checkWhiteSpaces( int fd, string& input ) {
 		return true;
 	}
 
-	size_t pos = input.find( CRLF );
+	size_t pos = buffer.find( CRLF );
 	if ( pos != string::npos ) {
-		input.erase( pos );
+		buffer.erase( pos );
 	}
 
-	size_t nPos = input.find_last_of( LF );
+	size_t nPos = buffer.find_last_of( LF );
 	if ( nPos != string::npos )
-		input.erase( nPos, 1 );
+		buffer.erase( nPos, 1 );
 
-	if ( input.empty() ) return true;
+	if ( buffer.empty() ) return true;
+
+	for ( string::const_iterator it = buffer.begin(); it != buffer.end(); ++it ) {
+		if ( std::isprint( *it ) == 0 ) {
+			string client_name = cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName();
+			ft_send( fd, ERR_UNKNOWNCOMMAND( client_name, buffer ) );
+			return true;
+		}
+	}
+
+	cli[fd].setBuffer( buffer );
 
 	return false;
 }
@@ -167,8 +169,10 @@ void ClientManager::parse( int fd, string& input ) {
 			break;
 		}
 	}
-	if ( !found )
+	if ( !found ) {
+		cli[fd].setBuffer( "" );
 		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) );
+	}
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
 
@@ -188,8 +192,10 @@ void ClientManager::parse( int fd, string& input ) {
 		&ClientManager::inviteCmd,
 		&ClientManager::pingCmd };
 
-	if ( isCmd( cmd, USER ) || isCmd( cmd, PASS ) )
+	if ( isCmd( cmd, USER ) || isCmd( cmd, PASS ) ) {
+		cli[fd].setBuffer( "" );
 		return ft_send( fd, ERR_ALREADYREGISTERED( cli[fd].getNickName() ) );
+	}
 
 	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
 		if ( isCmd( cmd, cmdList[i] ) ) {

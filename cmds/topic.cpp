@@ -15,7 +15,12 @@ void ClientManager::topicCmd( int fd, string& input ) {
 		if ( it->getName() == channelName ) {
 			if ( it->isInChannel( cli[fd].getNickName() ) ) {
 				if ( tokens.size() == 2 ) {
-					return ft_send( fd, RPL_TOPICIS( cli[fd].getNickName(), channelName, it->getTopic() ) );
+					if ( it->getTopic().empty() ) {
+						return ft_send( fd, ERR_NOTOPIC( cli[fd].getNickName(), channelName ) );
+					}
+					ft_send( fd, RPL_TOPIC( cli[fd].getNickName(), channelName, it->getTopic() ) );
+					ft_send( fd, RPL_TOPICWHOTIME( cli[fd].getNickName(), channelName, it->getTopicAuthor(), it->getTopicDate() ) );
+					return;
 				} else {
 					if ( it->getTopicRestrict() && !it->isAdminInChannel( cli[fd].getNickName() ) ) {
 						return ft_send( fd, ERR_CHANOPRIVSNEEDED( cli[fd].getNickName(), channelName ) );
@@ -24,8 +29,7 @@ void ClientManager::topicCmd( int fd, string& input ) {
 					it->setTopic( topic );
 					it->setTopicAuthor( cli[fd].getNickName() );
 					it->setTopicDate( getTimestamp() );
-					it->broadcast( RPL_TOPIC( cli[fd].getNickName(), channelName, topic ) );
-					it->broadcast( RPL_TOPICWHOTIME( cli[fd].getNickName(), channelName, it->getTopicAuthor(), it->getTopicDate() ) );
+					it->broadcast( RPL_TOPIC( getPrefix( fd ), channelName, topic ) );
 					return;
 				}
 			}

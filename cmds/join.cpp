@@ -14,6 +14,7 @@ void createAndJoinChannel(vector<Channel>& channels, Client& client, int fd, con
     newChannel.addClient(client);
     newChannel.addAdmin(client);
 	newChannel.setCreationDate();
+	newChannel.setTopic("");
     channels.push_back(newChannel);
     newChannel.broadcast(RPL_JOINMSG(client.getNickName(), client.getUserName(), client.getIpAdd(), newChannel.getName()));
 	ft_send(fd, RPL_NAMREPLY(client.getNickName(), newChannel.getName(), newChannel.getClientChannelList()));
