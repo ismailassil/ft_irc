@@ -70,13 +70,13 @@ using std::vector;
 #define CYAN	"\x1b[1;36m"
 #define RESET	"\x1b[0m"
 
-void handle_signal( int signal );
-int	 parse_input( int& ac, char**& av );
-void error( string str, int exit_status );
+void handle_signal( int );
+int	 parse_input( int&, char**& );
+void error( const string&, int );
 
-const vector< string > splitString( const string& str, char delim );
-const vector< string > ft_split_tokens( const string& input );
-void				   ft_send( int fd, const string& str );
-const string		   getComment( vector< string > tokens, int index );
-bool				   isNumber( const string& s );
-int					   stringToInt( const string& str );
+const vector< string > splitString( const string&, char );
+const vector< string > ft_split_tokens( const string& );
+void				   ft_send( int fd, const string& );
+const string		   getText( const string&, vector< string >, int );
+bool				   isNumber( const string& );
+int					   stringToInt( const string& );

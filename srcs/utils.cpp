@@ -1,3 +1,5 @@
+#include <cctype>
+
 #include "../headers/bits.hpp"
 
 const vector< string > ft_split_tokens( const string& input ) {
@@ -32,14 +34,12 @@ void ft_send( int fd, const string& str ) {
 		cerr << "send() failed" << endl;
 }
 
-const string getComment( vector< string > tokens, int index ) {
+const string getText( const string& input, vector< string > tokens, int index ) {
 	string topic;
 
 	if ( tokens.at( index )[0] == ':' ) {
-		tokens.at( index ).erase( 0, 1 );
-		for ( size_t i = index; i < tokens.size(); i++ ) {
-			topic += tokens.at( i ) + " ";
-		}
+		size_t pos = input.find( tokens.at( index ) );
+		topic	   = input.substr( pos + 1 );
 	} else {
 		topic = tokens.at( index );
 	}
@@ -70,7 +70,7 @@ bool isNumber( const string& s ) {
 
 extern int stop_server;
 
-void error( string str, int exit_status ) {
+void error( const string& str, int exit_status ) {
 	perror( str.c_str() );
 	exit( exit_status );
 }
@@ -94,6 +94,12 @@ int parse_input( int& ac, char**& av ) {
 	if ( port.empty() || password.empty() ) {
 		cerr << "ERROR: Empty argument is not allowed" << endl;
 		return ( 1 );
+	}
+	for ( size_t i = 0; i < password.size(); i++ ) {
+		if ( isspace( password.at( i ) ) ) {
+			cerr << "ERROR: port must not contains white-spaces" << endl;
+			return ( 1 );
+		}
 	}
 	for ( size_t i = 0; i < port.size(); i++ ) {
 		if ( !isdigit( port.at( i ) ) ) {

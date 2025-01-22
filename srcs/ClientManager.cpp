@@ -114,6 +114,8 @@ bool ClientManager::removeWhiteSpace( string& input ) {
 	if ( nPos != string::npos )
 		input.erase( nPos, 1 );
 
+	if ( input.empty() ) return true;
+
 	return false;
 }
 
@@ -122,17 +124,13 @@ void ClientManager::parse( int fd, string& input ) {
 
 	if ( removeWhiteSpace( input ) ) return;
 
-	// size_t isExist = cli.find( fd ) != cli.end();
-	// if ( !isExist ) {
-	// 	cli[fd] = Client();
-	// 	cli[fd].setFd( fd );
-	// }
-
 	string buffer = cli[fd].getBuffer();
 
 	size_t pos = input.find_first_of( "\t\v" );
 	if ( pos != string::npos ) {
 		input.erase( pos );
+		buffer.append( input );
+		cli[fd].setBuffer( buffer );
 		return;
 	}
 	buffer.append( input );
