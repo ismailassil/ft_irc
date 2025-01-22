@@ -78,9 +78,11 @@ $(NAME): $(OBJ)
 	@$(CPP) $^ -o $@
 	@echo "$(GREEN)[ ✓ ] Executable file Compiled Successfully!$(RESET)"
 
-bonus: $(BOT_OBJ)
+bonus: $(NAME_BONUS)
+
+$(NAME_BONUS): $(BOT_OBJ) headers/bits.hpp
 	@echo "$(YELLOW)[ ~ ] Compilation of the Objects files...$(RESET)"
-	$(CPP) $^ -o $(NAME_BONUS)
+	@$(CPP) $^ -o $(NAME_BONUS)
 	@echo "$(GREEN)[ ✓ ] Executable file Compiled Successfully!$(RESET)"
 ######################################################
 
