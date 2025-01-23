@@ -22,9 +22,6 @@ Bot::Bot( void ) {
 	if ( connect( socket_fd, (struct sockaddr*)&server_addr, sizeof( server_addr ) ) < 0 )
 		error( "connect()", 1 );
 
-	usleep( 10000 );
-	read_msg();
-
 	authentificate();
 }
 

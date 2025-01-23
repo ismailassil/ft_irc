@@ -14,7 +14,7 @@ MAIN_FILE	=	main.cpp
 SRC_FILES	=	Channel.cpp		Client.cpp	ClientManager.cpp	utils.cpp	Server.cpp
 CMD_FILES	=	invite.cpp	join.cpp	kick.cpp			\
 				mode.cpp	nick.cpp	privmsg.cpp			\
-				topic.cpp	ping.cpp
+				topic.cpp	ping.cpp	pong.cpp
 BOT_FILES	=	Bot.cpp		main.cpp
 
 ##########################################################################################

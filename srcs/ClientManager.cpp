@@ -102,7 +102,7 @@ void ClientManager::registerClient( int fd, string& input ) {
 	}
 	if ( !cli[fd].getNickName().empty() && !cli[fd].getUserName().empty() ) {
 		cli[fd].setRegistered( true );
-		ft_send( fd, RPL_CONNECTED( cli[fd].getNickName() ) );
+		ft_send( fd, RPL_WELCOME( cli[fd].getNickName() ) );
 	}
 }
 
@@ -153,7 +153,7 @@ void ClientManager::parse( int fd, string& input ) {
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
-	const char*			   cmdList[] = { NICK, JOIN, TOPIC, MODE, PRIVMSG,
+	const char*			   cmdList[] = { PONG, NICK, JOIN, TOPIC, MODE, PRIVMSG,
 										 KICK, INVITE, PING, USER, PASS };
 	const vector< string > tokens	 = ft_split_tokens( buffer );
 	if ( tokens.size() == 0 ) {
@@ -164,6 +164,8 @@ void ClientManager::parse( int fd, string& input ) {
 	string cmd = tokens.at( 0 );
 	transform( cmd.begin(), cmd.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
 
+	cout << cmd << endl;
+	cout << buffer << endl;
 	int	 len   = sizeof( cmdList ) / sizeof( cmdList[0] );
 	bool found = false;
 	for ( int i = 0; i < len; i++ ) {
@@ -186,6 +188,7 @@ void ClientManager::parse( int fd, string& input ) {
 	}
 
 	void ( ClientManager::* func[] )( int, string& ) = {
+		&ClientManager::pongCmd,
 		&ClientManager::nickCmd,
 		&ClientManager::joinCmd,
 		&ClientManager::topicCmd,

@@ -19,6 +19,7 @@ class ClientManager {
 		Channel*	 findChannelByName( const vector< Channel >& channels, const string& name );
 		Channel*	 getChannel( const string& );
 
+		void pongCmd( int, string& );
 		void nickCmd( int, string& );
 		void joinCmd( int, string& );
 		void kickCmd( int, string& );

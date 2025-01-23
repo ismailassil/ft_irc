@@ -67,7 +67,7 @@ void Server::add_client() {
 	++nfds;
 	printCurrentDateTime();
 	cout << CYAN << "[server] Client <" << client_fd << "> is Connected" << RESET << endl;
-	send( client_fd, WELCOME_MSG, sizeof( WELCOME_MSG ), 0 );
+	// send( client_fd, WELCOME_MSG, sizeof( WELCOME_MSG ), 0 );
 }
 
 void Server::server_init() {

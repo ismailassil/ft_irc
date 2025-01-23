@@ -9,7 +9,7 @@ string displayChannelModes( const string& clientNickName,
 	return response.str();
 }
 
-void handleModeO( Channel& channel, char sign, const string& nick, int fd, Client& client, string& replyPrefix ) {
+void handleModeO( Channel& channel, char sign, const string& nick, int fd, string& replyPrefix ) {
 	Client* targetClient = (Client*)channel.getClientInChannel( nick );
 	if ( !targetClient ) {
 		ft_send( fd, ERR_NOSUCHNICK( channel.getName(), nick ) );
@@ -27,7 +27,7 @@ void handleModeO( Channel& channel, char sign, const string& nick, int fd, Clien
 	channel.broadcast( reply );
 }
 
-void handleModeK( Channel& channel, char sign, const string& key, Client& client, string& replyPrefix ) {
+void handleModeK( Channel& channel, char sign, const string& key, string& replyPrefix ) {
 	if ( sign == '+' ) {
 		channel.setKey( 1 );
 		channel.setPassword( key );
@@ -63,7 +63,7 @@ void handleModeL( Channel& channel, char sign, const string& limit, int fd, Clie
 	channel.broadcast( reply );
 }
 
-void handleModeI( Channel& channel, char sign, Client& client, string& replyPrefix ) {
+void handleModeI( Channel& channel, char sign, string& replyPrefix ) {
 	channel.setInviteOnly( sign == '+' );
 	channel.setModeAtIndex( 'i', sign == '+' );
 	string mode	 = sign == '+' ? "+i" : "-i";
@@ -71,7 +71,7 @@ void handleModeI( Channel& channel, char sign, Client& client, string& replyPref
 	channel.broadcast( reply );
 }
 
-void handleModeT( Channel& channel, char sign, Client& client, string& replyPrefix ) {
+void handleModeT( Channel& channel, char sign, string& replyPrefix ) {
 	channel.setTopicRestrict( sign == '+' );
 	channel.setModeAtIndex( 't', sign == '+' );
 	string mode	 = sign == '+' ? "+t" : "-t";
@@ -105,7 +105,7 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 				if ( sign == '+' && params.size() < j + 1 ) {
 					ft_send( fd, ERR_NEEDMOREPARAMS( cli.getNickName() ) );
 				} else {
-					handleModeO( channel, sign, params[j], fd, cli, replyPrefix );
+					handleModeO( channel, sign, params[j], fd, replyPrefix );
 					j++;
 				}
 				break;
@@ -113,7 +113,7 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 				if ( sign == '+' && params.size() < j + 1 ) {
 					ft_send( fd, ERR_NEEDMOREPARAMS( cli.getNickName() ) );
 				} else {
-					handleModeK( channel, sign, params[j], cli, replyPrefix );
+					handleModeK( channel, sign, params[j], replyPrefix );
 					j++;
 				}
 				break;
@@ -126,10 +126,10 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 				}
 				break;
 			case 'i':
-				handleModeI( channel, sign, cli, replyPrefix );
+				handleModeI( channel, sign, replyPrefix );
 				break;
 			case 't':
-				handleModeT( channel, sign, cli, replyPrefix );
+				handleModeT( channel, sign, replyPrefix );
 				break;
 			default:
 				ft_send( fd, ERR_UNKNOWNMODE( cli.getNickName(), channel.getName(), mode ) );
@@ -152,7 +152,7 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 	}
 	string channelName = splited[1].substr( 1 );
 	if ( !isChannel( splited[1] ) ) {
-		ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), splited[1] ) );
+		ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), channelName ) );
 		return;
 	}
 
