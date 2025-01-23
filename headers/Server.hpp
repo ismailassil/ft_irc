@@ -10,14 +10,14 @@ class Server {
 		struct sockaddr_in server_addr;
 		string			   port;
 		string			   password;
-		struct pollfd	   fds[MAXCLIENT + 1];
-		int				   nfds;
+		static struct pollfd	   fds[MAXCLIENT + 1];
+		static int				   nfds;
 		ClientManager	   clientManager;
 
 		void add_client();
-		void remove_client( int & );
-		void read_msg( int & );
-		void printCurrentDateTime();
+		void remove_client( int &fd );
+		void read_msg( int &fd );
+		static void printCurrentDateTime();
 
 	public:
 		Server( void );
@@ -27,6 +27,7 @@ class Server {
 
 		Server( const string &port, const string &password );
 		void server_init();
+		static void remove_fd( int & );
 };
 
 #endif
