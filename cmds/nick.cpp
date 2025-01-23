@@ -24,16 +24,9 @@ void ClientManager::nickCmd( int fd, string& input ) {
 		ft_send( fd, ":" + cli[fd].getNickName() + " NICK " + nick + CRLF );
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
 		if ( it->isInChannel( cli[fd].getNickName() ) ) {
-			Client* client = it->getClient( cli[fd].getNickName() );
-			if ( !client )
-				client->setNickname( nick );
-			if ( it->isAdminInChannel( cli[fd].getNickName() ) ) {
-				Client* admin = it->getAdmin( cli[fd].getNickName() );
-				if ( !admin )
-					admin->setNickname( nick );
-			}
-			if ( topicAuthor == cli[fd].getNickName() )
-				setTopicAuthor( nick );
+			it->changeMemberNick( cli[fd].getNickName(), nick );
+			if ( it->getTopicAuthor() == cli[fd].getNickName() )
+				it->setTopicAuthor( nick );
 			it->broadcast( ":" + getPrefix( fd ) + " NICK " + nick + CRLF, fd );
 		}
 	}

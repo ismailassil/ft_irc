@@ -256,6 +256,21 @@ bool Channel::changeAdminToClient( const string &nick ) {
 	return false;
 }
 
+void Channel::changeMemberNick( const string &oldNick, const string &newNick ) {
+	for ( size_t i = 0; i < clients.size(); i++ ) {
+		if ( clients[i].getNickName() == oldNick ) {
+			clients[i].setNickname( newNick );
+			break;
+		}
+	}
+	for ( size_t i = 0; i < admins.size(); i++ ) {
+		if ( admins[i].getNickName() == oldNick ) {
+			admins[i].setNickname( newNick );
+			return;
+		}
+	}
+}
+
 void Channel::broadcast( const string &reply, const int fd ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getFd() != fd )
