@@ -148,6 +148,14 @@ const string Channel::getClientChannelList() const {
 	return list;
 }
 
+const string Channel::getAdminChannelList() const {
+	string list = "";
+	for ( size_t i = 0; i < admins.size(); i++ ) {
+		list += "@" + admins[i].getNickName() + " ";
+	}
+	return list;
+}
+
 const Client *Channel::getClient( const int fd ) const {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getFd() == fd )

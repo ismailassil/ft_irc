@@ -84,5 +84,6 @@ void				   ft_send( int fd, const string& );
 const string		   getText( const string&, vector< string >, int );
 bool				   isNumber( const string& );
 int					   stringToInt( const string& );
+string                 intToString( int n );
 bool				   hasOnlyWhitespaces( const string& str );
 string				   getTimestamp();

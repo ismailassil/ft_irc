@@ -51,6 +51,7 @@ class Channel {
 		const string  getName() const;
 		const string  getModes() const;
 		const string  getClientChannelList() const;
+		const string  getAdminChannelList() const;
 		const Client *getClient( const int ) const;
 		const Client *getAdmin( const int ) const;
 		const Client *getClientInChannel( const string & ) const;

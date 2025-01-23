@@ -9,7 +9,8 @@ void createAndJoinChannel(vector<Channel>& channels, Client& client, int fd, con
     newChannel.setName(name);
     if (!password.empty()) {
         newChannel.setPassword(password);
-        newChannel.setKey(true);
+        newChannel.setKey(1);
+        newChannel.setModeAtIndex('k', true);
     }
     newChannel.addClient(client);
     newChannel.addAdmin(client);

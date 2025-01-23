@@ -73,6 +73,12 @@ int stringToInt( const string& str ) {
 	return result;
 }
 
+string intToString( int n ) {
+	stringstream ss;
+	ss << n;
+	return ss.str();
+}
+
 bool isNumber( const string& s ) {
 	if ( s.empty() )
 		return false;

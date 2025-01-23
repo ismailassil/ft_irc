@@ -1,12 +1,22 @@
 
 #include "../headers/ClientManager.hpp"
 
-string displayChannelModes( const string& clientNickName,
-							const string& channelName,
-							const string& modes ) {
-	ostringstream response;
-	response << ": 324 " << clientNickName << " #" << channelName << " " << modes << CRLF;
-	return response.str();
+string displayChannelModes( const string& clientNickName, const Channel& channel ) {
+	string mode = channel.getModes();
+	string args = "";
+	if ( channel.getModeAtIndex( 'k' ) ) {
+		args += channel.getPassword();
+	}
+	if ( channel.getModeAtIndex( 'l' ) ) {
+		args += " " + intToString( channel.getLimit() );
+	}
+	if ( channel.getModeAtIndex( 'i' ) ) {
+		args += " " + channel.getPassword();
+	}
+	if ( channel.getModeAtIndex( 't' ) ) {
+		args += " " + channel.getPassword();
+	}
+	return RPL_CHANNELMODEIS( clientNickName, channel.getName(), mode, args );
 }
 
 void handleModeO( Channel& channel, char sign, const string& nick, int fd, string& replyPrefix ) {
@@ -23,7 +33,7 @@ void handleModeO( Channel& channel, char sign, const string& nick, int fd, strin
 	}
 
 	string mode	 = sign == '+' ? "+o" : "-o";
-	string reply = RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, nick );
+	string reply = RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, targetClient->getNickName() );
 	channel.broadcast( reply );
 }
 
@@ -36,9 +46,7 @@ void handleModeK( Channel& channel, char sign, const string& key, string& replyP
 	}
 	channel.setModeAtIndex( 'k', sign == '+' );
 	string mode	 = sign == '+' ? "+k" : "-k";
-	string reply = sign == '+'
-					   ? RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, "*****" )
-					   : RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, "" );
+	string reply = sign == '+' ? RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, key ) : RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, "" );
 
 	channel.broadcast( reply );
 }
@@ -168,7 +176,7 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 	}
 
 	if ( splited.size() == 2 ) {
-		ft_send( fd, displayChannelModes( cli[fd].getNickName(), channelName, channel->getModes() ) );
+		ft_send( fd, displayChannelModes(cli[fd].getNickName(), *channel) );
 		ft_send( fd, RPL_CREATIONTIME( cli[fd].getNickName(), channelName, channel->getCreationDate() ) );
 		return;
 	}
@@ -178,5 +186,5 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 		return;
 	}
 
-	processMode( splited, *channel, fd, cli[fd], getPrefix( fd ) );
+	processMode( splited, *channel, fd, cli[fd], cli[fd].getNickName() + "!" + cli[fd].getUserName());
 }
