@@ -11,17 +11,6 @@ Client::Client()
 	  ChannelsInvite( 0 ),
 	  channels( 0 ) {}
 
-Client::Client( const string &nickname, const string &username, int fd )
-	: fd( fd ),
-	  authenticated( false ),
-	  registered( false ),
-	  nickname( nickname ),
-	  userName( username ),
-	  buffer( "" ),
-	  ipAdd( "" ),
-	  ChannelsInvite( 0 ),
-	  channels( 0 ) {}
-
 Client::~Client() {}
 
 Client::Client( Client const &src ) {

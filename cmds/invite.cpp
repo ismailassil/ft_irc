@@ -38,7 +38,7 @@ void    ClientManager::inviteCmd(int fd, string& cmd) {
 
     if (!targetClient)
     {
-        ft_send(fd, ERR_NOSUCHNICK(channelName, splited[1]));
+        ft_send(fd, ERR_NOSUCHNICK( ("#" + channelName), splited[1]));
         return ;
     }
 

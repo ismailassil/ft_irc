@@ -1,5 +1,3 @@
-#include <cctype>
-
 #include "../headers/bits.hpp"
 
 const vector< string > ft_split_tokens( const string& input ) {

@@ -4,18 +4,24 @@
 #include "../headers/bits.hpp"
 
 class Bot {
-		int				   socket_fd;
+		static int		   socket_fd;
 		struct sockaddr_in server_addr;
 		string			   password;
 		int				   port;
 		vector< string >   facts;
+		string			   nick;
+		string			   user;
 
 		void		 initVars();
 		void		 openConfigFile();
 		void		 authentificate();
 		void		 send_msg( const string &msg );
 		void		 error( string str, int exit_status );
+		static void	 handle_signal( int signum );
 		const string read_msg();
+
+		string getNickName();
+		string getUserName();
 
 		void printCurrentDateTime();
 

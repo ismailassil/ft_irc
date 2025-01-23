@@ -28,7 +28,7 @@
 #define ERR_UNKNOWNMODE( nickname, chName, mode )	   ( ": 472 " + nickname + " #" + chName + " " + mode + " :is not a recognised channel mode" + CRLF )
 #define ERR_NEEDMOREPARAMS( nickname )				   ( ": 461 " + nickname + " :Not enough parameters." + CRLF )
 #define ERR_NOTOPERATOR( chName )					   ( ": 482 #" + chName + " :You're not a channel operator" + CRLF )
-#define ERR_NOSUCHNICK( chName, name )				   ( ": 401 #" + chName + " " + name + " :No such nick/channel" + CRLF )
+#define ERR_NOSUCHNICK( chName, name )				   ( ": 401 " + chName + " " + name + " :No such nick/channel" + CRLF )
 #define ERR_PASSWDMISMATCH( nickname )				   ( ": 464 " + nickname + ":Password incorrect !" + CRLF )
 #define ERR_ALREADYREGISTERED( nickname )			   ( ": 462 " + nickname + " :You may not reregister !" + CRLF )
 #define ERR_NONICKNAME( nickname )					   ( ": 431 " + nickname + " :No nickname given" + CRLF )

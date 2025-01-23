@@ -22,7 +22,7 @@ string displayChannelModes( const string& clientNickName, const Channel& channel
 void handleModeO( Channel& channel, char sign, const string& nick, int fd, string& replyPrefix ) {
 	Client* targetClient = (Client*)channel.getClientInChannel( nick );
 	if ( !targetClient ) {
-		ft_send( fd, ERR_NOSUCHNICK( channel.getName(), nick ) );
+		ft_send( fd, ERR_NOSUCHNICK( ( "#" + channel.getName() ), nick ) );
 		return;
 	}
 
@@ -176,7 +176,7 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 	}
 
 	if ( splited.size() == 2 ) {
-		ft_send( fd, displayChannelModes(cli[fd].getNickName(), *channel) );
+		ft_send( fd, displayChannelModes( cli[fd].getNickName(), *channel ) );
 		ft_send( fd, RPL_CREATIONTIME( cli[fd].getNickName(), channelName, channel->getCreationDate() ) );
 		return;
 	}
@@ -186,5 +186,5 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 		return;
 	}
 
-	processMode( splited, *channel, fd, cli[fd], cli[fd].getNickName() + "!" + cli[fd].getUserName());
+	processMode( splited, *channel, fd, cli[fd], cli[fd].getNickName() + "!" + cli[fd].getUserName() );
 }

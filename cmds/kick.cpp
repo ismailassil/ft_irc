@@ -50,7 +50,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 					ft_send( fd, ERR_USERNOTINCHANNEL( cli[fd].getNickName(), nicknames[i], channelName ) );
 					continue;
 				}
-				string reply = ":" + getPrefix(fd) + " KICK #" + channelName + " " + nicknames[i];
+				string reply = ":" + getPrefix( fd ) + " KICK #" + channelName + " " + nicknames[i];
 				if ( !reason.empty() )
 					reply += " :" + reason;
 				reply += CRLF;

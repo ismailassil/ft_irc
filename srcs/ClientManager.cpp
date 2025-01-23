@@ -189,7 +189,7 @@ void ClientManager::parse( int fd, string& input ) {
 
 	if ( isCmd( cmd, USER ) || isCmd( cmd, PASS ) ) {
 		cli[fd].setBuffer( "" );
-		return ft_send( fd, ERR_ALREADYREGISTERED( cli[fd].getNickName() ) );
+		return ft_send( fd, ERR_ALREADYREGISTERED( ( cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName() ) ) );
 	}
 
 	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {

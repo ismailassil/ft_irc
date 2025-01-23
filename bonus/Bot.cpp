@@ -1,11 +1,12 @@
 #include "Bot.hpp"
 
-extern int stop_bot;
+int stop_bot	   = 0;
+int Bot::socket_fd = -1;
 
-Bot::Bot( void ) {
-	signal( SIGINT, handle_signal );
-	signal( SIGTERM, handle_signal );
-	signal( SIGHUP, handle_signal );
+Bot::Bot( void ) : password( "" ), port( 0 ), nick( "bot" ), user( "bot" ) {
+	signal( SIGINT, &Bot::handle_signal );
+	signal( SIGTERM, &Bot::handle_signal );
+	signal( SIGHUP, &Bot::handle_signal );
 	signal( SIGPIPE, SIG_IGN );
 
 	cout << GREEN << "[Bot] is Starting" << RESET << endl;
@@ -15,6 +16,11 @@ Bot::Bot( void ) {
 	socket_fd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( socket_fd == -1 )
 		error( "socket()", 1 );
+
+	int opt = 1;
+	if ( setsockopt( socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof( opt ) ) < 0 )
+		error( "setsockopt()", 1 );
+
 	memset( &server_addr, 0, sizeof( server_addr ) );
 	server_addr.sin_family		= AF_INET;
 	server_addr.sin_addr.s_addr = inet_addr( "127.0.0.1" );
@@ -98,7 +104,7 @@ void Bot::authentificate() {
 	}
 	message.clear();
 	////
-	const string& msg2 = string( "nick bot" ) + CRLF;
+	const string& msg2 = string( "nick " + getNickName() ) + CRLF;
 	send_msg( msg2 );
 	usleep( 10000 );
 	////
@@ -108,8 +114,10 @@ void Bot::authentificate() {
 		close( socket_fd );
 		exit( 1 );
 	}
-	const string& msg3 = string( "user bot 0 * :bot" ) + CRLF;
+	const string& msg3 = string( "user " + getUserName() + " 0 * :bot" ) + CRLF;
 	send_msg( msg3 );
+
+	read_msg();
 }
 
 void Bot::send_msg( const string& msg ) {
@@ -166,6 +174,21 @@ void Bot::initVars() {
 	facts.push_back( "The shortest war in history was between Britain and Zanzibar on August 27, 1896. Zanzibar surrendered after 38 minutes." );
 }
 
+const vector< string > splitMessage( const string& str, char delim ) {
+	vector< string > split;
+	string			 token = "";
+
+	for ( size_t i = 0; i < str.size(); i++ ) {
+		if ( str[i] == delim ) {
+			split.push_back( token );
+			token = "";
+		} else
+			token += str[i];
+	}
+	split.push_back( token );
+	return split;
+}
+
 void Bot::run() {
 	string message;
 
@@ -177,18 +200,28 @@ void Bot::run() {
 			continue;
 		}
 
-		if ( message.find( "PRIVMSG" ) != string::npos ) {
-			size_t preStart = message.find( ':' ) + 1;
-			size_t preEnd	= message.find( ' ', preStart );
+		printCurrentDateTime();
+		cout << "Received from: " << message.erase( message.find( CRLF ) ) << endl;
 
-			const string& clientName = message.substr( preStart, preEnd - preStart );
-
-			printCurrentDateTime();
-			cout << message << endl;
+		transform( message.begin(), message.end(), message.begin(), static_cast< int ( * )( int ) >( tolower ) );
+		if ( message.find( "privmsg" ) != string::npos ) {
+			vector< string > tokens = splitMessage( message, ' ' );
+			if ( tokens.size() < 4 ) {
+				continue;
+			}
+			string clientName = tokens[0].substr( 1, tokens[0].find( '!' ) - 1 );
 
 			string response;
-			if ( message.find( "ping" ) != string::npos ) {
+			if ( tokens.at( 3 ) == ":ping" ) {
 				response = "PONG";
+			} else if ( tokens.at( 3 ) == ":pong" ) {
+				response = "PING";
+			} else if ( tokens.at( 3 ) == ":time" ) {
+				time_t curr_time;
+				curr_time = time( NULL );
+				response  = ctime( &curr_time );
+			} else if ( tokens.at( 3 ) == ":hello" ) {
+				response = "Hello, " + clientName + "!";
 			} else {
 				response = facts[rand() % facts.size()];
 			}
@@ -217,4 +250,21 @@ void Bot::printCurrentDateTime() {
 		 << setw( 2 ) << tm_local->tm_hour << ":"
 		 << setw( 2 ) << tm_local->tm_min << ":"
 		 << setw( 2 ) << tm_local->tm_sec << "] ";
+}
+
+void Bot::handle_signal( int signum ) {
+	(void)signum;
+	stop_bot = 1;
+	if ( socket_fd != -1 ) {
+		send( socket_fd, "QUIT :Bye!\r\n", 11, 0 );
+		close( socket_fd );
+	}
+}
+
+string Bot::getNickName() {
+	return nick;
+}
+
+string Bot::getUserName() {
+	return user;
 }

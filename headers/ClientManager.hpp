@@ -5,7 +5,6 @@
 
 class ClientManager {
 	private:
-		vector< int >	   fds;
 		map< int, Client > cli;
 		vector< Channel >  channels;
 		string			   pass;

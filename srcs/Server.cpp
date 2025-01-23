@@ -1,8 +1,9 @@
 #include "../headers/Server.hpp"
+
 #include <csignal>
 
-int stop_server = 0;
-int Server::nfds = 0;
+int			  stop_server  = 0;
+int			  Server::nfds = 0;
 struct pollfd Server::fds[MAXCLIENT + 1];
 
 Server::Server() {}
@@ -119,8 +120,6 @@ Server::Server( const string &_port, const string &_password )
 		for ( int i = 1; i < nfds; i++ ) {
 			if ( fds[i].revents & POLLIN )
 				read_msg( fds[i].fd );
-			if ( fds[i].revents & POLLHUP || fds[i].revents & POLLERR )
-				remove_fd( fds[i].fd ); 
 		}
 	}
 }
@@ -142,7 +141,7 @@ void Server::read_msg( int &fd ) {
 		clientManager.parse( fd, message );
 	}
 	if ( byte == 0 )
-		remove_client(fd);
+		remove_client( fd );
 	else if ( byte < 0 )
 		perror( "recv() " );
 }
@@ -155,7 +154,7 @@ void Server::remove_client( int &fd ) {
 	//////////////////////////////////////////
 	clientManager.removeClient( fd );
 	//////////////////////////////////////////
-	for ( int i = 0; i < nfds; i++ ) {
+	for ( int i = 1; i < nfds; i++ ) {
 		if ( fds[i].fd == fd ) {
 			for ( int j = i; j < nfds - 1; j++ ) {
 				fds[j] = fds[j + 1];
@@ -171,7 +170,7 @@ void Server::remove_fd( int &fd ) {
 		printCurrentDateTime();
 		cout << CYAN << "[server] Client <" << fd << "> is Disconnected" << RESET << endl;
 	}
-	for ( int i = 0; i < nfds; i++ ) {
+	for ( int i = 1; i < nfds; i++ ) {
 		if ( fds[i].fd == fd ) {
 			for ( int j = i; j < nfds - 1; j++ ) {
 				fds[j] = fds[j + 1];
@@ -181,4 +180,3 @@ void Server::remove_fd( int &fd ) {
 		}
 	}
 }
-

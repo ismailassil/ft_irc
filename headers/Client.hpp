@@ -16,10 +16,9 @@ class Client {
 	public:
 		// Constructors and Destructor
 		Client();
-		Client( const string &nickname, const string &username, int fd );
-		~Client();
 		Client( Client const &src );
 		Client &operator=( Client const &src );
+		~Client();
 
 		// Getters
 		int			 getFd() const;
