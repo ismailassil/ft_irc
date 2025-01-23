@@ -10,18 +10,18 @@ void ClientManager::quitCmd( int fd, string& input ) {
 	}
 
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
-		if ( it->getClient( fd ) ) {
+		if ( it->isInChannel( cli[fd].getNickName() ) ) {
 			it->removeClient( fd );
-			if ( it->getAdmin( fd ) )
+			if ( it->isAdminInChannel( cli[fd].getNickName() ) )
 				it->removeAdmin( fd );
 			if ( it->getNumberOfClients() == 0 ) {
 				channels.erase( it );
 			} else {
-				string reply = getPrefix( fd ) + " QUIT :" + reason;
+				cli.erase( fd );
+				string reply = getPrefix( fd ) + " QUIT :" + reason + CRLF;
 				it->broadcast( reply );
 			}
 		}
 	}
-	cli.erase( fd );
 	Server::remove_fd( fd );
 }

@@ -126,14 +126,8 @@ bool ClientManager::checkWhiteSpaces( int fd, string& input ) {
 	if ( nPos != string::npos )
 		buffer.erase( nPos, 1 );
 
-	if ( buffer.empty() ) return true;
-
-	for ( string::const_iterator it = buffer.begin(); it != buffer.end(); ++it ) {
-		if ( std::isprint( *it ) == 0 ) {
-			string client_name = cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName();
-			ft_send( fd, ERR_UNKNOWNCOMMAND( client_name, buffer ) );
-			return true;
-		}
+	if ( buffer.empty() ) {
+		return true;
 	}
 
 	cli[fd].setBuffer( buffer );
@@ -142,10 +136,11 @@ bool ClientManager::checkWhiteSpaces( int fd, string& input ) {
 }
 
 void ClientManager::parse( int fd, string& input ) {
+	cout << "[" << input << "]" << endl;
 	if ( checkWhiteSpaces( fd, input ) ) return;
 
 	string buffer = cli[fd].getBuffer();
-
+	cout << buffer << endl;
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
@@ -160,8 +155,6 @@ void ClientManager::parse( int fd, string& input ) {
 	string cmd = tokens.at( 0 );
 	transform( cmd.begin(), cmd.end(), cmd.begin(), static_cast< int ( * )( int ) >( tolower ) );
 
-	cout << cmd << endl;
-	cout << buffer << endl;
 	int	 len   = sizeof( cmdList ) / sizeof( cmdList[0] );
 	bool found = false;
 	for ( int i = 0; i < len; i++ ) {
