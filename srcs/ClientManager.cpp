@@ -136,11 +136,9 @@ bool ClientManager::checkWhiteSpaces( int fd, string& input ) {
 }
 
 void ClientManager::parse( int fd, string& input ) {
-	cout << "[" << input << "]" << endl;
 	if ( checkWhiteSpaces( fd, input ) ) return;
 
 	string buffer = cli[fd].getBuffer();
-	cout << buffer << endl;
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
