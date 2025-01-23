@@ -25,12 +25,11 @@ void ClientManager::partCmd( int fd, string& input ) {
 				ft_send( fd, ERR_NOTONCHANNEL( cli[fd].getNickName(), target ) );
 				continue;
 			}
-			if ( channel->isClientInChannel( cli[fd].getNickName() ) )
-				channel->removeClient( fd );
-			else if ( channel->isAdminInChannel( cli[fd].getNickName() ) )
+			channel->removeClient( fd );
+			if ( channel->isAdminInChannel( cli[fd].getNickName() ) )
 				channel->removeAdmin( fd );
 			string reply = ":" + getPrefix( fd ) + " PART " + target + " :" + message + CRLF;
-			channel->broadcast( reply, fd );
+			channel->broadcast( reply );
 			if ( channel->getNumberOfClients() == 0 ) {
 				for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
 					if ( it->getName() == channel->getName() ) {
