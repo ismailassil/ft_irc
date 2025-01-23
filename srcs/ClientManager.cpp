@@ -149,8 +149,8 @@ void ClientManager::parse( int fd, string& input ) {
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////// Check for cmd ///////////////////////////
 	//////////////////////////////////////////////////////////////////////
-	const char*			   cmdList[] = { PONG, NICK, JOIN, TOPIC, MODE, PRIVMSG,
-										 KICK, INVITE, PING, USER, PASS };
+	const char*			   cmdList[] = { PONG, QUIT, PART, NICK, JOIN, TOPIC,
+										 MODE, PRIVMSG, KICK, INVITE, PING, USER, PASS };
 	const vector< string > tokens	 = ft_split_tokens( buffer );
 	if ( tokens.size() == 0 ) {
 		cli[fd].setBuffer( "" );
@@ -185,6 +185,8 @@ void ClientManager::parse( int fd, string& input ) {
 
 	void ( ClientManager::* func[] )( int, string& ) = {
 		&ClientManager::pongCmd,
+		&ClientManager::quitCmd,
+		&ClientManager::partCmd,
 		&ClientManager::nickCmd,
 		&ClientManager::joinCmd,
 		&ClientManager::topicCmd,

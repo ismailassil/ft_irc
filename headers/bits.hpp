@@ -42,6 +42,8 @@
 #define INVITE	"invite"
 #define PING	"ping"
 #define PONG	"pong"
+#define QUIT	"quit"
+#define PART	"part"
 
 using std::cerr;
 using std::cout;
