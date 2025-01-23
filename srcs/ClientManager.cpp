@@ -1,9 +1,5 @@
 #include "../headers/ClientManager.hpp"
 
-#include <cctype>
-#include <cstdio>
-#include <string>
-
 bool ClientManager::isChannel( const string& channel ) {
 	string channelName = channel.substr( 1 );
 	if ( channel.empty() || ( channel[0] != '#' && channel[0] != '&' ) ) {
