@@ -1,4 +1,5 @@
 #include "../headers/ClientManager.hpp"
+#include "../headers/Server.hpp"
 
 void ClientManager::quitCmd( int fd, string& input ) {
 	const vector< string > tokens = ft_split_tokens( input );
@@ -21,9 +22,6 @@ void ClientManager::quitCmd( int fd, string& input ) {
 			}
 		}
 	}
-	cli.erase( fd );		  // Remove client from the Server
-	/*
-	* Server::remove_fd( fd );  // Remove the fd from the pollfd array
-	* close( fd );			    // Close the connection
-	*/
+	cli.erase( fd );
+	Server::remove_fd( fd );
 }
