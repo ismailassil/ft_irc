@@ -2,6 +2,8 @@
 #include <csignal>
 
 int stop_server = 0;
+int Server::nfds = 0;
+struct pollfd Server::fds[MAXCLIENT + 1];
 
 Server::Server() {}
 
@@ -117,17 +119,19 @@ Server::Server( const string &_port, const string &_password )
 			add_client();
 		for ( int i = 1; i < nfds; i++ ) {
 			if ( fds[i].revents & POLLIN )
-				read_msg( i );
+				read_msg( fds[i].fd );
+			if ( fds[i].revents & POLLHUP || fds[i].revents & POLLERR )
+				remove_fd( fds[i].fd ); 
 		}
 	}
 }
 
-void Server::read_msg( int &i ) {
+void Server::read_msg( int &fd ) {
 	char   buffer[BUFFER_SIZE];
 	string message;
 	int	   byte;
 
-	while ( ( byte = recv( fds[i].fd, buffer, BUFFER_SIZE - 1, 0 ) ) > 0 ) {
+	while ( ( byte = recv( fd, buffer, BUFFER_SIZE - 1, 0 ) ) > 0 ) {
 		buffer[byte] = '\0';
 		message += buffer;
 		if ( byte < BUFFER_SIZE - 1 )
@@ -135,24 +139,46 @@ void Server::read_msg( int &i ) {
 	}
 	if ( !message.empty() ) {
 		printCurrentDateTime();
-		cout << "[client] Message received from client <" << fds[i].fd << "> : " << GREEN << message << RESET;
-		clientManager.parse( fds[i].fd, message );
+		cout << "[client] Message received from client <" << fd << "> : " << GREEN << message << RESET;
+		clientManager.parse( fd, message );
 	}
 	if ( byte == 0 )
-		remove_client( i );
+		remove_client(fd);
 	else if ( byte < 0 )
 		perror( "recv() " );
 }
 
-void Server::remove_client( int &i ) {
-	if ( close( fds[i].fd ) != -1 ) {
+void Server::remove_client( int &fd ) {
+	if ( close( fd ) != -1 ) {
 		printCurrentDateTime();
-		cout << CYAN << "[server] Client <" << fds[i].fd << "> is Disconnected" << RESET << endl;
+		cout << CYAN << "[server] Client <" << fd << "> is Disconnected" << RESET << endl;
 	}
 	//////////////////////////////////////////
-	clientManager.removeClient( fds[i].fd );
+	clientManager.removeClient( fd );
 	//////////////////////////////////////////
-	for ( int j = i; j < nfds - 1; j++ )
-		fds[j] = fds[j + 1];
-	nfds--;
+	for ( int i = 0; i < nfds; i++ ) {
+		if ( fds[i].fd == fd ) {
+			for ( int j = i; j < nfds - 1; j++ ) {
+				fds[j] = fds[j + 1];
+			}
+			--nfds;
+			break;
+		}
+	}
+}
+
+void Server::remove_fd( int &fd ) {
+	if ( close( fd ) != -1 ) {
+		printCurrentDateTime();
+		cout << CYAN << "[server] Client <" << fd << "> is Disconnected" << RESET << endl;
+	}
+	for ( int i = 0; i < nfds; i++ ) {
+		if ( fds[i].fd == fd ) {
+			for ( int j = i; j < nfds - 1; j++ ) {
+				fds[j] = fds[j + 1];
+			}
+			--nfds;
+			break;
+		}
+	}
 }

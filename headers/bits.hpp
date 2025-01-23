@@ -24,8 +24,8 @@
 #include <vector>	  // IWYU pragma: keep
 
 #define BACKLOG		4
-#define MAXCLIENT	5
-#define BUFFER_SIZE 1024
+#define MAXCLIENT	300
+#define BUFFER_SIZE 4096
 #define PASS_LENGH	4
 #define PASS_MAXLEN 16
 
