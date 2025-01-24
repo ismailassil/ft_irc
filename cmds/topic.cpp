@@ -32,6 +32,8 @@ void ClientManager::topicCmd( int fd, string& input ) {
 					it->broadcast( RPL_TOPIC( getPrefix( fd ), channelName, topic ) );
 					return;
 				}
+			} else {
+				return ft_send( fd, ERR_NOTONCHANNEL( cli[fd].getNickName(), channelName ) );
 			}
 			return;
 		}
