@@ -9,16 +9,11 @@ void ClientManager::quitCmd( int fd, string& input ) {
 		reason += getText( input, tokens, 1 );
 	}
 
+	string reply = ":" + getPrefix( fd ) + " QUIT :" + reason + CRLF;
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); ) {
 		if ( it->isInChannel( cli[fd].getNickName() ) ) {
-			string reply = ":" + getPrefix( fd ) + " QUIT :" + reason + CRLF;
 			it->broadcast( reply );
 
-			for ( map< int, Client >::iterator it2 = cli.begin(); it2 != cli.end(); it2++ ) {
-				if ( it2->second.getFd() != fd && it2->second.getFriends().size() > 0 ) {
-					it2->second.removeFriend( cli[fd].getNickName() );
-				}
-			}
 			it->removeClient( fd );
 			if ( it->isAdminInChannel( cli[fd].getNickName() ) )
 				it->removeAdmin( fd );
@@ -28,6 +23,14 @@ void ClientManager::quitCmd( int fd, string& input ) {
 				it++;
 		} else {
 			it++;
+		}
+	}
+	for ( map< int, Client >::iterator it2 = cli.begin(); it2 != cli.end(); it2++ ) {
+		if ( it2->second.getFd() != fd && it2->second.getFriends().size() > 0 ) {
+			if ( it2->second.isFriend( cli[fd].getNickName() ) ) {
+				ft_send( it2->first, reply );
+				it2->second.removeFriend( cli[fd].getNickName() );
+			}
 		}
 	}
 	cli.erase( fd );

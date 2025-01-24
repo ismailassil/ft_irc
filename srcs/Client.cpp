@@ -1,4 +1,5 @@
 #include "../headers/Client.hpp"
+
 #include <vector>
 
 Client::Client()
@@ -118,6 +119,10 @@ void Client::addFriend( const string &friendName ) {
 	friends.push_back( friendName );
 }
 
+bool Client::isFriend( const string &friendName ) {
+	return find( friends.begin(), friends.end(), friendName ) != friends.end();
+}
+
 void Client::setFriendNickName( const string &old, const string &nickName ) {
 	for ( vector< string >::iterator it = friends.begin(); it != friends.end(); it++ ) {
 		if ( *it == old ) {
@@ -136,6 +141,6 @@ void Client::removeFriend( const string &friendName ) {
 	}
 }
 
-vector<string> Client::getFriends() const {
+vector< string > Client::getFriends() const {
 	return friends;
 }

@@ -18,8 +18,8 @@ void ClientManager::partCmd( int fd, string& input ) {
 			continue;
 		}
 		if ( target[0] == '#' || target[0] == '&' ) {
-			string channelName = target.substr( 1 );
-			Channel* channel = getChannel( channelName );
+			string	 channelName = target.substr( 1 );
+			Channel* channel	 = getChannel( channelName );
 			if ( !channel ) {
 				ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), channelName ) );
 				continue;

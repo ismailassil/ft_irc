@@ -46,5 +46,6 @@ class Client {
 		// Methods
 		void addInvitedChannel( const string &channelName );
 		void addFriend( const string &friendName );
+		bool isFriend( const string &friendName );
 		void removeFriend( const string &friendName );
 };

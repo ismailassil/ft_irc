@@ -39,12 +39,13 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 				ft_send( fd, ERR_NOSUCHNICK( cli[fd].getNickName(), target ) );
 				continue;
 			}
-			string reply = ":" + getPrefix(fd) + " PRIVMSG " + target + " :" + message + CRLF;
-			if (client->getFd() == fd)
+			string reply = ":" + getPrefix( fd ) + " PRIVMSG " + target + " :" + message + CRLF;
+			if ( client->getFd() == fd )
 				continue;
 			else {
 				ft_send( client->getFd(), reply );
 				cli[fd].addFriend( client->getNickName() );
+				cli[client->getFd()].addFriend( cli[fd].getNickName() );
 			}
 		}
 	}
