@@ -24,7 +24,7 @@
 #include <vector>	  // IWYU pragma: keep
 
 #define BACKLOG		4
-#define MAXCLIENT	300
+#define MAXCLIENT	10
 #define BUFFER_SIZE 4096
 #define PASS_LENGH	4
 #define PASS_MAXLEN 16
@@ -84,6 +84,6 @@ void				   ft_send( int fd, const string& );
 const string		   getText( const string&, vector< string >, int );
 bool				   isNumber( const string& );
 int					   stringToInt( const string& );
-string                 intToString( int n );
+string				   intToString( int n );
 bool				   hasOnlyWhitespaces( const string& str );
 string				   getTimestamp();
