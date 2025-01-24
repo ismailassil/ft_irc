@@ -250,6 +250,11 @@ void ClientManager::removeClient( int fd ) {
 			it++;
 		}
 	}
+	for ( map< int, Client >::iterator it = cli.begin(); it != cli.end(); it++ ) {
+		if ( it->second.getFd() != fd && it->second.getFriends().size() > 0 ) {
+			it->second.removeFriend( cli[fd].getNickName() );
+		}
+	}
 	cli.erase( fd );
 }
 

@@ -42,8 +42,10 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 			string reply = ":" + getPrefix(fd) + " PRIVMSG " + target + " :" + message + CRLF;
 			if (client->getFd() == fd)
 				continue;
-			else
+			else {
 				ft_send( client->getFd(), reply );
+				cli[fd].addFriend( client->getNickName() );
+			}
 		}
 	}
 }

@@ -14,6 +14,11 @@ void ClientManager::quitCmd( int fd, string& input ) {
 			string reply = ":" + getPrefix( fd ) + " QUIT :" + reason + CRLF;
 			it->broadcast( reply );
 
+			for ( map< int, Client >::iterator it2 = cli.begin(); it2 != cli.end(); it2++ ) {
+				if ( it2->second.getFd() != fd && it2->second.getFriends().size() > 0 ) {
+					it2->second.removeFriend( cli[fd].getNickName() );
+				}
+			}
 			it->removeClient( fd );
 			if ( it->isAdminInChannel( cli[fd].getNickName() ) )
 				it->removeAdmin( fd );

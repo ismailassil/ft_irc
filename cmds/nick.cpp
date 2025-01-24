@@ -30,5 +30,16 @@ void ClientManager::nickCmd( int fd, string& input ) {
 			it->broadcast( ":" + getPrefix( fd ) + " NICK " + nick + CRLF, fd );
 		}
 	}
+	vector< string > friends = cli[fd].getFriends();
+	for ( vector< string >::iterator it = friends.begin(); it != friends.end(); it++ ) {
+		const Client* client = getClient( *it );
+		if ( client )
+			ft_send( client->getFd(), ":" + getPrefix( fd ) + " NICK " + nick + CRLF );
+	}
+	for ( map< int, Client >::iterator it = cli.begin(); it != cli.end(); it++ ) {
+		if ( it->second.getFd() != fd && it->second.getFriends().size() > 0 ) {
+			it->second.setFriendNickName( cli[fd].getNickName(), nick );
+		}
+	}
 	cli[fd].setNickname( nick );
 }

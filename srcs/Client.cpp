@@ -1,4 +1,5 @@
 #include "../headers/Client.hpp"
+#include <vector>
 
 Client::Client()
 	: fd( -1 ),
@@ -9,7 +10,8 @@ Client::Client()
 	  buffer( "" ),
 	  ipAdd( "" ),
 	  ChannelsInvite( 0 ),
-	  channels( 0 ) {}
+	  channels( 0 ),
+	  friends( 0 ) {}
 
 Client::Client( const int fd, const string &ip )
 	: fd( fd ),
@@ -20,7 +22,8 @@ Client::Client( const int fd, const string &ip )
 	  buffer( "" ),
 	  ipAdd( ip ),
 	  ChannelsInvite( 0 ),
-	  channels( 0 ) {}
+	  channels( 0 ),
+	  friends( 0 ) {}
 
 Client::~Client() {}
 
@@ -39,6 +42,7 @@ Client &Client::operator=( Client const &src ) {
 		ipAdd		   = src.ipAdd;
 		ChannelsInvite = src.ChannelsInvite;
 		channels	   = src.channels;
+		friends		   = src.friends;
 	}
 	return *this;
 }
@@ -106,4 +110,32 @@ void Client::setIpAdd( const string &ipAdd ) {
 
 void Client::addInvitedChannel( const string &channelName ) {
 	ChannelsInvite.push_back( channelName );
+}
+
+void Client::addFriend( const string &friendName ) {
+	if ( find( friends.begin(), friends.end(), friendName ) != friends.end() )
+		return;
+	friends.push_back( friendName );
+}
+
+void Client::setFriendNickName( const string &old, const string &nickName ) {
+	for ( vector< string >::iterator it = friends.begin(); it != friends.end(); it++ ) {
+		if ( *it == old ) {
+			*it = nickName;
+			break;
+		}
+	}
+}
+
+void Client::removeFriend( const string &friendName ) {
+	for ( vector< string >::iterator it = friends.begin(); it != friends.end(); it++ ) {
+		if ( *it == friendName ) {
+			friends.erase( it );
+			break;
+		}
+	}
+}
+
+vector<string> Client::getFriends() const {
+	return friends;
 }
