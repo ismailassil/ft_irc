@@ -8,6 +8,7 @@ class Bot {
 		struct sockaddr_in server_addr;
 		string			   password;
 		int				   port;
+		string			   server_ip;
 		vector< string >   facts;
 		vector< string >   jokes;
 		vector< string >   quotes;

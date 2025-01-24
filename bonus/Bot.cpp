@@ -23,7 +23,7 @@ Bot::Bot( void ) : password( "" ), port( 0 ), nick( "bot" ), user( "bot" ), last
 
 	memset( &server_addr, 0, sizeof( server_addr ) );
 	server_addr.sin_family		= AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr( "127.0.0.1" );
+	server_addr.sin_addr.s_addr = inet_addr( server_ip.c_str() );
 	server_addr.sin_port		= htons( port );
 	if ( connect( socket_fd, (struct sockaddr*)&server_addr, sizeof( server_addr ) ) < 0 )
 		error( "connect()", 1 );
@@ -67,7 +67,8 @@ void Bot::openConfigFile() {
 		}
 		size_t port_pos = line.find( "PORT=" );
 		size_t pass_pos = line.find( "PASSWORD=" );
-		if ( port_pos == string::npos && pass_pos == string::npos ) {
+		size_t ip_pos	= line.find( "IP=" );
+		if ( port_pos == string::npos && pass_pos == string::npos && ip_pos == string::npos ) {
 			file.close();
 			cerr << "ERROR: arg not found" << endl;
 			exit( 1 );
@@ -78,10 +79,15 @@ void Bot::openConfigFile() {
 		if ( pass_pos != string::npos ) {
 			password = line.substr( pass_pos + 9 );
 		}
+		if ( ip_pos != string::npos ) {
+			server_ip = line.substr( ip_pos + 3 );
+			if ( server_ip == "localhost" )
+				server_ip = "127.0.0.1";
+		}
 	}
 	file.close();
 
-	if ( prt.empty() || password.empty() ) {
+	if ( prt.empty() || password.empty() || server_ip.empty() ) {
 		cerr << "ERROR: arg is empty" << endl;
 		exit( 1 );
 	}
@@ -312,7 +318,8 @@ void Bot::handle_signal( int signum ) {
 	(void)signum;
 	stop_bot = 1;
 	if ( socket_fd != -1 ) {
-		send( socket_fd, "QUIT :Bye!\r\n", 11, 0 );
+		const string& quitMsg = "QUIT :Bye!" + string( CRLF );
+		send( socket_fd, quitMsg.c_str(), quitMsg.size(), 0 );
 		close( socket_fd );
 	}
 }
