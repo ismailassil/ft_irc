@@ -7,7 +7,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 	if ( tokens.size() < 3 )
 		return ft_send( fd, ERR_NEEDMOREPARAMS( cli[fd].getNickName() ) );
 	if ( tokens.at( 1 ).at( 0 ) != '#' && tokens.at( 1 ).at( 0 ) != '&' ) {
-		return ft_send( fd, ERR_NOSUCHCHANNEL( tokens.at( 2 ), tokens.at( 1 ).substr( 1 ) ) );
+		return ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), tokens.at( 1 ).substr( 1 ) ) );
 	}
 
 	string reason = "Yeet Out";

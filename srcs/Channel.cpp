@@ -134,6 +134,8 @@ const string Channel::getModes() const {
 		mode += "i";
 	if ( modes.at( 't' ) )
 		mode += "t";
+	if ( getAdminChannelList().size() > 0 )
+		mode += "o";
 	return mode;
 }
 

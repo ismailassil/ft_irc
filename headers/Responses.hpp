@@ -16,7 +16,7 @@
 #define RPL_ENDOFNAMES( nickname, chName )					( ": 366 " + nickname + " #" + chName + " :END of /NAMES list" + CRLF )
 #define RPL_TOPIC( nickname, chName, topic )				( ": 332 " + nickname + " #" + chName + " :" + topic + CRLF )
 #define RPL_TOPICWHOTIME( nickname, chName, author, date )	( ": 333 " + nickname + " #" + chName + " " + author + " " + date + CRLF )
-#define RPL_INVITING( nickname, target, chName )			( ": 341 " + nickname + " INVITE " + target + " #" + chName + CRLF )
+#define RPL_INVITING( nickname, target, chName )			( ": 341 " + nickname + " " + target + " #" + chName + CRLF )
 #define RPL_PONG( nickname, token )							( ":PONG " + token + CRLF )
 #define RPL_CHANNELMODEIS( nickname, chName, mode, args )	( ": 324 " + nickname + " #" + chName + " " + mode + " " + args + CRLF )
 
