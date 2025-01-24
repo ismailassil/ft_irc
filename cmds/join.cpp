@@ -69,7 +69,6 @@ void ClientManager::joinCmd(int fd, string& cmd) {
 
         string chanName = chans[i].substr(1);
         Channel* channel = findChannelByName(channels, chanName);
-
         if (!channel) {
             string password = (j < passwords.size()) ? passwords[j] : "";
 			createAndJoinChannel(channels, cli[fd], fd, chanName, password);

@@ -9,7 +9,7 @@ void ClientManager::quitCmd( int fd, string& input ) {
 		reason += getText( input, tokens, 1 );
 	}
 
-	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
+	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); ) {
 		if ( it->isInChannel( cli[fd].getNickName() ) ) {
 			string reply = ":" + getPrefix( fd ) + " QUIT :" + reason + CRLF;
 			it->broadcast( reply );
@@ -18,9 +18,11 @@ void ClientManager::quitCmd( int fd, string& input ) {
 			if ( it->isAdminInChannel( cli[fd].getNickName() ) )
 				it->removeAdmin( fd );
 			if ( it->getNumberOfClients() == 0 )
-				channels.erase( it );
-			if ( channels.empty() )
-				break;
+				it = channels.erase( it );
+			else
+				it++;
+		} else {
+			it++;
 		}
 	}
 	cli.erase( fd );

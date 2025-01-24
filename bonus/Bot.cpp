@@ -3,7 +3,7 @@
 int stop_bot	   = 0;
 int Bot::socket_fd = -1;
 
-Bot::Bot( void ) : password( "" ), port( 0 ), nick( "bot" ), user( "bot" ) {
+Bot::Bot( void ) : password( "" ), port( 0 ), nick( "bot" ), user( "bot" ), lastActivity( time( NULL ) ) {
 	signal( SIGINT, &Bot::handle_signal );
 	signal( SIGTERM, &Bot::handle_signal );
 	signal( SIGHUP, &Bot::handle_signal );
@@ -43,11 +43,14 @@ Bot::~Bot( void ) {
 Bot& Bot::operator=( const Bot& other ) {
 	if ( this == &other )
 		return ( *this );
-	socket_fd	= other.socket_fd;
-	server_addr = other.server_addr;
-	password	= other.password;
-	port		= other.port;
-	facts		= other.facts;
+	socket_fd	 = other.socket_fd;
+	server_addr	 = other.server_addr;
+	password	 = other.password;
+	port		 = other.port;
+	facts		 = other.facts;
+	nick		 = other.nick;
+	user		 = other.user;
+	lastActivity = other.lastActivity;
 	return ( *this );
 }
 
@@ -172,6 +175,32 @@ void Bot::initVars() {
 	facts.push_back( "The unicorn is the national animal of Scotland." );
 	facts.push_back( "The world's largest snowflake was 15 inches wide and 8 inches thick." );
 	facts.push_back( "The shortest war in history was between Britain and Zanzibar on August 27, 1896. Zanzibar surrendered after 38 minutes." );
+
+	jokes.push_back( "Why did the scarecrow win an award? Because he was outstanding in his field!" );
+	jokes.push_back( "Why did the tomato turn red? Because it saw the salad dressing!" );
+	jokes.push_back( "Why don't skeletons fight each other? They don't have the guts!" );
+	jokes.push_back( "Why don't eggs tell jokes? They might crack up!" );
+	jokes.push_back( "Why can't your nose be 12 inches long? Because then it would be a foot!" );
+	jokes.push_back( "What do you call fake spaghetti? An impasta!" );
+	jokes.push_back( "Why did the bicycle fall over? Because it was two-tired!" );
+	jokes.push_back( "Why don't oysters donate to charity? Because they are shellfish!" );
+	jokes.push_back( "What did the ocean say to the beach? Nothing, it just waved!" );
+	jokes.push_back( "Why did the coffee file a police report? It got mugged!" );
+	jokes.push_back( "Why did the golfer bring two pairs of pants? In case he got a hole in one!" );
+	jokes.push_back( "What do you call cheese that isn't yours? Nacho cheese!" );
+
+	quotes.push_back( "The only way to do great work is to love what you do. – Steve Jobs" );
+	quotes.push_back( "Success is not final, failure is not fatal: It is the courage to continue that counts. – Winston Churchill" );
+	quotes.push_back( "It does not matter how slowly you go as long as you do not stop. – Confucius" );
+	quotes.push_back( "The journey of a thousand miles begins with one step. – Lao Tzu" );
+	quotes.push_back( "In the middle of every difficulty lies opportunity. – Albert Einstein" );
+	quotes.push_back( "Believe you can and you're halfway there. – Theodore Roosevelt" );
+	quotes.push_back( "The only limit to our realization of tomorrow is our doubts of today. – Franklin D. Roosevelt" );
+	quotes.push_back( "Life is what happens when you're busy making other plans. – John Lennon" );
+	quotes.push_back( "You must be the change you wish to see in the world. – Mahatma Gandhi" );
+	quotes.push_back( "The best way to predict the future is to create it. – Abraham Lincoln" );
+	quotes.push_back( "The best time to plant a tree was 20 years ago. The second best time is now. – Chinese Proverb" );
+	quotes.push_back( "The future belongs to those who believe in the beauty of their dreams. – Eleanor Roosevelt" );
 }
 
 const vector< string > splitMessage( const string& str, char delim ) {
@@ -189,6 +218,17 @@ const vector< string > splitMessage( const string& str, char delim ) {
 	return split;
 }
 
+void Bot::checkInactivity() {
+	static const int idleThreshold = 10;
+
+	time_t currentTime = time( NULL );
+	if ( difftime( currentTime, lastActivity ) > idleThreshold ) {
+		const string pingMsg = "PING :Are you alive?" + string( CRLF );
+		send_msg( pingMsg );
+		lastActivity = currentTime;
+	}
+}
+
 void Bot::run() {
 	string message;
 
@@ -197,9 +237,11 @@ void Bot::run() {
 	while ( stop_bot == 0 ) {
 		message = read_msg();
 		if ( message.empty() ) {
+			checkInactivity();
 			continue;
 		}
 
+		lastActivity = time( NULL );
 		printCurrentDateTime();
 		cout << "Received from: " << message.erase( message.find( CRLF ) ) << endl;
 
@@ -222,8 +264,22 @@ void Bot::run() {
 				response  = ctime( &curr_time );
 			} else if ( tokens.at( 3 ) == ":hello" ) {
 				response = "Hello, " + clientName + "!";
-			} else {
+			} else if ( tokens.at( 3 ) == ":fact" ) {
 				response = facts[rand() % facts.size()];
+			} else if ( tokens.at( 3 ) == ":roll" ) {
+				response = "You rolled a " + intToString( rand() % 6 + 1 ) + "!";
+			} else if ( tokens.at( 3 ) == ":flip" ) {
+				response = "You flipped a " + string( rand() % 2 ? "heads" : "tails" ) + "!";
+			} else if ( tokens.at( 3 ) == ":dice" ) {
+				response = "You rolled a " + intToString( rand() % 6 + 1 ) + " and a " + intToString( rand() % 6 + 1 ) + "!";
+			} else if ( tokens.at( 3 ) == ":joke" ) {
+				response = jokes[rand() % jokes.size()];
+			} else if ( tokens.at( 3 ) == ":quote" ) {
+				response = quotes[rand() % quotes.size()];
+			} else if ( tokens.at( 3 ) == ":help" ) {
+				response = "Available commands: :hello, :ping, :pong, :time, :fact, :roll, :flip, :dice, :joke, :quote, :help";
+			} else {
+				response = "Unknown command. Type :help to see available commands.";
 			}
 
 			const string& msg = "PRIVMSG " + clientName + " :" + response + CRLF;
@@ -267,4 +323,10 @@ string Bot::getNickName() {
 
 string Bot::getUserName() {
 	return user;
+}
+
+string intToString( int n ) {
+	stringstream ss;
+	ss << n;
+	return ss.str();
 }

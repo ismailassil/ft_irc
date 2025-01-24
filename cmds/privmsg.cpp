@@ -40,7 +40,10 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 				continue;
 			}
 			string reply = ":" + getPrefix(fd) + " PRIVMSG " + target + " :" + message + CRLF;
-			ft_send( client->getFd(), reply );
+			if (client->getFd() == fd)
+				continue;
+			else
+				ft_send( client->getFd(), reply );
 		}
 	}
 }

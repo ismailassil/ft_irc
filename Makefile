@@ -41,35 +41,35 @@ run: $(NAME) art
 run_bonus: bonus bonus_art
 	@./bot
 
-$(FLD_NAME)/bonus/%.o: ./bonus/%.cpp bonus/Bot.hpp headers/bits.hpp
+$(FLD_NAME)/bonus/%.o: ./bonus/%.cpp bonus/Bot.hpp headers/bits.hpp headers/Responses.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/%.o: ./%.cpp headers/Server.hpp
+$(FLD_NAME)/%.o: ./%.cpp headers/Server.hpp headers/Responses.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/Channel.o: ./srcs/Channel.cpp headers/Channel.hpp headers/Client.hpp
+$(FLD_NAME)/srcs/Channel.o: ./srcs/Channel.cpp headers/Channel.hpp headers/Client.hpp headers/Responses.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/Client.o: ./srcs/Client.cpp headers/Client.hpp headers/bits.hpp
+$(FLD_NAME)/srcs/Client.o: ./srcs/Client.cpp headers/Client.hpp headers/bits.hpp headers/Responses.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/ClientManager.o: ./srcs/ClientManager.cpp headers/ClientManager.hpp headers/Client.hpp headers/Channel.hpp headers/bits.hpp
+$(FLD_NAME)/srcs/ClientManager.o: ./srcs/ClientManager.cpp headers/ClientManager.hpp headers/Client.hpp headers/Channel.hpp headers/bits.hpp headers/Responses.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/Server.o: ./srcs/Server.cpp headers/Server.hpp headers/ClientManager.hpp headers/bits.hpp
+$(FLD_NAME)/srcs/Server.o: ./srcs/Server.cpp headers/Server.hpp headers/ClientManager.hpp headers/bits.hpp headers/Responses.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/utils.o: ./srcs/utils.cpp headers/bits.hpp
+$(FLD_NAME)/srcs/utils.o: ./srcs/utils.cpp headers/bits.hpp headers/Responses.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/cmds/%.o: ./cmds/%.cpp headers/ClientManager.hpp
+$(FLD_NAME)/cmds/%.o: ./cmds/%.cpp headers/ClientManager.hpp headers/Responses.hpp
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 

@@ -10,8 +10,8 @@ void ClientManager::kickCmd( int fd, string& input ) {
 		return ft_send( fd, ERR_NOSUCHCHANNEL( tokens.at( 2 ), tokens.at( 1 ).substr( 1 ) ) );
 	}
 
-	string reason = "";
-	if ( tokens.size() > 3 )
+	string reason = "Yeet Out";
+	if ( tokens.size() > 3 && tokens.at( 3 ) != ":" )
 		reason = getText( input, tokens, 3 );
 
 	vector< string > chName = splitString( tokens.at( 1 ), ',' );
@@ -27,9 +27,10 @@ void ClientManager::kickCmd( int fd, string& input ) {
 
 	const string& channelName = chName[0].substr( 1 );
 
-	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
+	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); ) {
 		if ( channelName == it->getName() ) {
 			chFound = true;
+
 			if ( !it->isInChannel( cli[fd].getNickName() ) )
 				return ft_send( fd, ERR_NOTONCHANNEL( cli[fd].getNickName(), channelName ) );
 			if ( !it->isAdminInChannel( cli[fd].getNickName() ) )
@@ -40,25 +41,34 @@ void ClientManager::kickCmd( int fd, string& input ) {
 					ft_send( fd, ERR_NOSUCHNICK( nicknames[i], cli[fd].getNickName() ) );
 					continue;
 				}
+
 				if ( it->isInChannel( nicknames[i] ) ) {
 					int client_fd = it->getClientInChannel( nicknames[i] )->getFd();
+
+					string reply = ":" + getPrefix( fd ) + " KICK #" + channelName + " " + nicknames[i];
+					reply += " :" + reason + CRLF;
+					it->broadcast( reply );
+
 					it->removeClient( client_fd );
-					if ( it->isAdminInChannel( nicknames[i] ) )
+
+					if ( it->isAdminInChannel( nicknames[i] ) ) {
 						it->removeAdmin( client_fd );
-					ft_send( client_fd, RPL_KICK( channelName, cli[fd].getNickName(), reason ) );
+					}
+
 				} else {
 					ft_send( fd, ERR_USERNOTINCHANNEL( cli[fd].getNickName(), nicknames[i], channelName ) );
 					continue;
 				}
-				string reply = ":" + getPrefix( fd ) + " KICK #" + channelName + " " + nicknames[i];
-				if ( !reason.empty() )
-					reply += " :" + reason;
-				reply += CRLF;
-				it->broadcast( reply );
-				if ( it->getNumberOfClients() == 0 )
-					channels.erase( it );
-				return;
 			}
+
+			if ( it->getNumberOfClients() == 0 ) {
+				it = channels.erase( it );
+			} else {
+				++it;
+			}
+			return;
+		} else {
+			++it;
 		}
 	}
 	if ( !chFound )

@@ -16,6 +16,7 @@ class Client {
 	public:
 		// Constructors and Destructor
 		Client();
+		Client( const int fd, const string& ip );
 		Client( Client const &src );
 		Client &operator=( Client const &src );
 		~Client();

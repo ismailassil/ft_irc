@@ -66,8 +66,6 @@ class Channel {
 		void removeAdmin( const int );
 		void addClient( const Client );
 		void removeClient( const int );
-		bool changeClientToAdmin( const string & );
-		bool changeAdminToClient( const string & );
 		void changeMemberNick( const string &, const string & );
 
 		// Send to All Clients

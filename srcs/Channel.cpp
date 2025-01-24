@@ -234,28 +234,6 @@ void Channel::removeAdmin( const int fd ) {
 	}
 }
 
-bool Channel::changeClientToAdmin( const string &nick ) {
-	for ( size_t i = 0; i < clients.size(); i++ ) {
-		if ( clients[i].getNickName() == nick ) {
-			admins.push_back( clients[i] );
-			clients.erase( clients.begin() + i );
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Channel::changeAdminToClient( const string &nick ) {
-	for ( size_t i = 0; i < admins.size(); i++ ) {
-		if ( admins[i].getNickName() == nick ) {
-			clients.push_back( admins[i] );
-			admins.erase( admins.begin() + i );
-			return true;
-		}
-	}
-	return false;
-}
-
 void Channel::changeMemberNick( const string &oldNick, const string &newNick ) {
 	for ( size_t i = 0; i < clients.size(); i++ ) {
 		if ( clients[i].getNickName() == oldNick ) {

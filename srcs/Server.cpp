@@ -13,7 +13,7 @@ Server::~Server() {
 		close( fds[i].fd );
 	}
 	printCurrentDateTime();
-	cout << YELLOW << "\n[server] Shutting down" << RESET << endl;
+	cout << YELLOW << "\n[Server] Shutting down" << RESET << endl;
 }
 
 void Server::printCurrentDateTime() {
@@ -60,7 +60,7 @@ void Server::add_client() {
 	if ( client_fd < 0 )
 		return perror( "accept()" );
 	if ( this->nfds >= MAXCLIENT + 1 ) {
-		cout << "[server] Max clients reached. Closing connection." << endl;
+		cout << "[Server] Max clients reached. Closing connection." << endl;
 		close( client_fd );
 		return;
 	}
@@ -69,7 +69,7 @@ void Server::add_client() {
 	fds[nfds].events = POLLIN | POLLPRI;
 	++nfds;
 	printCurrentDateTime();
-	cout << CYAN << "[server] Client <" << client_fd << "> is Connected" << RESET << endl;
+	cout << CYAN << "[Server] Client <" << client_fd << "> is Connected" << RESET << endl;
 }
 
 void Server::server_init() {
@@ -92,7 +92,7 @@ void Server::server_init() {
 		error( "bind()", 1 );
 	}
 	printCurrentDateTime();
-	cout << YELLOW << "[server] running....." << RESET << endl;
+	cout << YELLOW << "[Server] running....." << RESET << endl;
 	if ( listen( socket_fd, BACKLOG ) < 0 ) {
 		close( socket_fd );
 		error( "listen()", 1 );
@@ -137,7 +137,7 @@ void Server::read_msg( int &fd ) {
 	}
 	if ( !message.empty() ) {
 		printCurrentDateTime();
-		cout << "[client] Message received from client <" << fd << "> : " << GREEN << message << RESET;
+		cout << "[Client] Message received from client <" << fd << "> : " << GREEN << message << RESET;
 		clientManager.parse( fd, message );
 	}
 	if ( byte == 0 )
@@ -149,7 +149,7 @@ void Server::read_msg( int &fd ) {
 void Server::remove_client( int &fd ) {
 	if ( close( fd ) != -1 ) {
 		printCurrentDateTime();
-		cout << CYAN << "[server] Client <" << fd << "> is Disconnected" << RESET << endl;
+		cout << CYAN << "[Server] Client <" << fd << "> is Disconnected" << RESET << endl;
 	}
 	//////////////////////////////////////////
 	clientManager.removeClient( fd );
@@ -168,7 +168,7 @@ void Server::remove_client( int &fd ) {
 void Server::remove_fd( int &fd ) {
 	if ( close( fd ) != -1 ) {
 		printCurrentDateTime();
-		cout << CYAN << "[server] Client <" << fd << "> is Disconnected" << RESET << endl;
+		cout << CYAN << "[Server] Client <" << fd << "> is Disconnected" << RESET << endl;
 	}
 	for ( int i = 1; i < nfds; i++ ) {
 		if ( fds[i].fd == fd ) {

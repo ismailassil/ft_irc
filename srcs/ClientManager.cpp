@@ -195,6 +195,7 @@ void ClientManager::parse( int fd, string& input ) {
 	for ( size_t i = 0; i < sizeof( func ) / sizeof( func[0] ); i++ ) {
 		if ( isCmd( cmd, cmdList[i] ) ) {
 			( this->*func[i] )( fd, buffer );
+			if ( cli.find( fd ) == cli.end() ) return;
 			cli[fd].setBuffer( "" );
 			return;
 		}
@@ -232,10 +233,9 @@ const string ClientManager::getPrefix( int fd ) {
 
 void ClientManager::removeClient( int fd ) {
 	int isExist = cli.find( fd ) != cli.end();
-	if ( isExist ) {
-		cli.erase( fd );
-	}
-	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
+	if ( !isExist ) return;
+
+	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); ) {
 		Channel& channel = *it;
 		if ( channel.isInChannel( cli[fd].getNickName() ) ) {
 			channel.removeClient( fd );
@@ -243,16 +243,17 @@ void ClientManager::removeClient( int fd ) {
 				channel.removeAdmin( fd );
 			if ( channel.getNumberOfClients() == 0 ) {
 				channels.erase( it );
+			} else {
+				it++;
 			}
+		} else {
+			it++;
 		}
 	}
+	cli.erase( fd );
 }
 
 void ClientManager::addNewClient( int fd, struct in_addr ip ) {
-	size_t isExist = cli.find( fd ) != cli.end();
-	if ( !isExist ) {
-		cli[fd] = Client();
-		cli[fd].setFd( fd );
-		cli[fd].setIpAdd( inet_ntoa( ip ) );
-	}
+	if ( cli.find( fd ) != cli.end() ) return;
+	cli[fd] = Client( fd, inet_ntoa( ip ) );
 }
