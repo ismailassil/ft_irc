@@ -16,8 +16,7 @@ class Bot {
 		string			   user;
 		time_t			   lastActivity;
 
-		void
-					 initVars();
+		void		 initVars();
 		void		 openConfigFile();
 		void		 authentificate();
 		void		 send_msg( const string &msg );

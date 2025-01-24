@@ -178,9 +178,6 @@ void Bot::initVars() {
 	facts.push_back( "Sloths can hold their breath longer than dolphins can—up to 40 minutes." );
 	facts.push_back( "The dot over a lowercase 'i' or 'j' is called a 'tittle.'" );
 	facts.push_back( "Butterflies can taste with their feet." );
-	facts.push_back( "The unicorn is the national animal of Scotland." );
-	facts.push_back( "The world's largest snowflake was 15 inches wide and 8 inches thick." );
-	facts.push_back( "The shortest war in history was between Britain and Zanzibar on August 27, 1896. Zanzibar surrendered after 38 minutes." );
 
 	jokes.push_back( "Why did the scarecrow win an award? Because he was outstanding in his field!" );
 	jokes.push_back( "Why did the tomato turn red? Because it saw the salad dressing!" );
@@ -194,6 +191,14 @@ void Bot::initVars() {
 	jokes.push_back( "Why did the coffee file a police report? It got mugged!" );
 	jokes.push_back( "Why did the golfer bring two pairs of pants? In case he got a hole in one!" );
 	jokes.push_back( "What do you call cheese that isn't yours? Nacho cheese!" );
+	jokes.push_back( "Why did the math book look sad? Because it had too many problems!" );
+	jokes.push_back( "Why couldn't the leopard play hide and seek? Because he was always spotted!" );
+	jokes.push_back( "Why do bees have sticky hair? Because they use honeycombs!" );
+	jokes.push_back( "Why don't you ever see elephants hiding in trees? Because they're so good at it!" );
+	jokes.push_back( "Why did the cookie go to the doctor? Because it felt crumby!" );
+	jokes.push_back( "Why did the computer go to the doctor? It had a virus!" );
+	jokes.push_back( "What do you call a belt made of watches? A waist of time!" );
+	jokes.push_back( "Why was the math teacher late to school? She took the rhombus!" );
 
 	quotes.push_back( "The only way to do great work is to love what you do. – Steve Jobs" );
 	quotes.push_back( "Success is not final, failure is not fatal: It is the courage to continue that counts. – Winston Churchill" );
@@ -207,6 +212,14 @@ void Bot::initVars() {
 	quotes.push_back( "The best way to predict the future is to create it. – Abraham Lincoln" );
 	quotes.push_back( "The best time to plant a tree was 20 years ago. The second best time is now. – Chinese Proverb" );
 	quotes.push_back( "The future belongs to those who believe in the beauty of their dreams. – Eleanor Roosevelt" );
+	quotes.push_back( "The only thing standing between you and your goal is the story you keep telling yourself as to why you can't achieve it. – Jordan Belfort" );
+	quotes.push_back( "The best revenge is massive success. – Frank Sinatra" );
+	quotes.push_back( "The only person you are destined to become is the person you decide to be. – Ralph Waldo Emerson" );
+	quotes.push_back( "Do what you can, with what you have, where you are. – Theodore Roosevelt" );
+	quotes.push_back( "Dream big and dare to fail. – Norman Vaughan" );
+	quotes.push_back( "Happiness is not something ready-made. It comes from your own actions. – Dalai Lama" );
+	quotes.push_back( "Hardships often prepare ordinary people for an extraordinary destiny. – C.S. Lewis" );
+	quotes.push_back( "You miss 100% of the shots you don’t take. – Wayne Gretzky" );
 }
 
 const vector< string > splitMessage( const string& str, char delim ) {
