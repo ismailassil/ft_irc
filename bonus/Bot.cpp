@@ -131,7 +131,7 @@ void Bot::authentificate() {
 
 void Bot::send_msg( const string& msg ) {
 	if ( send( socket_fd, msg.c_str(), msg.size(), 0 ) < 0 )
-		error( "send()", 1 );
+		cerr << "ERROR: send() failed" << endl;
 }
 
 const string Bot::read_msg() {
@@ -144,14 +144,8 @@ const string Bot::read_msg() {
 	ssize_t byte = recv( socket_fd, buffer, BUFFER_SIZE - 1, 0 );
 	if ( byte == 0 ) {
 		return string();
-	}
-
-	if ( byte < 0 ) {
-		if ( errno == EWOULDBLOCK || errno == EAGAIN ) {
-			return string();
-		} else {
-			exit( 1 );
-		}
+	} else if ( byte < 0 ) {
+		exit( 1 );
 	}
 	buffer[byte] = '\0';
 	return string( buffer );

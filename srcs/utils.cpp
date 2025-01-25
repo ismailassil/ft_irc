@@ -28,24 +28,8 @@ const vector< string > splitString( const string& str, char delim ) {
 }
 
 void ft_send( int fd, const string& str ) {
-	ssize_t sent;
-
-	while ( 1 ) {
-		sent = send( fd, str.c_str(), str.size(), 0 );
-
-		if ( sent >= 0 ) {
-			return;
-		}
-
-		if ( errno == EAGAIN || errno == EWOULDBLOCK ) {
-			continue;
-		} else if ( errno == EINTR ) {
-			continue;
-		} else {
-			perror( "send()" );
-			return;
-		}
-	}
+	if ( send( fd, str.c_str(), str.size(), 0 ) < 0 )
+		cerr << "ERROR: send() failed" << endl;
 }
 
 const string getText( const string& input, vector< string > tokens, int index ) {
