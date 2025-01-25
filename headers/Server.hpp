@@ -17,7 +17,6 @@ class Server {
 		void		add_client();
 		void		remove_client( int &fd );
 		void		read_msg( int &fd );
-		static void printCurrentDateTime();
 
 	public:
 		Server( void );

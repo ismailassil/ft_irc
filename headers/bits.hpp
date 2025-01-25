@@ -72,6 +72,7 @@ using std::vector;
 #define BLUE	"\x1b[1;34m"
 #define MAGENTA "\x1b[1;35m"
 #define CYAN	"\x1b[1;36m"
+#define WHITE	"\x1b[0;37m"
 #define RESET	"\x1b[0m"
 
 void handle_signal( int );
@@ -87,3 +88,4 @@ int					   stringToInt( const string& );
 string				   intToString( int n );
 bool				   hasOnlyWhitespaces( const string& str );
 string				   getTimestamp();
+void				   printCurrentDateTime();

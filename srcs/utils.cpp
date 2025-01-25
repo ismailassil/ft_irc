@@ -79,9 +79,27 @@ void error( const string& str, int exit_status ) {
 	exit( exit_status );
 }
 
+void printCurrentDateTime() {
+	time_t curr_time;
+	curr_time = time( NULL );
+
+	tm *tm_local = localtime( &curr_time );
+	if ( tm_local == NULL )
+		return;
+	cout << "[" << tm_local->tm_mday << "-"
+		 << setfill( '0' ) << setw( 2 ) << tm_local->tm_mon + 1 << "-"
+		 << tm_local->tm_year + 1900 << "] ["
+		 << setw( 2 ) << tm_local->tm_hour << ":"
+		 << setw( 2 ) << tm_local->tm_min << ":"
+		 << setw( 2 ) << tm_local->tm_sec << "] ";
+}
+
 void handle_signal( int signal ) {
 	(void)signal;
 	stop_server = 1;
+	cout << "\r";
+	printCurrentDateTime();
+	cout << CYAN << "[Server] Signal received" << RESET << endl;
 }
 
 int parse_input( int& ac, char**& av ) {

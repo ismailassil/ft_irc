@@ -10,23 +10,9 @@ Server::~Server() {
 	for ( int i = 0; i < nfds; i++ ) {
 		close( fds[i].fd );
 	}
+	cout << "\r";
 	printCurrentDateTime();
-	cout << YELLOW << "\n[Server] Shutting down" << RESET << endl;
-}
-
-void Server::printCurrentDateTime() {
-	time_t curr_time;
-	curr_time = time( NULL );
-
-	tm *tm_local = localtime( &curr_time );
-	if ( tm_local == NULL )
-		return;
-	cout << "[" << tm_local->tm_mday << "-"
-		 << setfill( '0' ) << setw( 2 ) << tm_local->tm_mon + 1 << "-"
-		 << tm_local->tm_year + 1900 << "] ["
-		 << setw( 2 ) << tm_local->tm_hour << ":"
-		 << setw( 2 ) << tm_local->tm_min << ":"
-		 << setw( 2 ) << tm_local->tm_sec << "] ";
+	cout << YELLOW << "[Server] Shutting down" << RESET << endl;
 }
 
 Server::Server( const Server &copy ) {
@@ -67,10 +53,11 @@ void Server::add_client() {
 	}
 	clientManager.addNewClient( client_fd, client_addr.sin_addr );
 	fds[nfds].fd	 = client_fd;
-	fds[nfds].events = POLLIN | POLLPRI;
+	fds[nfds].events = POLLIN;
+	fds[nfds].revents = 0;
 	++nfds;
 	printCurrentDateTime();
-	cout << CYAN << "[Server] Client <" << client_fd << "> is Connected" << RESET << endl;
+	cout << GREEN << "[Server] Client <ID: " << WHITE << client_fd << GREEN << ", IP: " << WHITE << inet_ntoa( client_addr.sin_addr ) << GREEN << "> Connected" << RESET << endl;
 }
 
 void Server::server_init() {
@@ -99,7 +86,7 @@ void Server::server_init() {
 	}
 	printCurrentDateTime();
 	cout << YELLOW << "[Server] running....." << RESET << endl;
-	if ( listen( socket_fd, BACKLOG ) < 0 ) {
+	if ( listen( socket_fd, SOMAXCONN ) < 0 ) {
 		close( socket_fd );
 		error( "listen()", 1 );
 	}
@@ -113,18 +100,20 @@ Server::Server( const string &_port, const string &_password )
 	int status;
 	server_init();
 	fds[0].fd	  = socket_fd;
-	fds[0].events = POLLIN | POLLPRI;
+	fds[0].events = POLLIN;
+	fds[0].revents = 0;
 	nfds		  = 1;
 	while ( !stop_server ) {
-		status = poll( fds, nfds, 1000 );
-		if ( status == 0 )
-			continue;
-		if ( status < 0 && stop_server == 0 )
+		if ( ( status = poll( fds, nfds, -1 ) ) < 0 && stop_server == 0 ) {
+			if ( stop_server == 0 )
+				break;
 			perror( "poll()" );
-		if ( fds[0].revents & POLLIN )
+			break;
+		}
+		if ( stop_server == 0 && fds[0].revents & POLLIN )
 			add_client();
 		for ( int i = 1; i < nfds; i++ ) {
-			if ( fds[i].revents & POLLIN )
+			if ( stop_server == 0 && fds[i].revents & POLLIN )
 				read_msg( fds[i].fd );
 		}
 	}
@@ -155,7 +144,7 @@ void Server::read_msg( int &fd ) {
 void Server::remove_client( int &fd ) {
 	if ( close( fd ) != -1 ) {
 		printCurrentDateTime();
-		cout << CYAN << "[Server] Client <" << fd << "> is Disconnected" << RESET << endl;
+		cout << CYAN << "[Server] Client <ID: " << WHITE << fd << CYAN << "> Disconnected" << RESET << endl;
 	}
 	//////////////////////////////////////////
 	clientManager.removeClient( fd );
@@ -174,7 +163,7 @@ void Server::remove_client( int &fd ) {
 void Server::remove_fd( int &fd ) {
 	if ( close( fd ) != -1 ) {
 		printCurrentDateTime();
-		cout << CYAN << "[Server] Client <" << fd << "> is Disconnected" << RESET << endl;
+		cout << CYAN << "[Server] Client <ID: " << WHITE << fd << CYAN << "> Disconnected" << RESET << endl;
 	}
 	for ( int i = 1; i < nfds; i++ ) {
 		if ( fds[i].fd == fd ) {
