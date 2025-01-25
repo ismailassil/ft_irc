@@ -1,7 +1,5 @@
 #include "../headers/Server.hpp"
 
-#include <csignal>
-
 int			  stop_server  = 0;
 int			  Server::nfds = 0;
 struct pollfd Server::fds[MAXCLIENT + 1];
@@ -64,6 +62,9 @@ void Server::add_client() {
 		close( client_fd );
 		return;
 	}
+	if ( fcntl( client_fd, F_SETFL, O_NONBLOCK ) < 0 ) {
+		error( "fcntl()", 1 );
+	}
 	clientManager.addNewClient( client_fd, client_addr.sin_addr );
 	fds[nfds].fd	 = client_fd;
 	fds[nfds].events = POLLIN | POLLPRI;
@@ -82,7 +83,12 @@ void Server::server_init() {
 	if ( socket_fd == -1 )
 		error( "socket()", 1 );
 	int reuse = 1;
-	setsockopt( socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof( reuse ) );
+	if ( setsockopt( socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof( reuse ) ) < 0 ) {
+		error( "setsockopt()", 1 );
+	}
+	if ( fcntl( socket_fd, F_SETFL, O_NONBLOCK ) < 0 ) {
+		error( "fcntl()", 1 );
+	}
 	memset( &this->server_addr, 0, sizeof( this->server_addr ) );
 	server_addr.sin_family		= AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;

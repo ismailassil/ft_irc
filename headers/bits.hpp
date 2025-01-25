@@ -1,6 +1,7 @@
 #pragma once
 #include <arpa/inet.h>	 // IWYU pragma: keep
 #include <errno.h>		 // IWYU pragma: keep
+#include <fcntl.h>		 // IWYU pragma: keep
 #include <netdb.h>		 // IWYU pragma: keep
 #include <netinet/in.h>	 // IWYU pragma: keep
 #include <poll.h>		 // IWYU pragma: keep

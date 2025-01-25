@@ -6,7 +6,7 @@ NAME			=	ircserv
 NAME_BONUS		=	bot
 HEADER			=	headers/Channel.hpp  headers/Client.hpp  headers/ClientManager.hpp  headers/Responses.hpp  \
 					headers/bits.hpp headers/Server.hpp
-
+NHEADER			=	headers/Responses.hpp headers/bits.hpp
 FLD_NAME		=	._object_files
 
 ##### SOURCE FILES #######################################################################
@@ -35,41 +35,48 @@ OBJ 		=	$(MAIN_OBJ) $(SRC_OBJ) $(CMD_OBJ)
 ########### Goal Target
 all: $(NAME)
 
-run: $(NAME) art
+run: $(NAME) clear art
 	@./$(NAME) 6667 hehe
 
-run_bonus: bonus bonus_art
+run_bonus: bonus clear bonus_art
 	@./bot
 
-$(FLD_NAME)/bonus/%.o: ./bonus/%.cpp bonus/Bot.hpp headers/bits.hpp headers/Responses.hpp
+clear:
+	@clear
+
+$(FLD_NAME)/bonus/%.o: ./bonus/%.cpp bonus/Bot.hpp $(NHEADER)
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/%.o: ./%.cpp headers/Server.hpp headers/Responses.hpp
+$(FLD_NAME)/%.o: ./%.cpp headers/Server.hpp $(NHEADER)
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/Channel.o: ./srcs/Channel.cpp headers/Channel.hpp headers/Client.hpp headers/Responses.hpp
+$(FLD_NAME)/srcs/Channel.o: ./srcs/Channel.cpp headers/Channel.hpp headers/Client.hpp $(NHEADER)
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/Client.o: ./srcs/Client.cpp headers/Client.hpp headers/bits.hpp headers/Responses.hpp
+$(FLD_NAME)/srcs/Client.o: ./srcs/Client.cpp headers/Client.hpp $(NHEADER)
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/ClientManager.o: ./srcs/ClientManager.cpp headers/ClientManager.hpp headers/Client.hpp headers/Channel.hpp headers/bits.hpp headers/Responses.hpp
+$(FLD_NAME)/srcs/ClientManager.o: ./srcs/ClientManager.cpp headers/ClientManager.hpp headers/Channel.hpp headers/Client.hpp $(NHEADER)
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/Server.o: ./srcs/Server.cpp headers/Server.hpp headers/ClientManager.hpp headers/bits.hpp headers/Responses.hpp
+$(FLD_NAME)/srcs/Server.o: ./srcs/Server.cpp headers/Server.hpp headers/ClientManager.hpp $(NHEADER)
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/srcs/utils.o: ./srcs/utils.cpp headers/bits.hpp headers/Responses.hpp
+$(FLD_NAME)/srcs/utils.o: ./srcs/utils.cpp $(NHEADER)
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
-$(FLD_NAME)/cmds/%.o: ./cmds/%.cpp headers/ClientManager.hpp headers/Responses.hpp
+$(FLD_NAME)/cmds/%.o: ./cmds/%.cpp headers/ClientManager.hpp $(NHEADER)
+	@mkdir -p $(dir $@)
+	@$(CPP) -c $< -o $@
+
+$(FLD_NAME)/cmds/quit.o: ./cmds/quit.cpp headers/ClientManager.hpp headers/Server.hpp $(NHEADER)
 	@mkdir -p $(dir $@)
 	@$(CPP) -c $< -o $@
 
