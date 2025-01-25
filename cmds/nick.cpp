@@ -5,8 +5,8 @@ void ClientManager::nickCmd( int fd, string& input ) {
 
 	if ( tokens.size() > 2 ) {
 		string erro;
-		for ( vector< string >::const_iterator it = tokens.begin() + 1; it != tokens.end(); it++ )
-			erro.append( *it + " " );
+		input.erase( 0, input.find( "nick" ) + 4 );
+		erro = input.substr( input.find( tokens.at( 1 ) ) );
 		return ft_send( fd, ERR_ERRONEUSNICKNAME( erro ) );
 	}
 	if ( tokens.size() != 2 )
