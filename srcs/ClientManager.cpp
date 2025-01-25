@@ -66,8 +66,8 @@ void ClientManager::registerClient( int fd, string& input ) {
 			return ft_send( fd, ERR_NEEDMOREPARAMS( ( cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName() ) ) );
 		if ( tokens.size() > 2 ) {
 			string erro;
-			for ( vector< string >::const_iterator it = tokens.begin() + 1; it != tokens.end(); it++ )
-				erro.append( *it + " " );
+			input.erase( 0, input.find( "nick" ) + 4 );
+			erro = input.substr( input.find( tokens.at( 1 ) ) );
 			return ft_send( fd, ERR_ERRONEUSNICKNAME( erro ) );
 		}
 		string nk = tokens.at( 1 );
@@ -163,7 +163,7 @@ void ClientManager::parse( int fd, string& input ) {
 	}
 	if ( !found ) {
 		cli[fd].setBuffer( "" );
-		return ft_send( fd, ERR_UNKNOWNCOMMAND( string( "*" ), cmd ) );
+		return ft_send( fd, ERR_UNKNOWNCOMMAND( ( cli[fd].getNickName().empty() ? string( "*" ) : cli[fd].getNickName() ), cmd ) );
 	}
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
