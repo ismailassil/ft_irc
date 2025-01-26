@@ -106,10 +106,20 @@ void Bot::authentificate() {
 	const string& msg1 = "pass " + password + CRLF;
 	send_msg( msg1 );
 	usleep( 10000 );
+	if ( recv( socket_fd, NULL, 0, MSG_PEEK ) > 0 ) {
+		cerr << "Authentication failed" << endl;
+		close( socket_fd );
+		exit( 1 );
+	}
 	////
 	const string& msg2 = string( "nick " + getNickName() ) + CRLF;
 	send_msg( msg2 );
 	usleep( 10000 );
+	if ( recv( socket_fd, NULL, 0, MSG_PEEK ) > 0 ) {
+		cerr << "Authentication failed" << endl;
+		close( socket_fd );
+		exit( 1 );
+	}
 	////
 	const string& msg3 = string( "user " + getUserName() + " 0 * :bot" ) + CRLF;
 	send_msg( msg3 );
@@ -134,7 +144,7 @@ const string Bot::read_msg() {
 	if ( stop_bot )
 		return "";
 	if ( byte <= 0 ) {
-		error( "recv()", 1 );
+		close( socket_fd );
 		exit( 1 );
 	}
 	buffer[byte] = '\0';

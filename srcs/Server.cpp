@@ -131,8 +131,8 @@ void Server::read_msg( int &fd ) {
 			break;
 	}
 	if ( !message.empty() ) {
-		printCurrentDateTime();
-		cout << "[Client] Message received from client <" << fd << "> : " << GREEN << message << RESET;
+		// printCurrentDateTime();
+		// cout << "[Client] Message received from client <" << fd << "> : " << GREEN << message << RESET;
 		clientManager.parse( fd, message );
 	}
 	if ( byte == 0 )
