@@ -118,7 +118,7 @@ int parse_input( int& ac, char**& av ) {
 		return ( 1 );
 	}
 	if (!isValidPassword(password)) {
-		cerr << "ERROR: password must only contains alphanumeric characters and underscores" << endl;
+		cerr << "ERROR: password must only contains alphanumeric characters and underscores and must be between " << PASS_LENGH << " and " << PASS_MAXLEN << " characters" << endl;
 		return ( 1 );
 	}
 	for ( size_t i = 0; i < port.size(); i++ ) {
