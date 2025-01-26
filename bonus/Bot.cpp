@@ -3,12 +3,13 @@
 int stop_bot	   = 0;
 int Bot::socket_fd = -1;
 
-Bot::Bot( void ) : password( "" ), port( 0 ), nick( "bot" ), user( "bot" ), lastActivity( time( NULL ) ) {
+Bot::Bot( void ) : password( "" ), port( 0 ), nick( "bot" ), user( "bot" ) {
 	signal( SIGINT, &Bot::handle_signal );
 	signal( SIGTERM, &Bot::handle_signal );
 	signal( SIGHUP, &Bot::handle_signal );
 	signal( SIGPIPE, SIG_IGN );
 
+	printCurrentDateTime();
 	cout << GREEN << "[Bot] is Starting" << RESET << endl;
 	initVars();
 	openConfigFile();
@@ -37,20 +38,21 @@ Bot::Bot( const Bot& copy ) {
 
 Bot::~Bot( void ) {
 	close( socket_fd );
+	cout << "\r";
+	printCurrentDateTime();
 	cout << RED << "[Bot] is Stopping" << RESET << endl;
 }
 
 Bot& Bot::operator=( const Bot& other ) {
 	if ( this == &other )
 		return ( *this );
-	socket_fd	 = other.socket_fd;
-	server_addr	 = other.server_addr;
-	password	 = other.password;
-	port		 = other.port;
-	facts		 = other.facts;
-	nick		 = other.nick;
-	user		 = other.user;
-	lastActivity = other.lastActivity;
+	socket_fd	= other.socket_fd;
+	server_addr = other.server_addr;
+	password	= other.password;
+	port		= other.port;
+	facts		= other.facts;
+	nick		= other.nick;
+	user		= other.user;
 	return ( *this );
 }
 
@@ -105,28 +107,20 @@ void Bot::authentificate() {
 	send_msg( msg1 );
 	usleep( 10000 );
 	////
-	string message = read_msg();
-	if ( !message.empty() ) {
-		cerr << "ERROR: invalid password" << endl;
-		close( socket_fd );
-		exit( 1 );
-	}
-	message.clear();
-	////
 	const string& msg2 = string( "nick " + getNickName() ) + CRLF;
 	send_msg( msg2 );
 	usleep( 10000 );
 	////
-	message = read_msg();
-	if ( !message.empty() ) {
-		cerr << "ERROR: invalid nick" << endl;
-		close( socket_fd );
-		exit( 1 );
-	}
 	const string& msg3 = string( "user " + getUserName() + " 0 * :bot" ) + CRLF;
 	send_msg( msg3 );
 
-	read_msg();
+	const string& message = read_msg();
+	if ( message != ":IRCServer 001 " + getNickName() + " : Welcome to the IRC server!" + CRLF ) {
+		cerr << "Authentication failed" << endl;
+		close( socket_fd );
+
+		exit( 1 );
+	}
 }
 
 void Bot::send_msg( const string& msg ) {
@@ -135,16 +129,12 @@ void Bot::send_msg( const string& msg ) {
 }
 
 const string Bot::read_msg() {
-	struct timeval timeout;
-	timeout.tv_sec	= 0;
-	timeout.tv_usec = 10000;
-	setsockopt( socket_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof( timeout ) );
-
 	char	buffer[BUFFER_SIZE];
 	ssize_t byte = recv( socket_fd, buffer, BUFFER_SIZE - 1, 0 );
-	if ( byte == 0 ) {
-		return string();
-	} else if ( byte < 0 ) {
+	if ( stop_bot )
+		return "";
+	if ( byte <= 0 ) {
+		error( "recv()", 1 );
 		exit( 1 );
 	}
 	buffer[byte] = '\0';
@@ -231,35 +221,24 @@ const vector< string > splitMessage( const string& str, char delim ) {
 	return split;
 }
 
-void Bot::checkInactivity() {
-	static const int idleThreshold = 10;
-
-	time_t currentTime = time( NULL );
-	if ( difftime( currentTime, lastActivity ) > idleThreshold ) {
-		const string pingMsg = "PING :Are you alive?" + string( CRLF );
-		send_msg( pingMsg );
-		lastActivity = currentTime;
-	}
-}
-
 void Bot::run() {
 	string message;
 
 	srand( time( NULL ) );
-	cout << YELLOW << "Bot is running" << RESET << endl;
+	printCurrentDateTime();
+	cout << YELLOW << "[Bot] is running" << RESET << endl;
 	while ( stop_bot == 0 ) {
 		message = read_msg();
-		if ( message.empty() ) {
-			checkInactivity();
-			continue;
+		if ( !stop_bot && !message.empty() ) {
+			printCurrentDateTime();
+			cout << "Client sent a message" << endl;
+			transform( message.begin(), message.end(), message.begin(), static_cast< int ( * )( int ) >( tolower ) );
+			size_t pos = message.find_first_of( CRLF );
+			if ( pos != string::npos ) {
+				message.erase( pos );
+			}
 		}
-
-		lastActivity = time( NULL );
-		printCurrentDateTime();
-		cout << "Received from: " << message.erase( message.find( CRLF ) ) << endl;
-
-		transform( message.begin(), message.end(), message.begin(), static_cast< int ( * )( int ) >( tolower ) );
-		if ( message.find( "privmsg" ) != string::npos ) {
+		if ( !stop_bot && !message.empty() && message.find( "privmsg" ) != string::npos ) {
 			vector< string > tokens = splitMessage( message, ' ' );
 			if ( tokens.size() < 4 ) {
 				continue;

@@ -14,14 +14,12 @@ class Bot {
 		vector< string >   quotes;
 		string			   nick;
 		string			   user;
-		time_t			   lastActivity;
 
 		void		 initVars();
 		void		 openConfigFile();
 		void		 authentificate();
 		void		 send_msg( const string &msg );
 		void		 error( string str, int exit_status );
-		void		 checkInactivity();
 		static void	 handle_signal( int signum );
 		const string read_msg();
 
