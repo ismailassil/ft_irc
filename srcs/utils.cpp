@@ -117,15 +117,9 @@ int parse_input( int& ac, char**& av ) {
 		cerr << "ERROR: Empty argument is not allowed" << endl;
 		return ( 1 );
 	}
-	for ( size_t i = 0; i < password.size(); i++ ) {
-		if ( isspace( password.at( i ) ) ) {
-			cerr << "ERROR: port must not contains white-spaces" << endl;
-			return ( 1 );
-		}
-		if ( isprint( password.at( i ) ) == 0 ) {
-			cerr << "ERROR: port must only contains printable characters" << endl;
-			return ( 1 );
-		}
+	if (!isValidPassword(password)) {
+		cerr << "ERROR: password must only contains alphanumeric characters and underscores" << endl;
+		return ( 1 );
 	}
 	for ( size_t i = 0; i < port.size(); i++ ) {
 		if ( !isdigit( port.at( i ) ) ) {
@@ -160,4 +154,16 @@ string getTimestamp() {
 	timestamp << currentTime;
 
 	return timestamp.str();
+}
+
+bool isValidPassword( const string& password ) {
+	if ( password.empty() || password.size() < PASS_LENGH || password.size() > PASS_MAXLEN ) {
+		return false;
+	}
+	for ( size_t i = 0; i < password.size(); i++ ) {
+		if ( isspace( password.at( i ) ) || ( !isalnum( password.at( i ) ) && password.at( i ) != '_' ) ) {
+			return false;
+		}
+	}
+	return true;
 }

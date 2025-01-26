@@ -19,7 +19,7 @@ string displayChannelModes( const string& clientNickName, const Channel& channel
 void handleModeO( Channel& channel, char sign, const string& nick, int fd, string& replyPrefix ) {
 	Client* targetClient = (Client*)channel.getClientInChannel( nick );
 	if ( !targetClient ) {
-		ft_send( fd, ERR_NOSUCHNICK( ( "#" + channel.getName() ), nick ) );
+		ft_send( fd, ERR_NOTONCHANNEL(targetClient->getNickName(), channel.getName()) );
 		return;
 	}
 
@@ -34,8 +34,12 @@ void handleModeO( Channel& channel, char sign, const string& nick, int fd, strin
 	channel.broadcast( reply );
 }
 
-void handleModeK( Channel& channel, char sign, const string& key, string& replyPrefix ) {
+void handleModeK( Channel& channel, char sign, const string& key, int fd, string& replyPrefix ) {
 	if ( sign == '+' ) {
+		if (!isValidPassword( key )) {
+			ft_send( fd, ERR_INVALIDMODEPARM( channel.getName(), "k" ) );
+			return;
+		}
 		channel.setKey( 1 );
 		channel.setPassword( key );
 	} else {
@@ -54,8 +58,9 @@ void handleModeL( Channel& channel, char sign, const string& limit, int fd, Clie
 		return;
 	}
 	if ( sign == '+' ) {
-		if ( channel.getLimit() && channel.getNumberOfClients() > channel.getLimit() ) {
-			ft_send( fd, ERR_CHANNELISFULL( client.getNickName(), channel.getName() ) );
+		int limitInt = stringToInt( limit );
+		if ( channel.getNumberOfClients() > limitInt ) {
+			ft_send( fd, ERR_INVALIDMODEPARM( channel.getName(), "l" ) );
 			return;
 		}
 		channel.setLimit( stringToInt( limit ) );
@@ -115,10 +120,10 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 				}
 				break;
 			case 'k':
-				if ( sign == '+' && params.size() < j + 1 ) {
+				if ( sign == '+' && params.size() < j + 1  ) {
 					ft_send( fd, ERR_NEEDMOREPARAMS( cli.getNickName() ) );
 				} else {
-					handleModeK( channel, sign, params[j], replyPrefix );
+					handleModeK( channel, sign, params[j], fd, replyPrefix );
 					j++;
 				}
 				break;

@@ -89,3 +89,4 @@ string				   intToString( int n );
 bool				   hasOnlyWhitespaces( const string& str );
 string				   getTimestamp();
 void				   printCurrentDateTime();
+bool                   isValidPassword( const string& password );

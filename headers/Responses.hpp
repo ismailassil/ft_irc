@@ -23,8 +23,8 @@
 /////////////////////////////////
 //////////// ERRORS /////////////
 /////////////////////////////////
-#define ERR_INVALIDMODEPARM( chName, mode )			   ( ": 696 #" + chName + " Invalid mode parameter. " + mode + CRLF )
-#define ERR_KEYSET( chName )						   ( ": 467 #" + chName + " Channel key already set. " + CRLF )
+#define ERR_INVALIDMODEPARM( chName, mode )			   ( ": 696 #" + chName + " Invalid mode parameter " + mode + CRLF )
+#define ERR_KEYSET( chName )						   ( ": 467 #" + chName + " Channel key already set " + CRLF )
 #define ERR_UNKNOWNMODE( nickname, chName, mode )	   ( ": 472 " + nickname + " #" + chName + " " + mode + " :is not a recognised channel mode" + CRLF )
 #define ERR_NEEDMOREPARAMS( nickname )				   ( ": 461 " + nickname + " :Not enough parameters." + CRLF )
 #define ERR_NOTOPERATOR( chName )					   ( ": 482 #" + chName + " :You're not a channel operator" + CRLF )
