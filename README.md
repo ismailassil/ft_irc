@@ -1,4 +1,4 @@
-# IRC 42 Project
+# FT_IRC
 
 Welcome to the **IRC 42 Project**! This project is an implementation of an Internet Relay Chat (IRC) server, designed as part of the curriculum at 42 School. The goal of this project is to create a fully functional IRC server that adheres to the RFC 1459 standard, allowing multiple clients to connect, communicate, and interact in real-time.
 
