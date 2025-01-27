@@ -102,7 +102,6 @@ The IRC 42 server supports the following commands:
 - `PART <channel>`: Leave a channel.
 - `PRIVMSG <target> <message>`: Send a message to a channel or user.
 - `QUIT [message]`: Disconnect from the server.
-- `LIST`: List all available channels.
 - `MODE <channel> <mode> [parameter]`: Change the mode of a channel.
 
 ## License
