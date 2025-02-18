@@ -1,5 +1,7 @@
 #include "../headers/Server.hpp"
 
+#include <vector>
+
 int			  stop_server  = 0;
 int			  Server::nfds = 0;
 struct pollfd Server::fds[MAXCLIENT + 1];
@@ -52,8 +54,8 @@ void Server::add_client() {
 		error( "fcntl()", 1 );
 	}
 	clientManager.addNewClient( client_fd, client_addr.sin_addr );
-	fds[nfds].fd	 = client_fd;
-	fds[nfds].events = POLLIN;
+	fds[nfds].fd	  = client_fd;
+	fds[nfds].events  = POLLIN;
 	fds[nfds].revents = 0;
 	++nfds;
 	printCurrentDateTime();
@@ -99,10 +101,10 @@ Server::Server( const string &_port, const string &_password )
 	: port( _port ), password( _password ) {
 	int status;
 	server_init();
-	fds[0].fd	  = socket_fd;
-	fds[0].events = POLLIN;
+	fds[0].fd	   = socket_fd;
+	fds[0].events  = POLLIN;
 	fds[0].revents = 0;
-	nfds		  = 1;
+	nfds		   = 1;
 	while ( !stop_server ) {
 		if ( ( status = poll( fds, nfds, -1 ) ) < 0 && stop_server == 0 ) {
 			if ( stop_server == 0 )
@@ -131,14 +133,36 @@ void Server::read_msg( int &fd ) {
 			break;
 	}
 	if ( !message.empty() ) {
-		// printCurrentDateTime();
-		// cout << "[Client] Message received from client <" << fd << "> : " << GREEN << message << RESET;
-		clientManager.parse( fd, message );
+		printCurrentDateTime();
+		cout << "[Client] Message received from client <" << fd << "> : " << GREEN << message << RESET;
+		vector< string > msg = ft_split_message( message );
+		for ( vector< string >::iterator it = msg.begin(); it != msg.end(); it++ ) {
+			clientManager.parse( fd, *it );
+		}
 	}
 	if ( byte == 0 )
 		remove_client( fd );
 	else if ( byte < 0 )
 		perror( "recv() " );
+}
+
+vector< string > Server::ft_split_message( string &msg ) {
+	vector< string > res;
+
+	size_t pos = msg.find_first_of( CRLF );
+	if ( pos == string::npos ) {
+		res.push_back( msg );
+		return res;
+	}
+	while ( pos != string::npos ) {
+		size_t pos_ = msg.find( CRLF );
+		if (pos_ != string::npos)
+			pos_ += 1;
+		res.push_back( msg.substr( 0, pos + 1 ) );
+		msg.erase( 0, pos + 1 );
+		pos = msg.find_first_of( CRLF );
+	}
+	return res;
 }
 
 void Server::remove_client( int &fd ) {

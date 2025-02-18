@@ -70,7 +70,8 @@ void Bot::openConfigFile() {
 		size_t port_pos = line.find( "PORT=" );
 		size_t pass_pos = line.find( "PASSWORD=" );
 		size_t ip_pos	= line.find( "IP=" );
-		if ( port_pos == string::npos && pass_pos == string::npos && ip_pos == string::npos ) {
+		size_t nick_pos = line.find( "NICK=" );
+		if ( port_pos == string::npos && pass_pos == string::npos && ip_pos == string::npos && nick_pos == string::npos ) {
 			file.close();
 			cerr << "ERROR: arg not found" << endl;
 			exit( 1 );
@@ -86,10 +87,13 @@ void Bot::openConfigFile() {
 			if ( server_ip == "localhost" )
 				server_ip = "127.0.0.1";
 		}
+		if ( nick_pos != string::npos ) {
+			nick = line.substr( nick_pos + 5 );
+		}
 	}
 	file.close();
 
-	if ( prt.empty() || password.empty() || server_ip.empty() ) {
+	if ( prt.empty() || password.empty() || server_ip.empty() || nick.empty() ) {
 		cerr << "ERROR: arg is empty" << endl;
 		exit( 1 );
 	}

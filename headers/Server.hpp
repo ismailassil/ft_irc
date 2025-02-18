@@ -14,9 +14,10 @@ class Server {
 		static int			 nfds;
 		ClientManager		 clientManager;
 
-		void		add_client();
-		void		remove_client( int &fd );
-		void		read_msg( int &fd );
+		void			 add_client();
+		void			 remove_client( int &fd );
+		void			 read_msg( int &fd );
+		vector< string > ft_split_message( string &msg );
 
 	public:
 		Server( void );
