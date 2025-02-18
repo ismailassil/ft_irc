@@ -31,10 +31,11 @@ class ClientManager {
 		void pingCmd( int, string& );
 
 	public:
-		void parse( int, string& );
-		void registerClient( int, string& );
-		void removeClient( int );
-		void addNewClient( int, struct in_addr ip );
+		void   parse( int, string& );
+		void   registerClient( int, string& );
+		void   removeClient( int );
+		void   addNewClient( int, struct in_addr ip );
+		string trim( const string& str );
 
 		void		 setPass( const string& );
 		const string getPass() const;

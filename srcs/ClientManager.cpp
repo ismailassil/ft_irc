@@ -262,3 +262,13 @@ void ClientManager::addNewClient( int fd, struct in_addr ip ) {
 	if ( cli.find( fd ) != cli.end() ) return;
 	cli[fd] = Client( fd, inet_ntoa( ip ) );
 }
+
+string ClientManager::trim( const string& str ) {
+	string::size_type start = str.find_first_not_of( " \t\n\r\f\v" );
+	if ( start == string::npos )
+		return "";
+
+	string::size_type end = str.find_last_not_of( " \t\n\r\f\v" );
+
+	return str.substr( start, end - start + 1 );
+}

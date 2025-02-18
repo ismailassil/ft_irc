@@ -4,18 +4,10 @@ bool isValidChannelName(const string& channel) {
     return !channel.empty() && (channel[0] == '#' || channel[0] == '&') && channel != "#" && channel != "&";
 }
 
-void createAndJoinChannel(vector<Channel>& channels, Client& client, int fd, const string& name, const string& password = "") {
+void createAndJoinChannel(vector<Channel>& channels, Client& client, int fd, const string& name, const string& password) {
+	(void)password;
     Channel newChannel;
     newChannel.setName(name);
-    if (!password.empty()) {
-        if (!isValidPassword(password)) {
-            ft_send(fd, ERR_BADCHANNELKEY(client.getNickName(), name));
-            return;
-        }
-        newChannel.setPassword(password);
-        newChannel.setModeAtIndex('k', true);
-        newChannel.setKey(1);
-    }
     newChannel.addClient(client);
     newChannel.addAdmin(client);
 	newChannel.setCreationDate();

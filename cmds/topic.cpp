@@ -26,7 +26,10 @@ void ClientManager::topicCmd( int fd, string& input ) {
 						return ft_send( fd, ERR_CHANOPRIVSNEEDED( cli[fd].getNickName(), channelName ) );
 					}
 					string topic = getText( input, tokens, 2 );
-					it->setTopic( topic );
+					string trimmed = trim( topic );
+					if (!trimmed.empty()) {
+						it->setTopic( topic );
+					}
 					it->setTopicAuthor( cli[fd].getNickName() );
 					it->setTopicDate( getTimestamp() );
 					it->broadcast( RPL_TOPIC( getPrefix( fd ), channelName, topic ) );

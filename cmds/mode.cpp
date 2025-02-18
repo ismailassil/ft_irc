@@ -5,13 +5,13 @@ string displayChannelModes( const string& clientNickName, const Channel& channel
 	string mode = channel.getModes();
 	string args = "";
 	if ( channel.getModeAtIndex( 'k' ) ) {
-		args += channel.getPassword();
+		args += channel.getPassword() + " ";
 	}
 	if ( channel.getModeAtIndex( 'l' ) ) {
-		args += " " + intToString( channel.getLimit() );
+		args += intToString( channel.getLimit() ) + " ";
 	}
 	if (channel.getAdminChannelList().size() > 0) {
-		args += " " + channel.getAdminChannelList();
+		args += channel.getAdminChannelList() + " ";
 	}
 	return RPL_CHANNELMODEIS( clientNickName, channel.getName(), mode, args );
 }

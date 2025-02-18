@@ -136,7 +136,7 @@ const string Channel::getModes() const {
 		mode += "t";
 	if ( getAdminChannelList().size() > 0 )
 		mode += "o";
-	return mode;
+	return mode.empty() ? mode : "+" + mode;
 }
 
 const string Channel::getClientChannelList() const {
