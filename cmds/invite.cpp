@@ -12,7 +12,7 @@ void    ClientManager::inviteCmd(int fd, string& cmd) {
         ft_send(fd, ERR_NOSUCHCHANNEL(cli[fd].getNickName(), splited[2]));
         return;
     }
-    string channelName = splited[2].substr(1);
+    string channelName = splited[2];
     if (!isChannel(splited[2])) {
         ft_send(fd, ERR_NOSUCHCHANNEL(cli[fd].getNickName(), splited[2]));
         return;
@@ -38,7 +38,7 @@ void    ClientManager::inviteCmd(int fd, string& cmd) {
 
     if (!targetClient)
     {
-        ft_send(fd, ERR_NOSUCHNICK( ("#" + channelName), splited[1]));
+        ft_send(fd, ERR_NOSUCHNICK( (channelName), splited[1]));
         return ;
     }
 
@@ -50,6 +50,6 @@ void    ClientManager::inviteCmd(int fd, string& cmd) {
     string reply = RPL_INVITING(cli[fd].getNickName(), targetClient->getNickName(), channelName);
     ft_send(fd, reply);
 
-    reply = ":" + getPrefix(fd) + " INVITE " + targetClient->getNickName() + " #" + channelName + CRLF;
+    reply = ":" + getPrefix(fd) + " INVITE " + targetClient->getNickName() + " " + channelName + CRLF;
     ft_send(targetClient->getFd(), reply);
 }

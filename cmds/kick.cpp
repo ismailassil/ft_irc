@@ -25,7 +25,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 	if ( nicknames.size() > 6 )
 		return ft_send( fd, ERR_TOOMANYTARGETS( cli[fd].getNickName(), nicknames[6] ) );
 
-	const string& channelName = chName[0].substr( 1 );
+	const string& channelName = chName[0];
 
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); ) {
 		if ( channelName == it->getName() ) {
@@ -45,7 +45,7 @@ void ClientManager::kickCmd( int fd, string& input ) {
 				if ( it->isInChannel( nicknames[i] ) ) {
 					int client_fd = it->getClientInChannel( nicknames[i] )->getFd();
 
-					string reply = ":" + getPrefix( fd ) + " KICK #" + channelName + " " + nicknames[i];
+					string reply = ":" + getPrefix( fd ) + " KICK " + channelName + " " + nicknames[i];
 					reply += " :" + reason + CRLF;
 					it->broadcast( reply );
 

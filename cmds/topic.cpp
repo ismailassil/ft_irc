@@ -10,7 +10,6 @@ void ClientManager::topicCmd( int fd, string& input ) {
 	if ( channelName[0] != '#' && channelName[0] != '&' ) {
 		return ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), channelName ) );
 	}
-	channelName.erase( 0, 1 );
 	for ( vector< Channel >::iterator it = channels.begin(); it != channels.end(); it++ ) {
 		if ( it->getName() == channelName ) {
 			if ( it->isInChannel( cli[fd].getNickName() ) ) {

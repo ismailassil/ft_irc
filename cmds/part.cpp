@@ -18,7 +18,7 @@ void ClientManager::partCmd( int fd, string& input ) {
 			continue;
 		}
 		if ( target[0] == '#' || target[0] == '&' ) {
-			string	 channelName = target.substr( 1 );
+			string	 channelName = target;
 			Channel* channel	 = getChannel( channelName );
 			if ( !channel ) {
 				ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), channelName ) );
@@ -28,7 +28,7 @@ void ClientManager::partCmd( int fd, string& input ) {
 				ft_send( fd, ERR_NOTONCHANNEL( cli[fd].getNickName(), channelName ) );
 				continue;
 			}
-			string reply = ":" + getPrefix( fd ) + " PART #" + channelName + " :" + message + CRLF;
+			string reply = ":" + getPrefix( fd ) + " PART " + channelName + " :" + message + CRLF;
 			channel->broadcast( reply );
 
 			channel->removeClient( fd );

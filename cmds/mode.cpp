@@ -160,7 +160,7 @@ void ClientManager::modeCmd( int fd, string& cmd ) {
 		ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), splited[1] ) );
 		return;
 	}
-	string channelName = splited[1].substr( 1 );
+	string channelName = splited[1];
 	if ( !isChannel( splited[1] ) ) {
 		ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), channelName ) );
 		return;

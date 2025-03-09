@@ -63,7 +63,7 @@ void ClientManager::joinCmd(int fd, string& cmd) {
             continue;
         }
 
-        string chanName = chans[i].substr(1);
+        string chanName = chans[i];
         Channel* channel = findChannelByName(channels, chanName);
         if (!channel) {
             string password = (j < passwords.size()) ? passwords[j] : "";
