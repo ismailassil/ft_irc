@@ -21,7 +21,6 @@ void ClientManager::privmsgCmd( int fd, string& input ) {
 			continue;
 		}
 		if ( target[0] == '#' || target[0] == '&' ) {
-			target				   = target;
 			const Channel* channel = getChannel( target );
 			if ( !channel ) {
 				ft_send( fd, ERR_NOSUCHCHANNEL( cli[fd].getNickName(), target ) );
