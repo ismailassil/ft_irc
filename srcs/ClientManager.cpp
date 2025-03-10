@@ -1,7 +1,7 @@
 #include "../headers/ClientManager.hpp"
 
 bool ClientManager::isChannel( const string& channel ) {
-	string channelName = channel.substr( 1 );
+	string channelName = channel;
 	if ( channel.empty() || ( channel[0] != '#' && channel[0] != '&' ) ) {
 		return false;
 	}

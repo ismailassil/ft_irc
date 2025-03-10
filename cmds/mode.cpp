@@ -10,7 +10,7 @@ string displayChannelModes( const string& clientNickName, const Channel& channel
 	if ( channel.getModeAtIndex( 'l' ) ) {
 		args += intToString( channel.getLimit() ) + " ";
 	}
-	if (channel.getAdminChannelList().size() > 0) {
+	if ( channel.getAdminChannelList().size() > 0 ) {
 		args += channel.getAdminChannelList() + " ";
 	}
 	return RPL_CHANNELMODEIS( clientNickName, channel.getName(), mode, args );
@@ -19,7 +19,7 @@ string displayChannelModes( const string& clientNickName, const Channel& channel
 void handleModeO( Channel& channel, char sign, const string& nick, int fd, string& replyPrefix ) {
 	Client* targetClient = (Client*)channel.getClientInChannel( nick );
 	if ( !targetClient ) {
-		ft_send( fd, ERR_NOTONCHANNEL(targetClient->getNickName(), channel.getName()) );
+		ft_send( fd, ERR_NOTONCHANNEL( targetClient->getNickName(), channel.getName() ) );
 		return;
 	}
 
@@ -36,7 +36,7 @@ void handleModeO( Channel& channel, char sign, const string& nick, int fd, strin
 
 void handleModeK( Channel& channel, char sign, const string& key, int fd, string& replyPrefix ) {
 	if ( sign == '+' ) {
-		if (!isValidPassword( key )) {
+		if ( !isValidPassword( key ) ) {
 			ft_send( fd, ERR_INVALIDMODEPARM( channel.getName(), "k" ) );
 			return;
 		}
@@ -47,7 +47,8 @@ void handleModeK( Channel& channel, char sign, const string& key, int fd, string
 	}
 	channel.setModeAtIndex( 'k', sign == '+' );
 	string mode	 = sign == '+' ? "+k" : "-k";
-	string reply = sign == '+' ? RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, key ) : RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, "" );
+	string reply = sign == '+' ? RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, key )
+							   : RPL_CHANGEMODE( replyPrefix, channel.getName(), mode, "" );
 
 	channel.broadcast( reply );
 }
@@ -120,7 +121,7 @@ void processMode( vector< string > splited, Channel& channel, int fd, Client& cl
 				}
 				break;
 			case 'k':
-				if ( sign == '+' && params.size() < j + 1  ) {
+				if ( sign == '+' && params.size() < j + 1 ) {
 					ft_send( fd, ERR_NEEDMOREPARAMS( cli.getNickName() ) );
 				} else {
 					handleModeK( channel, sign, params[j], fd, replyPrefix );
